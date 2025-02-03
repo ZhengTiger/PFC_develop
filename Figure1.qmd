@@ -1,0 +1,321 @@
+---
+author: "Hu Zheng"
+date: "2024-12-01"
+date-format: YYYY-MM-DD
+---
+
+# Figure1
+
+```{r}
+#| warning: false
+#| message: false
+
+library(Seurat)
+library(scCustomize)
+library(ggplot2)
+#library(cowplot)
+library(sciRcolor)
+library(tidyr)
+library(ggpointdensity)
+library(cowplot)
+library(ggtree)
+library(aplot)
+source('bin/Palettes.R')
+```
+
+
+```{r}
+seu.harmony <- readRDS('../../data/rds/seu.harmony.rds')
+seu.harmony.metadata <- readRDS('../../data/rds/seu.harmony.metadata.rds')
+seu.harmony@meta.data <- seu.harmony.metadata
+```
+
+
+## Figure_1A
+
+
+
+## Figure_1B
+
+```{r fig.width=8, fig.height=6}
+seu <- seu.harmony
+seu$SubType <- factor(seu$SubType, levels = names(col_SubType))
+DimPlot(seu,
+        reduction = 'umap', group.by = "SubType", label = T, 
+        cols = col_SubType) +
+  theme(axis.line = element_blank(), axis.ticks = element_blank(), 
+        axis.text = element_blank(), plot.title = element_text(size = 30)) +
+  labs(x='', y='', title = "") +
+  coord_fixed()
+```
+
+
+
+
+
+## Figure_1C
+
+```{r fig.width=8, fig.height=6}
+seu <- seu.harmony
+seu$Time <- seu.harmony$orig.ident
+seu$Time[which(seu$Time %in% c("Adult1", "Adult2", "Adult3"))] <- "Adult"
+seu$Time <- factor(seu$Time, levels = c("P0","P4","P10","Adult"))
+col <- c("P0"="#440154FF","P4"="#2D708EFF","P10"="#2BB07FFF","Adult"="#FDE725FF")
+
+DimPlot(seu,
+        reduction = 'umap', group.by = "Time", label = F, shuffle=T, seed=123,
+        cols = col) +
+  theme_bw() +
+  theme(panel.grid = element_blank(), 
+        axis.text = element_blank(), axis.ticks = element_blank(),
+        panel.border = element_rect(color = "black", linewidth = 1)) +
+  labs(x='', y='', title = "") +
+  coord_fixed()
+```
+
+
+
+
+## Figure_1D
+
+```{r fig.width=8, fig.height=3}
+df <- seu.harmony@meta.data[,c("orig.ident","SubType")]
+df$Time <- df$orig.ident
+df$Time[which(df$Time %in% c("Adult1", "Adult2", "Adult3"))] <- "Adult"
+df <- table(df$Time, df$SubType)
+df <- as.data.frame(df/rowSums(df))
+colnames(df) <- c("Time", "Subtype", "Prob")
+df$Time <- factor(df$Time, levels = rev(c("P0","P4","P10","Adult")))
+df$Subtype <- factor(df$Subtype, levels = rev(names(col_SubType)))
+
+ggplot(df, aes(x = Time, y = Prob, fill = Subtype)) + 
+  geom_bar(stat = "identity", width = 0.9) +
+  scale_fill_manual(values = col_SubType) +
+  labs(x='', y='', title='') +
+  theme_minimal(base_size = 15) +
+  theme(panel.grid = element_blank(), plot.title = element_text(hjust = 0.5),
+        legend.position = "none",
+        legend.title = element_blank()) +
+  labs(title = "Transcriptome subtype proporation") +
+  coord_flip()
+```
+
+
+
+
+
+## Figure_1E
+
+```{r fig.width=8, fig.height=8}
+df <- data.frame(
+  "UMAP_1" = seu.harmony@reductions$umap@cell.embeddings[,"UMAP_1"],
+  "UMAP_2" = seu.harmony@reductions$umap@cell.embeddings[,"UMAP_2"],
+  "Time" = seu.harmony$orig.ident
+)
+df$Time[which(df$Time %in% c("Adult1", "Adult2", "Adult3"))] <- "Adult"
+
+col <- sciRcolor::pal_scircolor(100)
+Time <- c("P0","P4","P10","Adult")
+plist <- list()
+for (i in 1:4){
+  df_i <- df[which(df$Time == Time[i]),]
+  plist[[i]] <- 
+    ggplot() +
+    geom_point(df, mapping = aes(x = UMAP_1, y = UMAP_2), color="lightgray", size=0.5) +
+    geom_pointdensity(df_i, mapping = aes(x = UMAP_1, y = UMAP_2), size=0.5) +
+    scale_color_gradientn(colours = col, na.value = col[length(col)],
+                          limits = c(0,1500), 
+                          breaks = c(0,1500)) +
+    coord_fixed() +
+    labs(title = Time[i], x="", y="", colour = "") +
+    theme_bw() +
+    theme(plot.title = element_text(hjust = 0.5),
+          axis.ticks = element_blank(), axis.text = element_blank(),
+          panel.grid = element_blank(),
+          legend.position = "right",
+          legend.key.width  = unit(0.5, "lines"),
+          legend.key.height = unit(2, "lines"))
+}
+
+plot_grid(plotlist = plist, ncol = 2)
+```
+
+
+
+
+
+## Figure_1F
+
+```{r fig.width=15, fig.height=10}
+#| message: false
+
+# ggtree
+seu <- seu.harmony
+Idents(seu) <- 'SubType'
+cluster_order <- c( "L2/3 IT", "L4/5 IT", "L5 IT", "L6 IT", "Immature IT",
+                 
+                 "Neuroblast", "L5 PT", "L6 CT", "L5 NP",
+                 "Lamp5", "Pvalb", "Sst", "Vip",
+                 "Astro","Endo","VLMC","Microglia",
+                 "Oligo","OPC","NPC")
+seu <- BuildClusterTree(
+  object = seu,
+  reduction = "harmony",
+  dims = 1:30,
+  verbose = FALSE
+  )
+tree <- Tool(object = seu, slot = 'BuildClusterTree')
+tree <- reordered_tree <- ape::rotateConstr(tree, cluster_order)
+
+groupInfo <- split(tree$tip.label, tree$tip.label)
+tree <- groupOTU(tree, groupInfo)
+
+p1 <- 
+  ggtree(tree, aes(color=group), ladderize=F, branch.length = "none",
+         size=1) +
+  #geom_tiplab(size=3, aes(color=group), hjust = 0.5, offset=-0.5) +
+  layout_dendrogram() +
+  scale_color_manual(values = col_SubType) +
+  NoLegend()
+
+
+# cell type
+df_type <- data.frame(
+  'SubType' = names(col_SubType),
+  'Color' = as.character(col_SubType)
+)
+df_type$SubType <- factor(df_type$SubType, levels=names(col_SubType))
+p2 <- ggplot(df_type, aes(x=SubType, y=1, fill=SubType)) + 
+  geom_tile() +
+  scale_fill_manual(values = col_SubType, name="Cell Type") +
+  theme_void() +
+  NoLegend()
+
+# dot plot
+p3 <- DotPlot(
+  seu,
+  features = c('Cux2','Calb1','Rorb','Deptor','Oprk1','Cd24a','Sox11','Pou3f1',
+               'Npr3','Syt6','Tshz2',
+               'Lamp5','Vip','Pvalb','Sst',
+               'Gja1','Pdgfra','Ptgds','Top2a','C1qc','Flt1','Vtn'),
+  group.by = 'SubType',
+  col.min=0, col.max=2, dot.scale = 8) +
+  coord_flip() +
+  scale_x_discrete(limits=rev) +
+  scale_color_gradientn(colours = c("lightblue3", "lightblue", "white", "red", "red4")) +
+  theme_minimal() +
+  theme(axis.text.x = element_blank(),
+        axis.title.x = element_blank(), axis.title.y = element_blank())
+
+# cell prob
+df <- seu.harmony@meta.data[,c("orig.ident","SubType")]
+df$Time <- df$orig.ident
+df$Time[which(df$Time %in% c("Adult1", "Adult2", "Adult3"))] <- "Adult"
+df <- as.data.frame.array(table(df$Time, df$SubType))
+df_long <- as.data.frame(apply(df, 2, function(x){x/sum(x)}))
+df_long$Time <- rownames(df_long)
+df_long <- pivot_longer(df_long, !Time, names_to = "Subtype", values_to = "Prob")
+df_long$Time <- factor(df_long$Time, levels = rev(c("P0","P4","P10","Adult")))
+
+col <- c("P0"="#440154FF","P4"="#2D708EFF","P10"="#2BB07FFF","Adult"="#FDE725FF")
+p4 <- 
+  ggplot(df_long, aes(x = Subtype, y = Prob, fill = Time)) + 
+  geom_bar(stat = "identity", width = 1) +
+  scale_fill_manual(values = col) +
+  labs(x='', y='', title='') +
+  theme_minimal(base_size = 15) +
+  theme(panel.grid = element_blank(), plot.title = element_text(hjust = 0.5),
+        legend.position = "none",
+        legend.title = element_blank(),
+        axis.text.x = element_text(angle = 90, hjust = 1))
+
+Figure_1C <- 
+  p3 %>%
+  insert_top(p2, height=.02) %>%
+  insert_top(p1, height = 0.2) %>%
+  insert_bottom(p4, height = 0.3)
+
+Figure_1C
+```
+
+
+
+```{r}
+p4
+```
+
+
+
+```{r}
+DEGs$cluster <- factor(DEGs$cluster, levels = names(col_SubType))
+DEGs_order <- arrange(DEGs, cluster, desc(avg_log2FC))
+```
+
+
+
+
+
+
+
+
+
+## Voxhunt
+
+```{r}
+library(patchwork)
+library(tidyverse)
+library(voxhunt)
+
+load_aba_data('F:/1.课题/5.PFC发育/VoxHunt/voxhunt_data/voxhunt_data')
+```
+
+
+```{r}
+voxhunt::plot_annotation(
+  'P56', annotation_level = "custom_3",
+  slices = 10,
+  alpha = 1,
+  show_legend = T) +
+  coord_fixed()
+```
+
+
+```{r}
+E18 <- readRDS("F:/1.课题/5.PFC发育/VoxHunt/voxhunt_data/voxhunt_data/E18.rds")
+E18 <- readRDS("F:/1.课题/5.PFC发育/VoxHunt/voxhunt_data/voxhunt_data/E18.rds")
+```
+
+
+
+
+
+```{r}
+sc_seu_P0 <- seu.harmony[,seu.harmony$orig.ident == "P0"]
+sc_seu_P4 <- seu.harmony[,seu.harmony$orig.ident == "P4"]
+sc_seu_P10 <- seu.harmony[,seu.harmony$orig.ident == "P10"]
+sc_seu_Adult <- seu.harmony[,seu.harmony$orig.ident %in% c("Adult1","Adult2","Adult3")]
+
+saveRDS(sc_seu_P0, "../../data/rds/Allen_dev/sc_seu_P0.rds")
+saveRDS(sc_seu_P4, "../../data/rds/Allen_dev/sc_seu_P4.rds")
+saveRDS(sc_seu_P10, "../../data/rds/Allen_dev/sc_seu_P10.rds")
+saveRDS(sc_seu_Adult, "../../data/rds/Allen_dev/sc_seu_Adult.rds")
+```
+
+```{r}
+
+```
+
+
+```{r}
+library(SeuratDisk)
+SaveH5Seurat(seu.harmony, filename = "../../data/rds/Allen_dev/sc_seu_all.h5Seurat")
+Convert("../../data/rds/Allen_dev/sc_seu_all.h5Seurat", dest = "h5ad")
+file.remove("../../data/rds/Allen_dev/sc_seu_all.h5Seurat")
+```
+
+
+
+
+
+
+

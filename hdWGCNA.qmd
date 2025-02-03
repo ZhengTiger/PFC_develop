@@ -1,0 +1,143 @@
+---
+author: "Hu Zheng"
+date: "2024-12-01"
+date-format: YYYY-MM-DD
+---
+
+# hdWGCNA 分析
+
+```{r}
+library(tidyverse)
+library(Seurat)
+library(WGCNA)
+library(hdWGCNA)
+library(ggplot2)
+library(cowplot)
+library(patchwork)
+library(igraph)
+
+set.seed(12345)
+```
+
+```{r}
+seu.harmony <- readRDS('../../data/rds/seu.harmony.rds')
+seu.harmony.metadata <- readRDS('../../data/rds/seu.harmony.metadata.rds')
+seu.harmony@meta.data <- seu.harmony.metadata
+```
+
+
+```{r}
+seurat_obj <- seu.harmony
+
+seurat_obj <- SetupForWGCNA(
+  seurat_obj,
+  gene_select = "fraction", # the gene selection approach
+  fraction = 0.05, # fraction of cells that a gene needs to be expressed in order to be included
+  wgcna_name = "allcell" # the name of the hdWGCNA experiment
+)
+
+# construct metacells  in each group
+seurat_obj <- MetacellsByGroups(
+  seurat_obj = seurat_obj,
+  group.by = c("SubType", "orig.ident"), # specify the columns in seurat_obj@meta.data to group by
+  reduction = 'harmony', # select the dimensionality reduction to perform KNN on
+  k = 25, # nearest-neighbors parameter
+  max_shared = 10, # maximum number of shared cells between two metacells
+  ident.group = 'SubType' # set the Idents of the metacell seurat object
+)
+
+# normalize metacell expression matrix:
+seurat_obj <- NormalizeMetacells(seurat_obj)
+
+seurat_obj <- SetDatExpr(
+  seurat_obj,
+  group_name = unique(seurat_obj$SubType), # the name of the group of interest in the group.by column
+  group.by='SubType', # the metadata column containing the cell type info. This same column should have also been used in MetacellsByGroups
+  assay = 'RNA', # using RNA assay
+  slot = 'data' # using normalized data
+)
+```
+
+```{r}
+# Test different soft powers:
+seurat_obj <- TestSoftPowers(
+  seurat_obj,
+  networkType = 'signed' # you can also use "unsigned" or "signed hybrid"
+)
+
+# plot the results:
+plot_list <- PlotSoftPowers(seurat_obj)
+
+# assemble with patchwork
+wrap_plots(plot_list, ncol=2)
+```
+
+```{r}
+# construct co-expression network:
+seurat_obj <- ConstructNetwork(
+  seurat_obj,
+  soft_power = 8,
+  tom_name = 'allcell' # name of the topoligical overlap matrix written to disk
+)
+
+seurat_obj <- ModuleEigengenes(
+ seurat_obj,
+ group.by.vars="orig.ident"
+)
+
+seurat_obj <- ModuleConnectivity(
+  seurat_obj,
+  group.by = 'SubType', group_name = unique(seurat_obj$SubType)
+)
+
+seurat_obj <- ResetModuleNames(
+  seurat_obj,
+  new_name = "M"
+)
+
+saveRDS(seurat_obj, "../../data/rds/seurat_obj.hdwgcna.rds")
+```
+
+
+```{r fig.width=6, fig.height=6}
+set.seed(20241212)
+
+seurat_obj <- RunModuleUMAP(
+  seurat_obj,
+  n_hubs = 10, # number of hub genes to include for the UMAP embedding
+  n_neighbors=25, # neighbors parameter for UMAP
+  min_dist=0.5
+)
+
+ModuleUMAPPlot(
+  seurat_obj,
+  sample_edges=TRUE,
+  edge_prop=0.2,
+  label_hubs=5,
+  edge.alpha = 0.25,
+  keep_grey_edges=FALSE,
+  vertex.label.cex = 0.01
+)
+```
+
+
+```{r fig.width=12, fig.height=6}
+p <- PlotKMEs(seurat_obj, ncol=5)
+
+p
+```
+
+```{r}
+hub_df <- GetHubGenes(seurat_obj, n_hubs = 10)
+
+head(hub_df)
+```
+
+
+
+
+
+
+
+
+

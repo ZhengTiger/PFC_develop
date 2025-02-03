@@ -1,0 +1,339 @@
+---
+author: "Hu Zheng"
+date: "2024-12-01"
+date-format: YYYY-MM-DD
+---
+
+# Figure2
+
+```{r}
+#| warning: false
+#| message: false
+
+library(Seurat)
+library(hdWGCNA)
+library(patchwork)
+library(ggplot2)
+library(ggalt)
+library(cowplot)
+library(tidyverse)
+source('bin/Palettes.R')
+```
+
+
+```{r}
+seu.harmony <- readRDS('../../data/rds/seu.harmony.rds')
+seu.harmony.metadata <- readRDS('../../data/rds/seu.harmony.metadata.rds')
+seu.harmony@meta.data <- seu.harmony.metadata
+```
+
+
+
+## Figure_2A
+
+```{r}
+seurat_obj <- readRDS("../../data/rds/seurat_obj.hdwgcna.rds")
+```
+
+```{r fig.width=6, fig.height=6}
+#| warning: false
+#| message: false
+#| eval: false
+
+set.seed(20241220)
+modules <- GetModules(seurat_obj)
+mods <- levels(modules$module)
+mods <- mods[mods != 'grey']
+
+Figure2_A <- 
+  HubGeneNetworkPlot(
+  seurat_obj,
+  n_hubs = 10, n_other=100,
+  edge_prop = 0.8,
+  edge.alpha = 0.8,
+  mods = mods,  
+  return_graph=FALSE
+)
+```
+
+
+
+
+## Figure_2B
+
+```{r fig.width=10, fig.height=8}
+#| warning: false
+#| message: false
+
+plot_list <- ModuleFeaturePlot(
+  seurat_obj,
+  features='hMEs',
+  order=TRUE,
+  title = FALSE
+)
+
+for (i in 1:13){
+  ggsave(filename=paste("../../Figure/Figure2/Figure2_B_1/M",i,".png",sep=""),
+         plot_list[[i]], 
+         width=4, height = 4, units = "in")
+}
+
+wrap_plots(plot_list, ncol=4)
+```
+
+
+
+
+## Figure_2C
+
+```{r fig.width=10, fig.height=8}
+seurat_obj$Time <- seurat_obj$orig.ident
+seurat_obj$Time[which(seurat_obj$Time %in% c("Adult1","Adult2","Adult3"))] <- "Adult"
+exp_mean <- AverageExpression(
+  seurat_obj, 
+  features = seurat_obj@misc$allcell$wgcna_genes,
+  assays = "RNA",
+  slot = "data",
+  group.by = "Time")
+exp_mean_zscore <- as.data.frame(t(scale(t(exp_mean$RNA))))
+exp_mean_zscore$module <- seurat_obj@misc$allcell$wgcna_modules$module
+exp_mean_zscore$gene <- rownames(exp_mean_zscore)
+exp_mean_zscore <- exp_mean_zscore[which(exp_mean_zscore$module != "grey"),]
+exp_mean_long <- pivot_longer(exp_mean_zscore, !c(module,gene), names_to = "Time",
+                              values_to = "Exp")
+
+
+plist <- list()
+M_color <- c("M1"="turquoise","M2"="green","M3"="blue","M4"="red","M5"="yellow",
+             "M6"="brown","M7"="tan","M8"="purple","M9"="greenyellow","M10"="pink",
+             "M11"="black","M12"="magenta","M13"="salmon")
+for (i in 1:13){
+  module <- paste("M",i,sep="")
+  df <- exp_mean_long[which(exp_mean_long$module==module),]
+  df$Time <- factor(df$Time, levels = c("P0","P4","P10","Adult"))
+  df_mean <- 
+    df |>
+    group_by(Time) |>
+    dplyr::summarize(across(Exp, ~ mean(.x, na.rm = TRUE)))
+  df_mean$Time <- factor(df_mean$Time, levels = c("P0","P4","P10","Adult"))
+  
+  plist[[i]] <- 
+    ggplot(df, aes(x=Time, y=Exp)) +
+    geom_line(aes(group=gene), color=M_color[i], alpha=0.1) +
+    stat_xspline(df_mean, mapping=aes(x=Time, y=Exp, group=1), 
+               spline_shape=-0.4, color="black", linewidth=1) +
+    theme_void(base_size = 10) +
+    theme(plot.title = element_text(hjust = 0.5),
+          panel.grid = element_blank()) +
+    scale_y_continuous(limits = c(-1.5,1.5)) +
+    coord_fixed()
+  ggsave(filename=paste("../../Figure/Figure2/Figure2_B_2/M",i,".png",sep=""),
+         plist[[i]], 
+         width=4, height = 4, units = "in")
+}
+
+plot_grid(plotlist = plist, ncol = 4)
+```
+
+
+
+```{r fig.width=5, fig.height=10}
+SubType_order <- c(
+  "Astro","Microglia","Oligo","OPC","Endo","VLMC",
+  "NPC","Neuroblast","Immature IT",
+  "Excitatory","Inhibitory"
+  )
+M_order <- c("M1","M3","M12","M13","M5","M9","M11","M8","M10","M2","M6","M7","M4")
+M_color <- c("M1"="turquoise","M2"="green","M3"="blue","M4"="red","M5"="yellow",
+             "M6"="brown","M7"="tan","M8"="purple","M9"="greenyellow","M10"="pink",
+             "M11"="black","M12"="magenta","M13"="salmon")
+
+hub_df <- GetHubGenes(seurat_obj, n_hubs = 50)
+hub_df$module <- factor(hub_df$module, levels = M_order)
+hub_df <- hub_df[order(hub_df$module),]
+
+seurat_obj$Cluster <- seurat_obj$SubType
+seurat_obj$Cluster[which(seurat_obj$Cluster %in% c("L2/3 IT","L4/5 IT","L5 IT","L6 IT","L5 PT","L5 NP","L6 CT"))] <- "Excitatory"
+seurat_obj$Cluster[which(seurat_obj$Cluster %in% c("Lamp5","Pvalb","Sst","Vip"))] <- "Inhibitory"
+
+exp_mean <- AverageExpression(
+  seurat_obj, 
+  features = hub_df$gene_name,
+  assays = "RNA",
+  slot = "data",
+  group.by = "Cluster")
+exp_mean_zscore <- as.data.frame(t(scale(t(exp_mean$RNA))))
+
+annotation_row = data.frame(
+  Module = rep(M_order,each=50)
+)
+rownames(annotation_row) <- rownames(exp_mean_zscore)
+ann_colors = list(
+  Module = M_color
+)
+
+breaks <- seq(-2,2,0.01)
+col <- colorRampPalette(c("lightblue3", "lightblue", "white", "red", "red4"))(length(breaks))
+
+mat <- exp_mean_zscore[,SubType_order]
+mat[mat>2] <- 2
+mat[mat< -2] <- -2
+Figure_2C <- 
+  pheatmap::pheatmap(mat,
+         cluster_rows = F, cluster_cols = F,
+         breaks = breaks,
+         color = col,
+         fontsize_col = 10,
+         annotation_row = annotation_row,
+         annotation_colors = ann_colors,
+         annotation_names_row=F, annotation_names_col=F,
+         show_colnames = T, show_rownames = F, angle_col=45, border_color=NA
+         )
+```
+
+
+
+```{r}
+DotPlot(seurat_obj, features=names(M_color), group.by = 'SubType')
+```
+
+
+
+## other
+
+```{r fig.width=5, fig.height=10}
+df <- seurat_obj@misc$allcell$hMEs
+df <- df[,-match("grey",colnames(df))]
+df <- df[,paste('M',1:13,sep="")]
+df$SubType <- seurat_obj$SubType
+
+df_mean <- 
+  df |>
+  group_by(SubType) |>
+  dplyr::summarize(across(1:13, ~ mean(.x, na.rm = TRUE)))
+df_mean_zscore <- as.data.frame(scale(df_mean[,2:14]))
+rownames(df_mean_zscore) <- df_mean$SubType
+
+SubType_order <- c(
+  "Astro","Microglia","Oligo","OPC","Endo","VLMC",
+  "NPC","Neuroblast","Immature IT",
+  "L2/3 IT","L4/5 IT","L5 IT","L6 IT","L5 PT","L5 NP","L6 CT",
+  "Lamp5","Pvalb","Sst","Vip")
+M_order <- c("M1","M3","M12","M13","M5","M9","M11","M8","M2","M10","M6","M4","M7")
+df_mean_zscore <- df_mean_zscore[SubType_order,M_order]
+
+# plot
+Time <- c()
+for (i in 1:ncol(df_mean_zscore)){
+  Time[i] <- strsplit(colnames(df_mean_zscore)[i]," ")[[1]][1]
+}
+annotation_col = data.frame(
+  Time = Time,
+  Cluster = rep(SubType,each=4)[-73]
+)
+rownames(annotation_col) <- colnames(df_mean_zscore)
+ann_colors = list(
+  Time = c("P0"="#440154FF","P4"="#2D708EFF","P10"="#2BB07FFF","Adult"="#FDE725FF"),
+  Cluster = col_SubType
+)
+
+breaks <- seq(-2,2,0.01)
+col <- colorRampPalette(sciRcolor::pal_scircolor(80))(length(breaks))
+col <- colorRampPalette(c("lightblue3", "lightblue", "white", "red", "red4"))(length(breaks))
+col <- colorRampPalette(c("navy","white","firebrick3"))(length(breaks))
+df_mean_zscore[df_mean_zscore < -2] <- -2
+df_mean_zscore[df_mean_zscore>2] <- 2
+
+Figure_2C <- 
+  pheatmap::pheatmap(t(df_mean_zscore),
+         cluster_rows = F, cluster_cols = F,
+         breaks = breaks,
+         color = col,
+         #annotation_col = annotation_col,
+         #annotation_colors = ann_colors,
+         fontsize_col = 10,
+         annotation_names_row=F, annotation_names_col=F,
+         show_colnames = T, show_rownames = T, angle_col=90,
+         border_color="black"
+         )
+```
+
+
+```{r}
+library(enrichR)
+library(GeneOverlap)
+# enrichr databases to test
+dbs <- c('GO_Biological_Process_2021','GO_Cellular_Component_2021','GO_Molecular_Function_2021')
+
+# perform enrichment tests
+seurat_obj <- RunEnrichr(
+  seurat_obj,
+  dbs=dbs, # character vector of enrichr databases to test
+  max_genes = 100 # number of genes per module to test. use max_genes = Inf to choose all genes!
+)
+
+# retrieve the output table
+enrich_df <- GetEnrichrTable(seurat_obj)
+
+# make GO term plots:
+EnrichrBarPlot(
+  seurat_obj,
+  outdir = "../../Figure/Figure2/enrichr_plots", # name of output directory
+  n_terms = 10, # number of enriched terms to show (sometimes more show if there are ties!!!)
+  plot_size = c(5,7), # width, height of the output .pdfs
+  logscale=TRUE # do you want to show the enrichment as a log scale?
+)
+```
+
+
+
+
+## other
+
+```{r fig.width=8, fig.height=6}
+seu <- seu.harmony
+seu$SubType <- factor(seu$SubType, levels = names(col_MainType))
+DimPlot(seu,
+        reduction = 'umap', group.by = "MainType", label = T, 
+        cols = col_MainType) +
+  theme(axis.line = element_blank(), axis.ticks = element_blank(), 
+        axis.text = element_blank(), plot.title = element_text(size = 30)) +
+  labs(x='', y='', title = "") +
+  coord_fixed()
+```
+
+
+
+```{r}
+seu <- seu.harmony
+seu$Time <- seu$orig.ident
+seu$Time[which(seu$Time %in% c("Adult1","Adult2","Adult3"))] <- "Adult"
+
+MainType <- names(col_MainType)
+Time <- c("P0","P4","P10","Adult")
+devDEGs <- data.frame()
+for (i in 1:3){
+  for (j in 1:length(MainType)){
+    ident.1 <- colnames(seu)[seu$Time==Time[i+1] & seu$MainType==MainType[j]]
+    ident.2 <- colnames(seu)[seu$Time==Time[i] & seu$MainType==MainType[j]]
+    if (length(ident.1)>0 & length(ident.2)>0){
+      DEGs <- FindMarkers(seu, ident.1 = ident.1, ident.2 = ident.2,
+                        logfc.threshold = 1)
+      DEGs$Time1 <- Time[i]
+      DEGs$Time2 <- Time[i+1]
+      DEGs$MainType <- MainType[j]
+      DEGs$Gene <- rownames(DEGs)
+      devDEGs <- rbind(devDEGs, DEGs)
+    }
+  }
+}
+```
+
+
+```{r}
+devDEGs$Time <- paste(devDEGs$Time1, "_to_", devDEGs$Time2, sep = "")
+df <- table(devDEGs$Time, devDEGs$MainType)
+```
+
+
+

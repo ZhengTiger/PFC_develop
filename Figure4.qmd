@@ -1,0 +1,306 @@
+---
+author: "Hu Zheng"
+date: "2024-12-01"
+date-format: YYYY-MM-DD
+---
+
+# Figure4
+
+```{r}
+#| warning: false
+#| message: false
+
+library(Seurat)
+library(hdWGCNA)
+library(patchwork)
+library(ggplot2)
+library(ggalt)
+library(cowplot)
+library(tidyverse)
+library(monocle3)
+library(xgboost)
+library(scCustomize)
+library(ggpointdensity)
+library("Nebulosa")
+source('bin/Palettes.R')
+```
+
+
+```{r}
+seu.harmony <- readRDS('../../data/rds/seu.harmony.rds')
+seu.harmony.metadata <- readRDS('../../data/rds/seu.harmony.metadata.rds')
+seu.harmony@meta.data <- seu.harmony.metadata
+```
+
+```{r}
+seu.In <- subset(seu.harmony, cells=colnames(seu.harmony)[which(
+  seu.harmony$SubType %in% c("Lamp5", "Pvalb", "Sst", "Vip")
+)])
+```
+
+
+
+
+## Figure_4A
+
+```{r fig.width=10, fig.height=8}
+seu <- seu.In
+seu$Time <- seu$orig.ident
+seu$Time[which(seu$Time %in% c("Adult1", "Adult2", "Adult3"))] <- "Adult"
+seu$Time <- factor(seu$Time, levels = c("P0","P4","P10","Adult"))
+seu$SubType <- factor(seu$SubType, levels = names(col_SubType))
+DimPlot(seu,
+        reduction = 'umap', group.by = "SubType", label = F, split.by = "Time",
+        cols = col_SubType, ncol = 2) +
+  theme(axis.line = element_blank(), axis.ticks = element_blank(), 
+        axis.text = element_blank(), plot.title = element_text(size = 30)) +
+  labs(x='', y='', title = "") +
+  coord_fixed()
+```
+
+
+
+
+
+## Figure_4B
+
+```{r}
+# 去掉<100cell 的 cluster
+seu.P0 <- subset(seu.In, cells=colnames(seu.In)[which(
+  seu.In$orig.ident == "P0"
+)])
+seu.P4 <- subset(seu.In, cells=colnames(seu.In)[which(
+  seu.In$orig.ident == "P4"
+)])
+seu.P10 <- subset(seu.In, cells=colnames(seu.In)[which(
+  seu.In$orig.ident == "P10"
+)])
+seu.Adult <- subset(seu.In, cells=colnames(seu.In)[which(
+  seu.In$orig.ident %in% c("Adult1", "Adult2", "Adult3")
+)])
+```
+
+```{r}
+SubType <- c("Lamp5" = 0,"Pvalb"=1,"Sst"=2,"Vip"=3)
+HVGs <- FindVariableFeatures(seu.In, selection.method = "vst", nfeatures = 2000)
+HVGs <- VariableFeatures(seu.In)
+
+DMatrix_P0 <- xgb.DMatrix(
+  data = t(seu.P0@assays$RNA@data[HVGs,]),
+  label = as.numeric(match(seu.P0$SubType, names(SubType)) - 1))
+DMatrix_P4 <- xgb.DMatrix(
+  data = t(seu.P4@assays$RNA@data[HVGs,]),
+  label = as.numeric(match(seu.P4$SubType, names(SubType)) - 1))
+DMatrix_P10 <- xgb.DMatrix(
+  data = t(seu.P10@assays$RNA@data[HVGs,]),
+  label = as.numeric(match(seu.P10$SubType, names(SubType)) - 1))
+DMatrix_Adult <- xgb.DMatrix(
+  data = t(seu.Adult@assays$RNA@data[HVGs,]),
+  label = as.numeric(match(seu.Adult$SubType, names(SubType)) - 1))
+
+# P0 → P4
+cv <- xgb.cv(data = DMatrix_P0, nrounds = 1000, nfold = 5, max_depth = 5, eta = 0.5,
+             early_stopping_rounds = 5, objective = "multi:softmax", 
+             num_class=9, verbose = F)
+model_xgb <- xgboost(data=DMatrix_P0, max_depth=5, eta=0.5, nthread = 5,
+                     nround = cv$best_iteration, objective = "multi:softmax",
+                     num_class=9, verbose = F)
+pre_P0_P4 <- predict(model_xgb, newdata = DMatrix_P4)
+df_P0_P4 <- as.data.frame.array(table(names(SubType[pre_P0_P4+1]), seu.P4$SubType))
+
+# P4 → P10
+cv <- xgb.cv(data = DMatrix_P4, nrounds = 1000, nfold = 5, max_depth = 5, eta = 0.5,
+             early_stopping_rounds = 5, objective = "multi:softmax", 
+             num_class=9, verbose = F)
+model_xgb <- xgboost(data=DMatrix_P4, max_depth=5, eta=0.5, nthread = 5,
+                     nround = cv$best_iteration, objective = "multi:softmax",
+                     num_class=9, verbose = F)
+pre_P4_P10 <- predict(model_xgb, newdata = DMatrix_P10)
+df_P4_P10 <- as.data.frame.array(table(names(SubType[pre_P4_P10+1]), seu.P10$SubType))
+
+# P10 → Adult
+cv <- xgb.cv(data = DMatrix_P10, nrounds = 1000, nfold = 5, max_depth = 5, 
+             eta = 0.5, early_stopping_rounds = 5, objective = "multi:softmax", 
+             num_class=9, verbose = F)
+model_xgb <- xgboost(data=DMatrix_P10, max_depth=5, eta=0.5, nthread = 5,
+                     nround = cv$best_iteration, objective = "multi:softmax",
+                     num_class=9, verbose = F)
+pre_P10_Adult <- predict(model_xgb, newdata = DMatrix_Adult)
+df_P10_Adult <- as.data.frame.array(table(names(SubType[pre_P10_Adult+1]),
+                                          seu.Adult$SubType))
+```
+
+
+```{r}
+df1 <- df_P0_P4
+#df1 <- df1[rowSums(df1)>=50, colSums(df1)>=50]
+df2 <- df_P4_P10
+#df2 <- df2[rowSums(df2)>=50, colSums(df2)>=50]
+df3 <- df_P10_Adult
+#df3 <- df3[rowSums(df3)>=50, colSums(df3)>=50]
+
+df1_mean <- df1/rowSums(df1)
+df1_mean$P0 <- rownames(df1)
+df1_mean_long <- pivot_longer(df1_mean, !P0, names_to = "P4", values_to = "Value")
+df1$P0 <- rownames(df1)
+df1_long <- pivot_longer(df1, !P0, names_to = "P4", values_to = "Value")
+df1_long$P0 <- paste("P0", df1_long$P0)
+df1_long$P4 <- paste("P4", df1_long$P4)
+colnames(df1_long) <- c('source', 'target', 'value')
+df1_long$Prob <- df1_mean_long$Value
+
+df2_mean <- df2/rowSums(df2)
+df2_mean$P4 <- rownames(df2)
+df2_mean_long <- pivot_longer(df2_mean, !P4, names_to = "P10", values_to = "Value")
+df2$P4 <- rownames(df2)
+df2_long <- pivot_longer(df2, !P4, names_to = "P10", values_to = "Value")
+df2_long$P4 <- paste("P4", df2_long$P4)
+df2_long$P10 <- paste("P10", df2_long$P10)
+colnames(df2_long) <- c('source', 'target', 'value')
+df2_long$Prob <- df2_mean_long$Value
+
+df3_mean <- df3/rowSums(df3)
+df3_mean$P10 <- rownames(df3)
+df3_mean_long <- pivot_longer(df3_mean, !P10, names_to = "Adult", 
+                              values_to = "Value")
+df3$P10 <- rownames(df3)
+df3_long <- pivot_longer(df3, !P10, names_to = "Adult", values_to = "Value")
+df3_long$P10 <- paste("P10", df3_long$P10)
+df3_long$Adult <- paste("Adult", df3_long$Adult)
+colnames(df3_long) <- c('source', 'target', 'value')
+df3_long$Prob <- df3_mean_long$Value
+
+col <- c("Vip"="#f8a635", "Lamp5"="#0e0786", "Pvalb"="#6902a4", "Sst"="#df6361")
+
+links <- rbind(df1_long, df2_long, df3_long)
+#links <- df3_long
+links$value <- links$Prob
+links$source <- gsub(" ","_",links$source)
+links$target <- gsub(" ","_",links$target)
+links <- links[which(links$value != 0),]
+nodes <- paste(rep(c("P0","P4","P10","Adult"), each=length(col)),
+               rep(names(col), 4), sep="_")
+nodes <- nodes[which(nodes %in% unique(c(links$source, links$target)))]
+nodes <- data.frame(name=nodes)
+nodes$index <- 0:(nrow(nodes) - 1)
+links <- merge(links, nodes, by.x="source", by.y="name")
+links <- merge(links, nodes, by.x="target", by.y="name")
+names(links) <- c("target","source","Value","Prob","IDsource","IDtarget")
+links$group <- "links_a"
+links$group[which(links$Prob>0.1 & links$Prob<0.8)] <- "links_b"
+links$group[which(links$Prob >= 0.8)] <- "links_c"
+nodes$group <- nodes$name
+
+
+domain <- c("links_a", "links_b", "links_c", nodes$name)
+range <- c("#ebfafa", "#e489dc", "#6860ff", 
+           as.character(c(col, col, col, col)))
+colourScale <- paste('d3.scaleOrdinal() .domain(["', domain[1], sep = '')
+for (i in 2:length(domain)){
+  colourScale <- paste(colourScale, '", "', domain[i], sep = '')
+}
+colourScale <- paste(colourScale, '"]) .range(["', sep = '')
+colourScale <- paste(colourScale, range[1], sep = '')
+for (i in 2:length(range)){
+  colourScale <- paste(colourScale,'", "', range[i], sep = '')
+}
+colourScale <- paste(colourScale,'"])', sep = '')
+```
+
+
+```{r}
+p <- sankeyNetwork(
+  Links = links, Nodes = nodes, Source = "IDsource", Target = "IDtarget", 
+  Value = "Value", NodeID = "name", colourScale = colourScale, LinkGroup="group",
+  NodeGroup="group", iterations= 0, width = 400, height = 400)
+p
+```
+
+
+```{r}
+saveNetwork(p,"../../Figure/Figure4/Figure_4B/Figure_4B.html")
+```
+
+
+
+
+
+## Figure_4C
+
+```{r fig.width=6, fig.height=4.5}
+col <- c("Vip"="#f8a635", "Lamp5"="#0e0786", "Pvalb"="#6902a4", "Sst"="#df6361")
+df <- table(seu$Time,seu$SubType)
+df <- df[,names(col)]
+df <- as.data.frame.array(df/rowSums(df))
+df$Time <- rownames(df)
+df_long <- pivot_longer(df, !Time, names_to = "SubType", values_to = "Value")
+df_long$Time <- factor(df_long$Time, levels = c("P0","P4","P10","Adult"))
+
+ggplot(df_long, aes(x=Time, y=Value, color=SubType, group=SubType)) +
+  geom_line(linewidth=1.5) +
+  geom_point(aes(fill=SubType), shape=21, color="black" , size=5) +
+  scale_color_manual(values = col) +
+  scale_fill_manual(values = col) +
+  labs(x="", y="Cell proportion", title="") +
+  theme_classic(base_size = 14)
+```
+
+
+
+
+
+## Figure_4D
+
+```{r fig.width=6, fig.height=3}
+col <- c("Vip"="#f8a635", "Lamp5"="#0e0786", "Pvalb"="#6902a4", "Sst"="#df6361")
+Time_SubType_order <- paste(
+  rep(c("P0","P4","P10","Adult"), length(col)),
+  rep(names(col), each=4)
+  )
+seu$Time_SubType <- paste(seu$Time, seu$SubType)
+seu$Time_SubType <- factor(
+  seu$Time_SubType,
+  levels = Time_SubType_order)
+
+DotPlot(
+  seu,
+  features = c('Vip','Lamp5','Pvalb','Sst'),
+  group.by = 'Time_SubType',
+  col.min=0, col.max=2, dot.scale = 6) +
+  coord_flip() +
+  scale_x_discrete(limits=rev) +
+  scale_color_gradientn(colours = c("lightblue3", "lightblue", "white", "red", "red4")) +
+  theme_bw() +
+  theme(axis.title.x = element_blank(), axis.title.y = element_blank(),
+        axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
+  geom_hline(yintercept = c(4.5,8.5,12.5))
+```
+
+
+
+
+## Figure_4E
+
+```{r fig.width=5, fig.height=10}
+gene_list <- c('Vip','Lamp5','Pvalb','Sst')
+plist <- list()
+for (i in 1:length(gene_list)){
+  plist[[i]] <- 
+    FeaturePlot_scCustom(
+      seurat_object = seu, features = c(gene_list[i]), order = T,
+      colors_use = c("lightblue3", "lightblue", "white", "red", "red4"),
+      split.by = "Time", num_columns = 1) +
+      coord_fixed() & theme_void()
+}
+
+plist[[1]]
+```
+
+
+
+
+
+
+
+
+

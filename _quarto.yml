@@ -1,0 +1,26 @@
+project:
+  type: book
+  output-dir: docs
+
+book:
+  title: "PFC_develop"
+  author: "Hu Zheng"
+  date: "2024/9/23"
+  date-format: YYYY-MM-DD
+  chapters:
+    - index.qmd
+    
+    - part: "Analysis"
+      chapters:
+        - clusting.qmd
+
+bibliography: references.bib
+
+format:
+  html:
+    theme: cosmo
+    code-fold: true
+    code-tools: true
+
+
+

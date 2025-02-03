@@ -1,0 +1,178 @@
+---
+author: "Hu Zheng"
+date: "2024-12-01"
+date-format: YYYY-MM-DD
+---
+
+# monocle3 拟时序分析
+
+```{r}
+library(Seurat)
+library(monocle3)
+library(ggplot2)
+```
+
+```{r}
+seu.harmony <- readRDS('../../data/rds/seu.harmony.rds')
+seu.harmony.metadata <- readRDS('../../data/rds/seu.harmony.metadata.rds')
+seu.harmony@meta.data <- seu.harmony.metadata
+```
+
+```{r}
+set.seed(12345)
+seurat_obj <- readRDS('../result/all.IT.rds')
+DefaultAssay(seurat_obj) <- 'RNA'
+Idents(seurat_obj) <- 'IT_Cluster'
+```
+
+提取 seurat 中的数据，构建 cds 对象：
+
+```{r}
+data <- GetAssayData(seu.harmony, assay = 'RNA', slot = 'counts')
+cell_metadata <- seu.harmony@meta.data
+gene_annotation <- data.frame(gene_short_name = rownames(data))
+rownames(gene_annotation) <- rownames(data)
+
+cds <- new_cell_data_set(data,
+                         cell_metadata = cell_metadata,
+                         gene_metadata = gene_annotation)
+```
+
+
+运行一遍 monocle 的聚类流程
+
+```{r}
+cds <- preprocess_cds(cds, num_dim = 50)
+cds <- align_cds(cds, alignment_group = "orig.ident",
+                 residual_model_formula_str = '~Size_Factor')
+```
+
+
+```{r}
+cds <- reduce_dimension(cds)
+cds <- cluster_cells(cds)
+```
+
+
+```{r}
+plot_cells(cds, label_groups_by_cluster=FALSE,  color_cells_by = "SubType")
+```
+
+```{r}
+plot_cells(cds, color_cells_by = "partition")
+```
+
+
+将 seurat umap 覆盖掉 monocle
+
+```{r}
+cds.embed <- cds@int_colData$reducedDims$UMAP
+int.embed <- Embeddings(seu.harmony, reduction = "umap")
+int.embed <- int.embed[rownames(cds.embed),]
+cds@int_colData$reducedDims$UMAP <- int.embed
+```
+
+```{r}
+plot_cells(cds, label_groups_by_cluster=FALSE,  color_cells_by = "SubType")
+```
+
+```{r}
+plot_cells(cds, label_groups_by_cluster=FALSE, label_leaves=FALSE,
+           label_branch_points=FALSE, color_cells_by = "partition")
+```
+
+
+将自定义 partition 覆盖掉 monocle 的 partition
+
+```{r}
+partition <- seu.harmony$SubType
+partition[which(partition %in% c("Neuroblast","Immature IT","L6 IT","L5 IT","L4/5 IT","L2/3 IT"))] <- 1
+partition[which(partition %in% c("L5 PT"))] <- 2
+partition[which(partition %in% c("L5 NP"))] <- 3
+partition[which(partition %in% c("L6 CT"))] <- 4
+partition[which(partition %in% c("Sst","Pvalb","Lamp5","Vip"))] <- 5
+partition[which(partition %in% c("NPC","OPC","Astro"))] <- 6
+partition[which(partition %in% c("Oligo"))] <- 7
+partition[which(partition %in% c("VLMC","Endo"))] <- 8
+partition[which(partition %in% c("Microglia"))] <- 9
+partition <- factor(partition)
+```
+
+```{r}
+cds@clusters$UMAP$partitions <- partition
+```
+
+```{r}
+plot_cells(cds, label_groups_by_cluster=FALSE, label_leaves=FALSE,
+           label_branch_points=FALSE, color_cells_by = "partition")
+```
+
+
+拟时序分析
+
+```{r}
+cds <- learn_graph(cds)
+```
+
+```{r}
+plot_cells(cds,
+           color_cells_by = "SubType",
+           label_groups_by_cluster=FALSE,
+           label_leaves=FALSE,
+           label_branch_points=TRUE,
+           group_label_size=4,
+           cell_size=1.5)
+```
+
+
+```{r}
+cds <- order_cells(cds)
+```
+
+```{r}
+plot_cells(cds,
+           color_cells_by = "pseudotime",
+           label_cell_groups=FALSE,
+           label_leaves=FALSE,
+           label_branch_points=FALSE,
+           graph_label_size=1.5)
+```
+
+
+
+
+
+
+```{r}
+get_earliest_principal_node <- function(cds, Cluster_col="", Cluster_name=""){
+  cell_ids <- which(colData(cds)[, Cluster_col] == Cluster_name)
+  
+  closest_vertex <- cds@principal_graph_aux[["UMAP"]]$pr_graph_cell_proj_closest_vertex
+  closest_vertex <- as.matrix(closest_vertex[colnames(cds), ])
+  root_pr_nodes <- igraph::V(principal_graph(cds)[["UMAP"]])$name[as.numeric(names(which.max(table(closest_vertex[cell_ids,]))))]
+  root_pr_nodes
+}
+
+cds <- order_cells(cds,root_pr_nodes=get_earliest_principal_node(cds,Cluster_col="orig.ident",Cluster_name="P0"))
+```
+
+```{r}
+plot_cells(cds,
+           color_cells_by = "pseudotime",
+           label_cell_groups=FALSE,
+           label_leaves=TRUE,
+           label_branch_points=TRUE,
+           group_label_size=4,cell_size=1)
+
+```
+
+
+
+
+
+
+
+
+
+
+
