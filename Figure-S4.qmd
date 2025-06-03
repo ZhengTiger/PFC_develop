@@ -1,0 +1,133 @@
+---
+author: "Hu Zheng"
+date: "2024-12-01"
+date-format: YYYY-MM-DD
+---
+
+# FigureS4
+
+```{r}
+#| warning: false
+#| message: false
+
+library(Seurat)
+library(tidyverse)
+library(hdWGCNA)
+source('bin/Palettes.R')
+```
+
+```{r}
+seu.harmony <- readRDS('../data/seu.harmony.rds')
+seu.harmony.metadata <- readRDS('../data/seu.harmony.metadata.rds')
+seu.harmony@meta.data <- seu.harmony.metadata
+seu.IT <- subset(seu.harmony, cells=colnames(seu.harmony)[which(
+  seu.harmony$SubType %in% names(col_SubType)[1:8]
+)])
+seu.Ex <- seu.harmony[,seu.harmony$SubType %in% names(col_SubType)[1:11]]
+```
+
+```{r}
+seurat_obj <- readRDS("../data/Figure4/seu.Ex.hdwgcna.rds")
+```
+
+
+
+
+
+## Figure_S4A
+
+```{r fig.width=8, fig.height=4}
+#| message: false
+#| warning: false
+
+Figure_S4A <- PlotDendrogram(seurat_obj, main='hdWGCNA Dendrogram')
+Figure_S4A
+```
+
+```{r}
+#| eval: false
+
+ggsave("../../Figure/FigureS4/Figure_S4A.pdf", plot = Figure_S4A,
+       height = 4, width = 8, units = "in")
+```
+
+
+
+
+
+## Figure_S4B
+
+```{r}
+#| eval: false
+
+ModuleNetworkPlot(
+  seurat_obj,
+  outdir = '../../Figure/Figure4/ModuleNetwork'
+)
+```
+
+```{r}
+knitr::include_graphics("./images/Figure_S4B.png", dpi = 300)
+```
+
+
+
+
+
+## Figure_S4C
+
+```{r fig.width=6, fig.height=6}
+#| message: false
+
+seu <- seu.IT
+seu$orig.ident <- factor(seu$orig.ident, levels = c("P1","P4","P10","Adult"))
+gene_list <- c("Cdh2","Ncam1","Sema4g","Igsf3","Lrp8")
+
+Figure_S4C <- 
+  VlnPlot(seu, features = rev(gene_list), group.by = "orig.ident", cols=col_Time,
+        split.by = "orig.ident",
+        stack = TRUE, flip = TRUE) +
+  theme(legend.position = "none", axis.text.x = element_text(angle = 0, hjust = 0.5)) +
+  labs(x="")
+Figure_S4C
+```
+
+```{r}
+#| eval: false
+
+ggsave("../../Figure/FigureS4/Figure_S4C.pdf", plot = Figure_S4C,
+       height = 6, width = 10, units = "in")
+```
+
+
+
+
+
+## Figure_S4D
+
+```{r fig.width=6, fig.height=6}
+#| message: false
+
+seu <- seu.IT
+seu$orig.ident <- factor(seu$orig.ident, levels = c("P1","P4","P10","Adult"))
+gene_list <- c("Efnb3","Cdh13","Sdc3","Cd200","L1cam")
+
+Figure_S4D <- 
+  VlnPlot(seu, features = gene_list, group.by = "orig.ident", cols=col_Time,
+        split.by = "orig.ident",
+        stack = TRUE, flip = TRUE) +
+  theme(legend.position = "none", axis.text.x = element_text(angle = 0, hjust = 0.5)) +
+  labs(x="")
+Figure_S4D
+```
+
+```{r}
+#| eval: false
+
+ggsave("../../Figure/FigureS4/Figure_S4D.pdf", plot = Figure_S4D,
+       height = 6, width = 10, units = "in")
+```
+
+
+
+

@@ -1,23 +1,156 @@
 [
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "PFC_develop",
+    "objectID": "Figure5.html",
+    "href": "Figure5.html",
+    "title": "5  Figure5",
     "section": "",
-    "text": "Preface\nThis is a Quarto book.\nTo learn more about Quarto books visit https://quarto.org/docs/books.\n\n\nCode\n1 + 1\n\n\n[1] 2",
+    "text": "5.1 Figure_5A\nCode\nseu &lt;- seu.NOneuron\nseu$Pseudotime &lt;- cds$Pseudotime\nseu$SubType &lt;- factor(seu$SubType, levels = names(col_SubType))\nseu$orig.ident &lt;- factor(seu$orig.ident, levels = c(\"P1\",\"P4\",\"P10\",\"Adult\"))\nFigure_5A &lt;- \n  FeaturePlot(seu, features = \"Pseudotime\", split.by = 'orig.ident', ncol = 4) &\n  scale_color_gradientn(colours = sciRcolor::pal_scircolor(96)) &\n  theme(axis.line = element_blank(), axis.ticks = element_blank(), \n        axis.text = element_blank(), plot.title = element_text(size = 30)) &\n  labs(x='', y='', title = \"\") &\n  coord_fixed()\nFigure_5A\nCode\nggsave(\"../../Figure/Figure5/Figure_5A.pdf\", plot = Figure_5A,\n       height = 6, width = 18, units = \"in\")",
     "crumbs": [
-      "Preface"
+      "Main Figure",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Figure5</span>"
     ]
   },
   {
-    "objectID": "clusting.html",
-    "href": "clusting.html",
-    "title": "1  Introduction",
-    "section": "",
-    "text": "This is a book created from markdown and executable code.\nSee Knuth (1984) for additional discussion of literate programming.\n\n\nCode\n1 + 1\n\n\n[1] 2\n\n\n\n\n\n\n\n\nKnuth, Donald E. 1984. “Literate Programming.” Comput. J. 27 (2): 97–111. https://doi.org/10.1093/comjnl/27.2.97.",
+    "objectID": "Figure5.html#figure_5b",
+    "href": "Figure5.html#figure_5b",
+    "title": "5  Figure5",
+    "section": "5.2 Figure_5B",
+    "text": "5.2 Figure_5B\n\n\nCode\nFigure_5B &lt;- \n  plot_cell_trajectory(cds, color_by = \"Pseudotime\") +\n  scale_color_gradientn(colours = sciRcolor::pal_scircolor(96))\nFigure_5B\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave(\"../../Figure/Figure5/Figure_5B.pdf\", plot = Figure_5B,\n       height = 4, width = 5, units = \"in\")",
     "crumbs": [
-      "Analysis",
-      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduction</span>"
+      "Main Figure",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Figure5</span>"
+    ]
+  },
+  {
+    "objectID": "Figure5.html#figure_5c",
+    "href": "Figure5.html#figure_5c",
+    "title": "5  Figure5",
+    "section": "5.3 Figure_5C",
+    "text": "5.3 Figure_5C\n\n\nCode\ncds$SubType &lt;- seu.NOneuron$SubType\ncds$SubType &lt;- factor(\n  cds$SubType, \n  levels = c(\"NPC\", \"OPC\", \"Oligo\", \"Astro\"))\nFigure_5C &lt;- \n  plot_cell_trajectory(cds, color_by = \"SubType\") +\n  scale_color_manual(values = col_SubType) +\n  facet_wrap(~SubType, nrow=2) +\n  theme_void()\nFigure_5C\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave(\"../../Figure/Figure5/Figure_5C.pdf\", plot = Figure_5C,\n       height = 5, width = 10, units = \"in\")",
+    "crumbs": [
+      "Main Figure",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Figure5</span>"
+    ]
+  },
+  {
+    "objectID": "Figure5.html#figure_5d",
+    "href": "Figure5.html#figure_5d",
+    "title": "5  Figure5",
+    "section": "5.4 Figure_5D",
+    "text": "5.4 Figure_5D\n\n\nCode\nordergene &lt;- cds@featureData@data$gene_short_name[cds@featureData@data$use_for_ordering==TRUE]\nTime_diff &lt;- differentialGeneTest(cds[ordergene,], cores = 5,\n                                  fullModelFormulaStr = \"~sm.ns(Pseudotime)\")\nTime_diff &lt;- Time_diff[order(Time_diff$qval),]\nsig_gene_names &lt;- row.names(subset(Time_diff, qval &lt; 1e-10))\nTime_diff &lt;- Time_diff[sig_gene_names,]\n#write.csv(Time_diff,\"../../data/supplemental_table/table6_Noneuron_pseudotime_gene.csv\")\n\nFigure_5D &lt;- plot_pseudotime_heatmap(\n  cds[sig_gene_names[1:1000],],\n  num_clusters = 6,\n  cores = 4,\n  show_rownames = F,\n  hmcols = colorRampPalette(rev(sciRcolor::pal_scircolor(85)))(100),\n  return_heatmap = T)\n\nclusters &lt;- data.frame(cutree(Figure_4F$tree_row, k=6))\nclusters[,1] &lt;- as.character(clusters[,1])\ncolnames(clusters) &lt;- \"Gene_clusters\"\n#write.csv(clusters, \"../../data/rds/Figure5/Time_cluster_all.csv\")\n\n\n\n\nCode\nknitr::include_graphics(\"./images/Figure_5D.png\", dpi = 300)",
+    "crumbs": [
+      "Main Figure",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Figure5</span>"
+    ]
+  },
+  {
+    "objectID": "Figure5.html#figure_5e",
+    "href": "Figure5.html#figure_5e",
+    "title": "5  Figure5",
+    "section": "5.5 Figure_5E",
+    "text": "5.5 Figure_5E\n\n\nCode\ngroup &lt;- c(rep(\"IT\",8), rep(\"Non-Neuronal\",4))\nnames(group) &lt;- names(col_SubType)[c(1:8,17,19:21)]\nNeuron &lt;- names(group)[c(1:8)]\nNon_neuron &lt;- names(group)[c(9:12)]\ncolor.use &lt;- c(\n  \"#062e60\",\"#4393c3\",\"#a6cee3\",\"#66bd63\",\n  \"#342a85\",\"#0a6ddd\",\"#009acd\",\"#31b69e\",\n  \"#a90dfd\",\"#f89279\",\"#614e96\",\"#ed30a6\")\n\nP1_net &lt;- as.data.frame(P1.CellChat@net$count)\nP4_net &lt;- as.data.frame(P4.CellChat@net$count)\nP10_net &lt;- as.data.frame(P10.CellChat@net$count)\nAdult_net &lt;- as.data.frame(Adult.CellChat@net$count)\nedge.weight.max &lt;- max(max(P1_net),max(P4_net),max(P10_net),max(Adult_net))\n\n#pdf(\"../../Figure/Figure5/Figure_5D_P0.pdf\", width = 6, height = 6)\n#par(mfrow=c(1,1))\n\n# P1\nP1_net[,\"L2/3 IT\"] &lt;- 0\nP1_net[,\"L4/5 IT\"] &lt;- 0\nP1_net[,\"L5 IT\"] &lt;- 0\nP1_net[,\"Oligo\"] &lt;- 0\nP1_net[\"Oligo\",] &lt;- 0\nnetVisual_circle_neuron(\n  as.matrix(P1_net[Non_neuron,Neuron]), \n  color.use = color.use,\n  group=group[c(Neuron, Non_neuron)],\n  weight.scale = T, \n  edge.weight.max = 20,\n  vertex.label.cex = 2,\n  arrow.size = 1,\n  title.name = \"P1\")\n\n#dev.off()\n\n\n# P4\nP4_net[,\"L2/3 IT\"] &lt;- 0\nP4_net[,\"L4/5 IT\"] &lt;- 0\nnetVisual_circle_neuron(\n  as.matrix(P4_net[Non_neuron,Neuron]),\n  color.use = color.use,\n  group=group[c(Neuron, Non_neuron)], \n  weight.scale = T, \n  edge.weight.max = 20,\n  vertex.label.cex = 2,\n  arrow.size = 1,\n  title.name = \"P4\")\n\n# P10\nnetVisual_circle_neuron(\n  as.matrix(P10_net[Non_neuron,Neuron]),\n  color.use = color.use,\n  group=group[c(Neuron, Non_neuron)], \n  weight.scale = T, \n  edge.weight.max = 20,\n  vertex.label.cex = 2,\n  arrow.size = 1,\n  title.name = \"P10\")\n\n# Adult\nAdult_net[,\"Im L2/3 IT\"] &lt;- 0\nAdult_net[,\"Im L4/5 IT\"] &lt;- 0\nAdult_net[,\"Im L5 IT\"] &lt;- 0\nAdult_net[,\"Im L6 IT\"] &lt;- 0\nAdult_net[,\"NPC\"] &lt;- 0\nAdult_net[\"NPC\",] &lt;- 0\nnetVisual_circle_neuron(\n  as.matrix(Adult_net[Non_neuron,Neuron]),\n  color.use = color.use,\n  group=group[c(Neuron, Non_neuron)], \n  weight.scale = T, \n  edge.weight.max = 20,\n  vertex.label.cex = 2,\n  arrow.size = 1,\n  title.name = \"Adult\")\n\n\n\n\nCode\nknitr::include_graphics(\"./images/Figure_5E.png\", dpi = 300)",
+    "crumbs": [
+      "Main Figure",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Figure5</span>"
+    ]
+  },
+  {
+    "objectID": "Figure5.html#figure_5f",
+    "href": "Figure5.html#figure_5f",
+    "title": "5  Figure5",
+    "section": "5.6 Figure_5F",
+    "text": "5.6 Figure_5F\n\n\nCode\ngroup &lt;- c(rep(\"IT\",8), rep(\"Non-Neuronal\",4))\nnames(group) &lt;- names(col_SubType)[c(1:8,17,19:21)]\nNeuron &lt;- names(group)[c(1:8)]\nNon_neuron &lt;- names(group)[c(9:12)]\n#P1\ndf.P1 &lt;- rankNet(P1.CellChat, slot.name = \"net\", measure = c(\"weight\"),\n                 sources.use = Non_neuron[-3], targets.use = Neuron[-c(5:7)],\n                 mode='single', return.data = T)\ndf.P1 &lt;- df.P1$signaling.contribution\ndf.P1$Time &lt;- \"P1\"\nP1.top10 &lt;- as.character(df.P1$name[df.P1$contribution&gt;0.1])\n#df.P0 &lt;- df.P0[df.P0$contribution &gt; 0.5,]\n\n#P4\ndf.P4 &lt;- rankNet(P4.CellChat, slot.name = \"net\", measure = c(\"weight\"),\n                 sources.use = Non_neuron, targets.use = Neuron[-c(5:6)],\n                 mode='single', return.data = T)\ndf.P4 &lt;- df.P4$signaling.contribution\ndf.P4$Time &lt;- \"P4\"\nP4.top10 &lt;- as.character(df.P4$name[df.P4$contribution&gt;0.1])\n#df.P4 &lt;- df.P4[df.P4$contribution &gt; 0.5,]\n\n#P10\ndf.P10 &lt;- rankNet(P10.CellChat, slot.name = \"net\", measure = c(\"weight\"),\n                  sources.use = Non_neuron, targets.use = Neuron,\n                  mode='single', return.data = T)\ndf.P10 &lt;- df.P10$signaling.contribution\ndf.P10$Time &lt;- \"P10\"\nP10.top10 &lt;- as.character(df.P10$name[df.P10$contribution&gt;0.1])\n#df.P10 &lt;- df.P10[df.P10$contribution &gt; 0.5,]\n\n#Adult\ndf.Adult &lt;- rankNet(Adult.CellChat, slot.name = \"net\", measure = c(\"weight\"),\n                    sources.use = Non_neuron[-1], targets.use = Neuron[-c(1:4)],\n                    mode='single', return.data = T)\ndf.Adult &lt;- df.Adult$signaling.contribution\ndf.Adult$Time &lt;- \"Adult\"\nAdult.top10 &lt;- as.character(df.Adult$name[df.Adult$contribution&gt;0.1])\n#df.Adult &lt;- df.Adult[df.Adult$contribution &gt; 0.5,]\n\n#name &lt;- unique(c(df.P0$name, df.P4$name, df.P10$name, df.Adult$name))\nname &lt;- unique(c(P1.top10, P4.top10, P10.top10, Adult.top10))\nmat &lt;- matrix(nrow = length(name), ncol = 4)\nrownames(mat) &lt;- name\ncolnames(mat) &lt;- c(\"P1\",\"P4\",\"P10\",\"Adult\")\nmat[,\"P1\"] &lt;- df.P1$contribution[match(name, df.P1$name)]\nmat[,\"P4\"] &lt;- df.P4$contribution[match(name, df.P4$name)]\nmat[,\"P10\"] &lt;- df.P10$contribution[match(name, df.P10$name)]\nmat[,\"Adult\"] &lt;- df.Adult$contribution[match(name, df.Adult$name)]\nmat[is.na(mat)] &lt;- 0\nmat &lt;- mat/rowSums(mat)\ndf &lt;- arrange(as.data.frame(mat), desc(P1), desc(P4), desc(P10), desc(Adult))\ndf$name &lt;- rownames(df)\ndf_long &lt;- pivot_longer(df, !name, names_to=\"Time\", values_to=\"Value\")\ndf_long$Time &lt;- factor(df_long$Time, levels = rev(c(\"P1\",\"P4\",\"P10\",\"Adult\")))\ndf_long$name &lt;- factor(df_long$name, levels = rev(df$name))\n\nFigure_5F &lt;- \n  ggplot(df_long, aes(x = name, y = Value, fill = Time)) + \n  geom_bar(stat = \"identity\", width = 0.9) +\n  scale_fill_manual(values = col_Time) +\n  labs(x='', y='', title='') +\n  theme_minimal(base_size = 8) +\n  theme(panel.grid = element_blank(), plot.title = element_text(hjust = 0.5),\n        legend.position = \"none\",\n        legend.title = element_blank()) +\n  coord_flip()\nFigure_5F\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave(\"../../Figure/Figure5/Figure_5F.pdf\", plot = Figure_5F, \n       height = 5.5, width = 3, units = \"in\")",
+    "crumbs": [
+      "Main Figure",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Figure5</span>"
+    ]
+  },
+  {
+    "objectID": "Figure5.html#figure_5g-h",
+    "href": "Figure5.html#figure_5g-h",
+    "title": "5  Figure5",
+    "section": "5.7 Figure_5G-H",
+    "text": "5.7 Figure_5G-H\n\n\nCode\npdf(\"../../Figure/Figure5/Figure_5F/SEMA3D_NRP2_PLXNA3_Adult.pdf\", width = 15, height = 8)\npathways.show &lt;- c('SEMA3')\nLR.show &lt;- c('SEMA3D_NRP2_PLXNA3')\nnetVisual_individual(Adult.CellChat, \n                    color.use = col_SubType[levels(Adult.CellChat@idents)],\n                    signaling = pathways.show,\n                    pairLR.use = LR.show,\n                    #vertex.receiver = c(1,7,8),\n                    #vertex.receiver = c(1,8,9,10),\n                    #vertex.receiver = c(1,10,11,12),\n                    vertex.receiver = c(1,6,7,8),\n                    layout = 'hierarchy')\ndev.off()\n\n\n\n\nCode\nknitr::include_graphics(\"./images/Figure_5GH.png\", dpi = 300)",
+    "crumbs": [
+      "Main Figure",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Figure5</span>"
+    ]
+  },
+  {
+    "objectID": "Figure5.html#figure_5i-j",
+    "href": "Figure5.html#figure_5i-j",
+    "title": "5  Figure5",
+    "section": "5.8 Figure_5I-J",
+    "text": "5.8 Figure_5I-J\n\n\nCode\nseu &lt;- seu.NOneuron[,seu.NOneuron$SubType==\"Astro\"]\nseu$orig.ident &lt;- factor(seu$orig.ident, levels = c(\"P1\",\"P4\",\"P10\",\"Adult\"))\ngene_list &lt;- c(\"Slit2\")\n\nFigure_5I &lt;- \n  VlnPlot_scCustom(seurat_object = seu, features = gene_list, group.by = \"orig.ident\",\n                 pt.size = 0) & NoLegend() &\n  geom_boxplot(width=0.1, outlier.size=0, fill=\"lightgray\") &\n  scale_fill_manual(values = col_Time) &\n  labs(x=\"\")\nFigure_5I\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave(\"../../Figure/Figure5/Figure_5H/Figure_5H_Sema3d.pdf\", plot = Figure_5H, \n       height = 4, width = 4.5, units = \"in\")\n\n\n\n\nCode\nseu &lt;- seu.harmony[,seu.harmony$SubType %in% names(col_SubType)[1:8]]\n\nseu$orig.ident &lt;- factor(seu$orig.ident, levels = c(\"P1\",\"P4\",\"P10\",\"Adult\"))\ngene_list &lt;- c(\"Robo1\")\n\nFigure_5I &lt;- \n  VlnPlot_scCustom(seurat_object = seu, features = gene_list, group.by = \"orig.ident\",\n                 pt.size = 0) & NoLegend() &\n  geom_boxplot(width=0.1, outlier.size=0, fill=\"lightgray\") &\n  scale_fill_manual(values = col_Time) &\n  labs(x=\"\")\nFigure_5I\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave(\"../../Figure/Figure5/Figure_5H/Figure_5J_Robo1.pdf\", plot = Figure_5H, \n       height = 4, width = 6, units = \"in\")",
+    "crumbs": [
+      "Main Figure",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Figure5</span>"
+    ]
+  },
+  {
+    "objectID": "Figure-S5.html",
+    "href": "Figure-S5.html",
+    "title": "10  FigureS5",
+    "section": "",
+    "text": "10.1 Figure_S5A\nCode\nseu &lt;- seu.NOneuron\nseu$SubType &lt;- factor(seu$SubType, levels = names(col_SubType))\nseu$orig.ident &lt;- factor(seu$orig.ident, levels = c(\"P1\",\"P4\",\"P10\",\"Adult\"))\nFigure_S5A &lt;- \n  DimPlot(seu,\n        reduction = 'umap', group.by = \"orig.ident\", label = F,\n        cols = col_Time) +\n  theme(axis.line = element_blank(), axis.ticks = element_blank(), \n        axis.text = element_blank(), plot.title = element_text(size = 30)) +\n  labs(x='', y='', title = \"\") +\n  coord_fixed()\nFigure_S5A\nCode\nggsave(\"../../Figure/FigureS5/Figure_S5A.pdf\", plot = Figure_S5A,\n       height = 5, width = 6, units = \"in\")",
+    "crumbs": [
+      "Supplemental Figure",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>FigureS5</span>"
+    ]
+  },
+  {
+    "objectID": "Figure-S5.html#figure_s5b",
+    "href": "Figure-S5.html#figure_s5b",
+    "title": "10  FigureS5",
+    "section": "10.2 Figure_S5B",
+    "text": "10.2 Figure_S5B\n\n\nCode\ncds$orig.ident &lt;- factor(cds$orig.ident, levels = c(\"P1\",\"P4\",\"P10\",\"Adult\"))\nFigure_S5B &lt;- \n  plot_cell_trajectory(cds, color_by = \"orig.ident\") +\n  scale_color_manual(values = col_Time)\nFigure_S5B\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave(\"../../Figure/FigureS5/Figure_S5B.pdf\", plot = Figure_S5B,\n       height = 4, width = 5, units = \"in\")",
+    "crumbs": [
+      "Supplemental Figure",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>FigureS5</span>"
+    ]
+  },
+  {
+    "objectID": "Figure-S5.html#figure_s5c",
+    "href": "Figure-S5.html#figure_s5c",
+    "title": "10  FigureS5",
+    "section": "10.3 Figure_S5C",
+    "text": "10.3 Figure_S5C\n\n\nCode\ncds$orig.ident &lt;- factor(cds$orig.ident, levels = c(\"P1\",\"P4\",\"P10\",\"Adult\"))\nFigure_S5C &lt;- \n  plot_cell_trajectory(cds, color_by = \"State\")\nFigure_S5C\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave(\"../../Figure/FigureS5/Figure_S5C.pdf\", plot = Figure_S5C,\n       height = 4, width = 5, units = \"in\")",
+    "crumbs": [
+      "Supplemental Figure",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>FigureS5</span>"
+    ]
+  },
+  {
+    "objectID": "Figure-S5.html#figure_s5d",
+    "href": "Figure-S5.html#figure_s5d",
+    "title": "10  FigureS5",
+    "section": "10.4 Figure_S5D",
+    "text": "10.4 Figure_S5D\n\n\nCode\ndata &lt;- data.frame(\n  Pseudotime = cds$Pseudotime,\n  Time = as.character(cds$orig.ident)\n)\n\ndata$Time &lt;- factor(data$Time, levels = c(\"P1\",\"P4\",\"P10\",\"Adult\"))\nFigure_S5D &lt;- \n  ggplot(data, aes(x=Time, y=Pseudotime, fill=Time)) +\n  geom_boxplot() +\n  labs(x=\"Time point\", y=\"Pseudotime\") +\n  scale_y_continuous(breaks=seq(0,45,10), limits = c(0,45),\n                     expand = expansion(mult = c(0, 0.05))) +\n  theme_classic(base_size = 15) +\n  theme(legend.position = \"top\") +\n  scale_fill_manual(values = col_Time)\nFigure_S5D\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave(\"../../Figure/FigureS5/Figure_S5D.pdf\", plot = Figure_S5D,\n       height = 4, width = 5, units = \"in\")",
+    "crumbs": [
+      "Supplemental Figure",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>FigureS5</span>"
+    ]
+  },
+  {
+    "objectID": "Figure-S5.html#figure_s5e-f",
+    "href": "Figure-S5.html#figure_s5e-f",
+    "title": "10  FigureS5",
+    "section": "10.5 Figure_S5E-F",
+    "text": "10.5 Figure_S5E-F\n\n\nCode\ngroup &lt;- c(rep(\"IT\",8), rep(\"Non-Neuronal\",4))\nnames(group) &lt;- names(col_SubType)[c(1:8,17,19:21)]\nNeuron &lt;- names(group)[c(1:8)]\nNon_neuron &lt;- names(group)[c(9:12)]\n#P1\ndf.P1 &lt;- rankNet(P1.CellChat, slot.name = \"net\", measure = c(\"weight\"),\n                 sources.use = Non_neuron[-3], targets.use = Neuron[-c(5:7)],\n                 mode='single', return.data = T)\ndf.P1 &lt;- df.P1$signaling.contribution\ndf.P1$Time &lt;- \"P1\"\nP1.top10 &lt;- as.character(df.P1$name[df.P1$contribution&gt;0.1])\n#df.P0 &lt;- df.P0[df.P0$contribution &gt; 0.5,]\n\n#P4\ndf.P4 &lt;- rankNet(P4.CellChat, slot.name = \"net\", measure = c(\"weight\"),\n                 sources.use = Non_neuron, targets.use = Neuron[-c(5:6)],\n                 mode='single', return.data = T)\ndf.P4 &lt;- df.P4$signaling.contribution\ndf.P4$Time &lt;- \"P4\"\nP4.top10 &lt;- as.character(df.P4$name[df.P4$contribution&gt;0.1])\n#df.P4 &lt;- df.P4[df.P4$contribution &gt; 0.5,]\n\n#P10\ndf.P10 &lt;- rankNet(P10.CellChat, slot.name = \"net\", measure = c(\"weight\"),\n                  sources.use = Non_neuron, targets.use = Neuron,\n                  mode='single', return.data = T)\ndf.P10 &lt;- df.P10$signaling.contribution\ndf.P10$Time &lt;- \"P10\"\nP10.top10 &lt;- as.character(df.P10$name[df.P10$contribution&gt;0.1])\n#df.P10 &lt;- df.P10[df.P10$contribution &gt; 0.5,]\n\n#Adult\ndf.Adult &lt;- rankNet(Adult.CellChat, slot.name = \"net\", measure = c(\"weight\"),\n                    sources.use = Non_neuron, targets.use = Neuron[-c(1:4)],\n                    mode='single', return.data = T)\ndf.Adult &lt;- df.Adult$signaling.contribution\ndf.Adult$Time &lt;- \"Adult\"\nAdult.top10 &lt;- as.character(df.Adult$name[df.Adult$contribution&gt;0.1])\n#df.Adult &lt;- df.Adult[df.Adult$contribution &gt; 0.5,]\n\n\n#name &lt;- unique(c(df.P0$name, df.P4$name, df.P10$name, df.Adult$name))\nname &lt;- unique(c(P1.top10, P4.top10, P10.top10, Adult.top10))\nmat &lt;- matrix(nrow = length(name), ncol = 4)\nrownames(mat) &lt;- name\ncolnames(mat) &lt;- c(\"P1\",\"P4\",\"P10\",\"Adult\")\nmat[,\"P1\"] &lt;- df.P1$contribution[match(name, df.P1$name)]\nmat[,\"P4\"] &lt;- df.P4$contribution[match(name, df.P4$name)]\nmat[,\"P10\"] &lt;- df.P10$contribution[match(name, df.P10$name)]\nmat[,\"Adult\"] &lt;- df.Adult$contribution[match(name, df.Adult$name)]\nmat[is.na(mat)] &lt;- 0\nmat &lt;- mat/rowSums(mat)\ndf &lt;- arrange(as.data.frame(mat), desc(P1), desc(P4), desc(P10), desc(Adult))\ndf$name &lt;- rownames(df)\ndf_long &lt;- pivot_longer(df, !name, names_to=\"Time\", values_to=\"Value\")\ndf_long$Time &lt;- factor(df_long$Time, levels = rev(c(\"P1\",\"P4\",\"P10\",\"Adult\")))\ndf_long$name &lt;- factor(df_long$name, levels = rev(df$name))\n\n\n\n\nCode\nall.name &lt;- levels(df_long$name)\n\n#P1\ndf.P1 &lt;- netVisual_bubble(\n  P1.CellChat, sources.use = Non_neuron, targets.use = Neuron, \n  pairLR.use = data.frame(\"interaction_name\" = all.name), \n  remove.isolate = FALSE, return.data = T)\ndf.P1 &lt;- df.P1$communication\ndf.P1 &lt;- df.P1[!(is.na(df.P1$source)),]\ndf.P1 &lt;- df.P1[!(is.na(df.P1$target)),]\ndf.P1$source.target &lt;- paste(\"P1\", df.P1$source.target)\n\n#P4\ndf.P4 &lt;- netVisual_bubble(\n  P4.CellChat, sources.use = Non_neuron, targets.use = Neuron, \n  pairLR.use = data.frame(\"interaction_name\" = all.name), \n  remove.isolate = FALSE, return.data = T)\ndf.P4 &lt;- df.P4$communication\ndf.P4 &lt;- df.P4[!(is.na(df.P4$source)),]\ndf.P4 &lt;- df.P4[!(is.na(df.P4$target)),]\ndf.P4$source.target &lt;- paste(\"P4\", df.P4$source.target)\n\n#P4\ndf.P10 &lt;- netVisual_bubble(\n  P10.CellChat, sources.use = Non_neuron, targets.use = Neuron, \n  pairLR.use = data.frame(\"interaction_name\" = all.name), \n  remove.isolate = FALSE, return.data = T)\ndf.P10 &lt;- df.P10$communication\ndf.P10 &lt;- df.P10[!(is.na(df.P10$source)),]\ndf.P10 &lt;- df.P10[!(is.na(df.P10$target)),]\ndf.P10$source.target &lt;- paste(\"P10\", df.P10$source.target)\n\n#P4\ndf.Adult &lt;- netVisual_bubble(\n  Adult.CellChat, sources.use = Non_neuron, targets.use = Neuron, \n  pairLR.use = data.frame(\"interaction_name\" = all.name), \n  remove.isolate = FALSE, return.data = T)\ndf.Adult &lt;- df.Adult$communication\ndf.Adult &lt;- df.Adult[!(is.na(df.Adult$source)),]\ndf.Adult &lt;- df.Adult[!(is.na(df.Adult$target)),]\ndf.Adult$source.target &lt;- paste(\"Adult\", df.Adult$source.target)\n\ndf.merge &lt;- as.data.frame(rbind(df.P1, df.P4, df.P10, df.Adult))\n\ndf &lt;- df.merge[df.merge$source==\"OPC\",]\ndf$interaction_name &lt;- factor(df$interaction_name, levels = all.name)\ndf$interaction_name_2 &lt;- factor(\n  df$interaction_name_2, \n  levels = unique(df$interaction_name_2[order(df$interaction_name)]))\ndf$target &lt;- factor(df$target, levels = Neuron)\ndf$source.target &lt;- factor(\n  df$source.target,\n  levels = unique(df$source.target[order(df$target)]))\nvalues &lt;- c(1,2,3); names(values) &lt;- c(\"p &gt; 0.05\", \"0.01 &lt; p &lt; 0.05\",\"p &lt; 0.01\")\ncol &lt;- rev(colorRampPalette(RColorBrewer::brewer.pal(11,\"Spectral\"))(99))\n\nFigure_S5E &lt;- \n  ggplot(df, aes(x = source.target, y = interaction_name_2, color = prob, size = pval)) + \n  geom_point(pch = 16) +\n  geom_vline(xintercept=seq(1.5, length(unique(df$source.target))-0.5, 1),lwd=0.1,colour=\"grey90\") +\n  geom_hline(yintercept=seq(1.5, length(unique(df$interaction_name_2))-0.5, 1),lwd=0.1,colour=\"grey90\") +\n  theme_linedraw() +\n  theme(panel.grid.major = element_blank(),\n        axis.text.x = element_text(angle = 45, hjust= 1),\n        axis.title.x = element_blank(),\n        axis.title.y = element_blank()) +\n  scale_x_discrete(position = \"bottom\") + \n  scale_radius(\n    range = c(min(df$pval), max(df$pval)),\n    breaks = sort(unique(df$pval)),\n    labels = names(values)[values %in% sort(unique(df$pval))], name = \"p-value\") + \n  scale_colour_gradientn(colors = col, na.value = \"white\", \n                         limits=c(quantile(df$prob, 0,na.rm= T), \n                                  quantile(df$prob, 1,na.rm= T)),\n                         breaks = c(quantile(df$prob, 0,na.rm= T), \n                                    quantile(df$prob, 1,na.rm= T)), \n                         labels = c(\"min\",\"max\")) +\n  guides(color = guide_colourbar(barwidth = 0.5, title = \"Commun. Prob.\"))\nFigure_S5E\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave(\"../../Figure/FigureS5/Figure_S5E/Figure_S5E_OPC.pdf\", plot = Figure_S5E,\n       height = 6.0, width = 10, units = \"in\")",
+    "crumbs": [
+      "Supplemental Figure",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>FigureS5</span>"
+    ]
+  },
+  {
+    "objectID": "Figure-S6.html",
+    "href": "Figure-S6.html",
+    "title": "11  FigureS6",
+    "section": "",
+    "text": "Code\nknitr::include_graphics(\"./images/FigureS6.jpg\", dpi = 300)",
+    "crumbs": [
+      "Supplemental Figure",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>FigureS6</span>"
     ]
   }
 ]

@@ -11,108 +11,53 @@ date-format: YYYY-MM-DD
 #| message: false
 
 library(Seurat)
-library(hdWGCNA)
-library(patchwork)
-library(ggplot2)
-library(ggalt)
-library(cowplot)
 library(tidyverse)
-library(monocle3)
-library(xgboost)
-library(scCustomize)
-library(ggpointdensity)
-library("Nebulosa")
+library(monocle)
+library(SCopeLoomR)
+library(ggraph)
+library(SummarizedExperiment)
 source('bin/Palettes.R')
 ```
 
 
 ```{r}
-seu.harmony <- readRDS('../../data/rds/seu.harmony.rds')
-seu.harmony.metadata <- readRDS('../../data/rds/seu.harmony.metadata.rds')
+seu.harmony <- readRDS('../data/seu.harmony.rds')
+seu.harmony.metadata <- readRDS('../data/seu.harmony.metadata.rds')
 seu.harmony@meta.data <- seu.harmony.metadata
-```
-
-
-提取 seurat 中的数据，构建 cds 对象：
-
-```{r}
-seu.Ex <- subset(seu.harmony, cells=colnames(seu.harmony)[which(
-  seu.harmony$SubType %in% c("L2/3 IT","L4/5 IT","L5 IT","L6 IT","L5 PT","L5 NP","L6 CT",
-                             "Neuroblast","Immature IT")
+seu.IT <- subset(seu.harmony, cells=colnames(seu.harmony)[which(
+  seu.harmony$SubType %in% names(col_SubType)[1:8]
 )])
-data <- GetAssayData(seu.Ex, assay = 'RNA', slot = 'counts')
-cell_metadata <- seu.Ex@meta.data
-gene_annotation <- data.frame(gene_short_name = rownames(data))
-rownames(gene_annotation) <- rownames(data)
-
-cds <- new_cell_data_set(data,
-                         cell_metadata = cell_metadata,
-                         gene_metadata = gene_annotation)
-```
-
-运行一遍 monocle 的聚类流程
-
-```{r}
-cds <- preprocess_cds(cds, num_dim = 50)
-cds <- align_cds(cds, alignment_group = "orig.ident",
-                 residual_model_formula_str = '~Size_Factor')
-cds <- reduce_dimension(cds)
-cds <- cluster_cells(cds)
-```
-
-将 seurat umap 覆盖掉 monocle
-
-```{r}
-cds.embed <- cds@int_colData$reducedDims$UMAP
-int.embed <- Embeddings(seu.Ex, reduction = "umap")
-int.embed <- int.embed[rownames(cds.embed),]
-cds@int_colData$reducedDims$UMAP <- int.embed
-```
-
-拟时序分析
-
-```{r}
-# 将自定义 partition 覆盖掉 monocle 的 partition
-partitions <- factor(rep(1,length(cds@clusters$UMAP$partitions)))
-names(partitions) <- colnames(seu.Ex)
-cds@clusters$UMAP$partitions <- partitions
-cds <- learn_graph(cds)
-cds <- order_cells(cds)
-```
-
-```{r}
-plot_cells(cds,
-           color_cells_by = "pseudotime",
-           label_cell_groups=FALSE,
-           label_leaves=FALSE,
-           label_branch_points=FALSE,
-           graph_label_size=1.5) +
-  theme_void() +
-  coord_fixed()
+cds <- readRDS("../data/Figure3/cds.rds")
 ```
 
 
-```{r}
-Ex_track_genes <- graph_test(cds, neighbor_graph="principal_graph", cores=4)
-```
 
 
 
 ## Figure_3A
 
-```{r fig.width=10, fig.height=8}
-seu <- seu.Ex
-seu$Time <- seu$orig.ident
-seu$Time[which(seu$Time %in% c("Adult1", "Adult2", "Adult3"))] <- "Adult"
-seu$Time <- factor(seu$Time, levels = c("P0","P4","P10","Adult"))
+```{r fig.width=10, fig.height=4}
+#| message: false
+
+seu <- seu.IT
+seu$Pseudotime <- cds$Pseudotime
 seu$SubType <- factor(seu$SubType, levels = names(col_SubType))
-DimPlot(seu,
-        reduction = 'umap', group.by = "SubType", label = F, split.by = "Time",
-        cols = col_SubType, ncol = 2) +
+seu$orig.ident <- factor(seu$orig.ident, levels = c("P1","P4","P10","Adult"))
+Figure_3A <- 
+  FeaturePlot(seu, features = "Pseudotime", split.by = 'orig.ident', ncol = 4) &
+  scale_color_gradientn(colours = sciRcolor::pal_scircolor(96)) &
   theme(axis.line = element_blank(), axis.ticks = element_blank(), 
-        axis.text = element_blank(), plot.title = element_text(size = 30)) +
-  labs(x='', y='', title = "") +
+        axis.text = element_blank(), plot.title = element_text(size = 30)) &
+  labs(x='', y='', title = "") &
   coord_fixed()
+Figure_3A
+```
+
+```{r}
+#| eval: false
+
+ggsave("../../Figure/Figure4/Figure_3A.pdf", plot = Figure_3A,
+       height = 6, width = 18, units = "in")
 ```
 
 
@@ -121,240 +66,47 @@ DimPlot(seu,
 
 ## Figure_3B
 
-```{r}
-# 去掉<100cell 的 cluster
-seu.P0 <- subset(seu.Ex, cells=colnames(seu.Ex)[which(
-  seu.Ex$orig.ident == "P0" & seu.Ex$SubType %in% c("Neuroblast","Immature IT","L6 IT","L5 PT","L5 NP","L6 CT")
-)])
-seu.P4 <- subset(seu.Ex, cells=colnames(seu.Ex)[which(
-  seu.Ex$orig.ident == "P4" & seu.Ex$SubType %in% c("Neuroblast","Immature IT","L6 IT","L5 PT","L5 NP","L6 CT")
-)])
-seu.P10 <- subset(seu.Ex, cells=colnames(seu.Ex)[which(
-  seu.Ex$orig.ident == "P10" & seu.Ex$SubType %in% c("Neuroblast","Immature IT","L2/3 IT","L4/5 IT","L5 IT","L6 IT","L5 PT","L5 NP","L6 CT")
-)])
-seu.Adult <- subset(seu.Ex, cells=colnames(seu.Ex)[which(
-  seu.Ex$orig.ident %in% c("Adult1", "Adult2", "Adult3") & seu.Ex$SubType %in% c("Neuroblast","Immature IT","L2/3 IT","L4/5 IT","L5 IT","L6 IT","L5 PT","L5 NP","L6 CT")
-)])
+```{r fig.width=5, fig.height=4}
+#| warning: false
+
+Figure_3B <- 
+  plot_cell_trajectory(cds, color_by = "Pseudotime") +
+  scale_color_gradientn(colours = sciRcolor::pal_scircolor(96))
+Figure_3B
 ```
 
 ```{r}
-SubType <- c("Neuroblast" = 0,"Immature IT"=1,"L2/3 IT"=2,"L4/5 IT"=3,"L5 IT"=4,"L6 IT"=5,"L5 PT"=6,"L5 NP"=7,"L6 CT"=8)
-HVGs <- FindVariableFeatures(seu.Ex, selection.method = "vst", nfeatures = 2000)
-HVGs <- VariableFeatures(seu.Ex)
+#| eval: false
 
-DMatrix_P0 <- xgb.DMatrix(
-  data = t(seu.P0@assays$RNA@data[HVGs,]),
-  label = as.numeric(match(seu.P0$SubType, names(SubType)) - 1))
-DMatrix_P4 <- xgb.DMatrix(
-  data = t(seu.P4@assays$RNA@data[HVGs,]),
-  label = as.numeric(match(seu.P4$SubType, names(SubType)) - 1))
-DMatrix_P10 <- xgb.DMatrix(
-  data = t(seu.P10@assays$RNA@data[HVGs,]),
-  label = as.numeric(match(seu.P10$SubType, names(SubType)) - 1))
-DMatrix_Adult <- xgb.DMatrix(
-  data = t(seu.Adult@assays$RNA@data[HVGs,]),
-  label = as.numeric(match(seu.Adult$SubType, names(SubType)) - 1))
-
-# P0 → P4
-cv <- xgb.cv(data = DMatrix_P0, nrounds = 1000, nfold = 5, max_depth = 5, eta = 0.5,
-             early_stopping_rounds = 5, objective = "multi:softmax", 
-             num_class=9, verbose = F)
-model_xgb <- xgboost(data=DMatrix_P0, max_depth=5, eta=0.5, nthread = 5,
-                     nround = cv$best_iteration, objective = "multi:softmax",
-                     num_class=9, verbose = F)
-pre_P0_P4 <- predict(model_xgb, newdata = DMatrix_P4)
-df_P0_P4 <- as.data.frame.array(table(names(SubType[pre_P0_P4+1]), seu.P4$SubType))
-
-# P4 → P10
-cv <- xgb.cv(data = DMatrix_P4, nrounds = 1000, nfold = 5, max_depth = 5, eta = 0.5,
-             early_stopping_rounds = 5, objective = "multi:softmax", 
-             num_class=9, verbose = F)
-model_xgb <- xgboost(data=DMatrix_P4, max_depth=5, eta=0.5, nthread = 5,
-                     nround = cv$best_iteration, objective = "multi:softmax",
-                     num_class=9, verbose = F)
-pre_P4_P10 <- predict(model_xgb, newdata = DMatrix_P10)
-df_P4_P10 <- as.data.frame.array(table(names(SubType[pre_P4_P10+1]), seu.P10$SubType))
-
-# P10 → Adult
-cv <- xgb.cv(data = DMatrix_P10, nrounds = 1000, nfold = 5, max_depth = 5, 
-             eta = 0.5, early_stopping_rounds = 5, objective = "multi:softmax", 
-             num_class=9, verbose = F)
-model_xgb <- xgboost(data=DMatrix_P10, max_depth=5, eta=0.5, nthread = 5,
-                     nround = cv$best_iteration, objective = "multi:softmax",
-                     num_class=9, verbose = F)
-pre_P10_Adult <- predict(model_xgb, newdata = DMatrix_Adult)
-df_P10_Adult <- as.data.frame.array(table(names(SubType[pre_P10_Adult+1]),
-                                          seu.Adult$SubType))
+ggsave("../../Figure/Figure3/Figure_3B.pdf", plot = Figure_3B,
+       height = 4, width = 5, units = "in")
 ```
-
-
-```{r}
-df1 <- df_P0_P4
-#df1 <- df1[rowSums(df1)>=50, colSums(df1)>=50]
-df2 <- df_P4_P10
-#df2 <- df2[rowSums(df2)>=50, colSums(df2)>=50]
-df3 <- df_P10_Adult
-#df3 <- df3[rowSums(df3)>=50, colSums(df3)>=50]
-
-df1_mean <- df1/rowSums(df1)
-df1_mean$P0 <- rownames(df1)
-df1_mean_long <- pivot_longer(df1_mean, !P0, names_to = "P4", values_to = "Value")
-df1$P0 <- rownames(df1)
-df1_long <- pivot_longer(df1, !P0, names_to = "P4", values_to = "Value")
-df1_long$P0 <- paste("P0", df1_long$P0)
-df1_long$P4 <- paste("P4", df1_long$P4)
-colnames(df1_long) <- c('source', 'target', 'value')
-df1_long$Prob <- df1_mean_long$Value
-
-df2_mean <- df2/rowSums(df2)
-df2_mean$P4 <- rownames(df2)
-df2_mean_long <- pivot_longer(df2_mean, !P4, names_to = "P10", values_to = "Value")
-df2$P4 <- rownames(df2)
-df2_long <- pivot_longer(df2, !P4, names_to = "P10", values_to = "Value")
-df2_long$P4 <- paste("P4", df2_long$P4)
-df2_long$P10 <- paste("P10", df2_long$P10)
-colnames(df2_long) <- c('source', 'target', 'value')
-df2_long$Prob <- df2_mean_long$Value
-
-df3_mean <- df3/rowSums(df3)
-df3_mean$P10 <- rownames(df3)
-df3_mean_long <- pivot_longer(df3_mean, !P10, names_to = "Adult", 
-                              values_to = "Value")
-df3$P10 <- rownames(df3)
-df3_long <- pivot_longer(df3, !P10, names_to = "Adult", values_to = "Value")
-df3_long$P10 <- paste("P10", df3_long$P10)
-df3_long$Adult <- paste("Adult", df3_long$Adult)
-colnames(df3_long) <- c('source', 'target', 'value')
-df3_long$Prob <- df3_mean_long$Value
-
-col <- c("Neuroblast"="#838381", "Immature_IT"="#c1b080",
-         "L2/3_IT"="#342a85", "L4/5_IT"="#0a6ddd", "L5_IT"="#009acd", 
-         "L6_IT"="#31b69e", "L5_PT"="#a1bc6a", "L5_NP"="#f7bc3e", 
-         "L6_CT"="#f7fa10")
-
-links <- rbind(df1_long, df2_long, df3_long)
-#links <- df3_long
-links$value <- links$Prob
-links$source <- gsub(" ","_",links$source)
-links$target <- gsub(" ","_",links$target)
-links <- links[which(links$value != 0),]
-nodes <- paste(rep(c("P0","P4","P10","Adult"), each=length(col)),
-               rep(names(col), 4), sep="_")
-nodes <- nodes[which(nodes %in% unique(c(links$source, links$target)))]
-nodes <- data.frame(name=nodes)
-nodes$index <- 0:(nrow(nodes) - 1)
-links <- merge(links, nodes, by.x="source", by.y="name")
-links <- merge(links, nodes, by.x="target", by.y="name")
-names(links) <- c("target","source","Value","Prob","IDsource","IDtarget")
-links$group <- "links_a"
-links$group[which(links$Prob>0.1 & links$Prob<0.8)] <- "links_b"
-links$group[which(links$Prob >= 0.8)] <- "links_c"
-nodes$group <- nodes$name
-
-
-domain <- c("links_a", "links_b", "links_c", nodes$name)
-range <- c("#ebfafa", "#e489dc", "#6860ff", 
-           as.character(c(col[-c(3,4,5)], col[-c(3,4,5)], col, col)))
-colourScale <- paste('d3.scaleOrdinal() .domain(["', domain[1], sep = '')
-for (i in 2:length(domain)){
-  colourScale <- paste(colourScale, '", "', domain[i], sep = '')
-}
-colourScale <- paste(colourScale, '"]) .range(["', sep = '')
-colourScale <- paste(colourScale, range[1], sep = '')
-for (i in 2:length(range)){
-  colourScale <- paste(colourScale,'", "', range[i], sep = '')
-}
-colourScale <- paste(colourScale,'"])', sep = '')
-```
-
-
-```{r}
-p <- sankeyNetwork(
-  Links = links, Nodes = nodes, Source = "IDsource", Target = "IDtarget", 
-  Value = "Value", NodeID = "name", colourScale = colourScale, LinkGroup="group",
-  NodeGroup="group", iterations= 0, width = 600, height = 400)
-p
-```
-
-```{r}
-saveNetwork(p,"../../Figure/Figure3/Figure_3B/Figure_3B.html")
-```
-
-
-
-```{r}
-links <- rbind(df1_long, df2_long, df3_long)
-links <- links[which(links$value != 0),]
-nodes <- c(unique(links$source), unique(links$target))
-nodes <- data.frame(name=nodes)
-nodes$index <- 0:(nrow(nodes) - 1)
-links <- merge(links, nodes, by.x="source", by.y="name")
-links <- merge(links, nodes, by.x="target", by.y="name")
-names(links) <- c("target","source","Value","IDsource","IDtarget")
-links$group <- "links_a"
-links$group[which(links$Value>0.1 & links$Value<0.8)] <- "links_b"
-links$group[which(links$Value >= 0.8)] <- "links_c"
-nodes$group <- nodes$name
-
-SubType <- c("Neuroblast","Immature IT","L2/3 IT","L4/5 IT","L5 IT","L6 IT",
-             "L5 PT","L5 NP","L6 CT")
-domain <- c("links_a", "links_b", "links_c", 
-            paste(rep(c("P0","P4","P10","Adult"), each=length(SubType)),
-                  rep(SubType, 4)))
-range <- c("#ebfafa", "#e489dc", "#6860ff", 
-           rep(col_SubType[SubType], 4))
-colourScale <- paste('d3.scaleOrdinal() .domain(["', domain[1], sep = '')
-for (i in 2:length(domain)){
-  colourScale <- paste(colourScale, '", "', domain[i], sep = '')
-}
-colourScale <- paste(colourScale, '"]) .range(["', sep = '')
-colourScale <- paste(colourScale, range[1], sep = '')
-for (i in 2:length(range)){
-  colourScale <- paste(colourScale,'", "', range[i], sep = '')
-}
-colourScale <- paste(colourScale,'"])', sep = '')
-```
-
 
 
 
 
 ## Figure_3C
 
-```{r fig.width=8, fig.height=5}
-col <- c("Neuroblast"="#838381", "Immature IT"="#c1b080",
-         "L2/3 IT"="#342a85", "L4/5 IT"="#0a6ddd", "L5 IT"="#009acd", 
-         "L6 IT"="#31b69e", "L5 PT"="#a1bc6a", "L5 NP"="#f7bc3e", 
-         "L6 CT"="#f7fa10")
-seu <- subset(seu.Ex, cells=colnames(seu.Ex)[which(
-  !(seu.Ex$orig.ident %in% c("P0","P4") & seu.Ex$SubType %in% c("L2/3 IT","L4/5 IT","L5 IT"))
-)])
-seu$Time <- seu$orig.ident
-seu$Time[which(seu$Time %in% c("Adult1", "Adult2", "Adult3"))] <- "Adult"
-seu$Time_SubType <- paste(seu$Time, seu$SubType)
-Time_SubType_order <- paste(
-  rep(c("P0","P4","P10","Adult"), length(col)),
-  rep(names(col), each=4)
-  )
-Time_SubType_order <- Time_SubType_order[which(Time_SubType_order %in% 
-                                                 unique(seu$Time_SubType))]
-seu$Time_SubType <- factor(
-  seu$Time_SubType,
-  levels = Time_SubType_order)
+```{r fig.width=12, fig.height=4}
+#| warning: false
 
-DotPlot(
-  seu,
-  features = c('Cd24a','Sox11','Cux2','Calb1','Rorb','Deptor','Oprk1','Penk','Pou3f1','Crym',
-               'Tshz2','Syt6'),
-  group.by = 'Time_SubType',
-  col.min=0, col.max=2, dot.scale = 6) +
-  coord_flip() +
-  scale_x_discrete(limits=rev) +
-  scale_color_gradientn(colours = c("lightblue3", "lightblue", "white", "red", "red4")) +
-  theme_bw() +
-  theme(axis.title.x = element_blank(), axis.title.y = element_blank(),
-        axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
-  geom_hline(yintercept = c(4.5,8.5,10.5,12.5,14.5,18.5,22.5,26.5))
+cds$orig.ident <- factor(
+  cds$SubType, 
+  levels = c("Im L2/3 IT","Im L4/5 IT","Im L5 IT","Im L6 IT",
+             "L2/3 IT","L4/5 IT","L5 IT","L6 IT"))
+Figure_3C <- 
+  plot_cell_trajectory(cds, color_by = "SubType") +
+  scale_color_manual(values = col_SubType) +
+  facet_wrap(~SubType_v4, nrow=2) +
+  theme_void()
+Figure_3C
+```
+
+```{r}
+#| eval: false
+
+ggsave("../../Figure/Figure3/Figure_3C.pdf", plot = Figure_3C,
+       height = 4, width = 12, units = "in")
 ```
 
 
@@ -364,85 +116,185 @@ DotPlot(
 ## Figure_3D
 
 ```{r}
-FeaturePlot_scCustom(
-  seurat_object = seu.Ex, features = c("Cd24a"), 
-  colors_use=sciRcolor::pal_scircolor(96))
+#| eval: false
+
+ordergene <- cds@featureData@data$gene_short_name[cds@featureData@data$use_for_ordering==TRUE]
+#BEAM_res <- BEAM(cds[ordergene,], branch_point = 1, cores = 2)
+#BEAM_res <- BEAM_res[order(BEAM_res$qval),]
+#write.csv(BEAM_res, "../../data/rds/Figure3/BEAM_res_all.csv")
+BEAM_res <- read.csv("../data/Figure3/BEAM_res_all.csv", row.names = 1)
+BEAM_res <- BEAM_res[order(BEAM_res$qval),]
+sig_gene_names <- row.names(subset(BEAM_res, qval < 1e-10))
+BEAM_res <- BEAM_res[sig_gene_names,]
+
+Figure_3D <- plot_pseudotime_heatmap(
+  cds[sig_gene_names[1:1000],],
+  num_clusters = 5,
+  cores = 4,
+  show_rownames = F,
+  hmcols = colorRampPalette(rev(sciRcolor::pal_scircolor(85)))(100),
+  return_heatmap = T)
+
+#Go Gene
+#clusters <- data.frame(cutree(Figure_3D$tree_row, k=5))
+#clusters[,1] <- as.character(clusters[,1])
+#colnames(clusters) <- "Gene_clusters"
+#write.csv(clusters, "../../data/rds/Figure3/Time_cluster_all.csv")
+```
+
+```{r}
+knitr::include_graphics("./images/Figure_3D.png", dpi = 300)
 ```
 
 
 
-```{r fig.width=10, fig.height=8}
-df <- as.data.frame(t(seu.Ex@assays$RNA@data[c("Cd24a","Sox11","Cux2","Deptor","Oprk1","Bcl6"),]))
-df$UMAP_1 <- seu.Ex@reductions$umap@cell.embeddings[,"UMAP_1"]
-df$UMAP_2 <- seu.Ex@reductions$umap@cell.embeddings[,"UMAP_2"]
 
 
-gene_list <- c("Cd24a","Sox11","Cux2","Deptor","Oprk1","Bcl6")
-plist <- list()
-for (i in 1:6){
-  gene <- gene_list[i]
-  #df_i <- df[which(df[,gene]>0),c(gene,"UMAP_1","UMAP_2")]
-  df_i <- df[,c(gene,"UMAP_1","UMAP_2")]
-  colnames(df_i) <- c("Exp","UMAP_1","UMAP_2")
-  
-  plist[[i]] <- 
-    ggplot() +
-    #geom_point(df, mapping = aes(x = UMAP_1, y = UMAP_2), color="lightgray", size=0.5) +
-    geom_point(df_i, mapping = aes(x = UMAP_1, y = UMAP_2, color=Exp), size=0.5) +
-    scale_color_gradientn(
-      colours = c("lightblue3", "lightblue", "white", "red", "red4"),
-      na.value = "red4",
-      limits = c(0,3),
-      breaks = c(0,1,2,3)) +
-    coord_fixed() +
-    labs(title = gene, x="", y="", colour = "") +
-    theme_void() +
-    theme(plot.title = element_text(hjust = 0.5),
-          legend.position = "right",
-          legend.key.width  = unit(0.5, "lines"),
-          legend.key.height = unit(2, "lines"))
-}
+## Figure_3E
 
-plot_grid(plotlist = plist, ncol = 3)
+```{r}
+#| message: false
+
+loom <- open_loom('../data/Figure3/SCENIC/aucell.loom')
+regulons_incidMat <- SCopeLoomR::get_regulons(loom, column.attr.name="Regulons")
+regulonAUC <- assay(SCopeLoomR::get_regulons_AUC(loom,column.attr.name='RegulonsAUC'))
+```
+
+```{r fig.width=6, fig.height=4}
+#| message: false
+
+seu <- seu.IT
+regulonsToPlot <- c(
+  'Cux1(+)','Sox11(+)','Sox12(+)','Myc(+)','Myf6(+)','Atf4(+)','Tbr1(+)',
+  'Nr1d1(+)','Bhlhe41(+)','Hes1(+)','Erg(+)','Rxrg(+)','Jun(+)')
+regulonsToPlot_mat <- scale(t(regulonAUC[regulonsToPlot,]))
+seu@meta.data <- cbind(seu@meta.data, regulonsToPlot_mat)
+seu$Time_subtype <- factor(seu$SubType, levels = names(col_SubType)[1:8])
+
+Figure_3E <- 
+  DotPlot(
+  seu,
+  features = regulonsToPlot,
+  group.by = 'SubType',
+  col.min=0, col.max=2, dot.scale = 5) +
+  coord_flip() +
+  scale_x_discrete(limits=rev) +
+  scale_color_gradientn(colours = c("lightblue3", "lightblue", "white", "red", "red4")) +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 25, hjust = 1)) +
+  geom_hline(yintercept = c(4.5), linetype="dashed") +
+  labs(x="",y="")
+Figure_3E
+```
+
+```{r}
+#| eval: false
+
+ggsave("../../Figure/Figure3/Figure_3E.pdf", plot = Figure_3E, 
+       height = 3, width = 6.5, units = "in")
 ```
 
 
 
-```{r fig.width=10, fig.height=6}
-gene_list <- c("Cd24a","Sox11","Cux2","Deptor","Oprk1","Bcl6")
-plist <- list()
-for (i in 1:length(gene_list)){
-  plist[[i]] <- 
-    FeaturePlot(seu.Ex, features = gene_list[i], pt.size = 0.5, order = T) +
-    scale_color_gradientn(
-      colours = c("lightblue3", "lightblue", "white", "red", "red4")) +
-    coord_fixed() +
-    theme_void(base_size = 14) +
-    theme(plot.title=element_text(hjust = 0.5))
-}
-plot_grid(plotlist = plist, ncol = 3)
+
+
+## Figure_3F
+
+```{r fig.width=6, fig.height=6}
+#| message: false
+#| warning: false
+
+grn <- read_tsv("../data/Figure3/SCENIC/grn.tsv")
+selected_tf <- c("Sox11","Sox12","Atf4","Tbr1")[1]
+
+sub_grn <- grn %>%
+  filter(TF == selected_tf) %>%
+  group_by(TF) %>%
+  top_n(20, importance) %>%
+  ungroup()
+
+nodes <- data.frame(
+  node = unique(c(sub_grn$TF, sub_grn$target))
+)
+nodes$node.size <- ifelse(nodes$node %in% selected_tf, 10, 10)
+nodes$node.colour <- ifelse(nodes$node %in% selected_tf, "#6468c5", "#e56967")
+
+edges <- data.frame(
+  from = sub_grn$TF,
+  to = sub_grn$target,
+  edge.width = sub_grn$importance,
+  edge.colour = sub_grn$importance
+)
+
+graph_data <- tidygraph::tbl_graph(nodes = nodes, edges = edges, directed = TRUE)
+
+# 绘制网络图
+ggraph(graph_data, layout = "stress", circular = TRUE) +
+  geom_edge_arc(aes(edge_colour = edge.colour, edge_width = edge.width)) +
+  geom_node_point(aes(colour = node.colour, size = node.size)) +
+  geom_node_label(aes(label = node), size = 5, repel = TRUE) +
+  theme_void() +
+  #scale_color_manual(values = c("#6468c5", "#e56967")) +
+  scale_edge_color_gradientn(colors = rev(sciRcolor::pal_scircolor(85))) +
+  scale_edge_width_continuous(range = c(0.2, 3)) +
+  scale_size_continuous(guide = "none") +  # 移除 node.size 的图例[^36^]
+  theme(
+    legend.position = "right",
+    legend.title = element_text(size = 10),
+    legend.text = element_text(size = 8)
+  ) +
+  labs(edge_width = "Importance", edge_colour = "Importance")
+```
+
+```{r}
+#| eval: false
+
+ggsave('../../Figure/Figure3/Figure_3F/Sox11_netplot.pdf',width = 6, height = 5)
 ```
 
 
 
-```{r fig.width=5, fig.height=10}
-seu <- seu.Ex
-seu$Time <- seu$orig.ident
-seu$Time[which(seu$Time %in% c("Adult1", "Adult2", "Adult3"))] <- "Adult"
-seu$Time <- factor(seu$Time, levels = c("P0","P4","P10","Adult"))
 
-gene_list <- c("Cd24a","Sox11","Calb1","Deptor","Npy","Crym")
-plist <- list()
-for (i in 1:length(gene_list)){
-  plist[[i]] <- 
-    FeaturePlot_scCustom(
-      seurat_object = seu, features = c(gene_list[i]), order = T,
-      colors_use = c("lightblue3", "lightblue", "white", "red", "red4"),
-      split.by = "Time", num_columns = 1) +
-      coord_fixed() & theme_void()
-}
 
-plist[[3]]
+## Figure_3G-J
+
+```{r fig.width=6, fig.height=6}
+data <- as.data.frame(regulonsToPlot_mat)
+data$UMAP_1 <- as.numeric(seu.IT@reductions$umap@cell.embeddings[,"UMAP_1"])
+data$UMAP_2 <- as.numeric(seu.IT@reductions$umap@cell.embeddings[,"UMAP_2"])
+data$Time <- seu.IT$orig.ident
+data$SubType <- seu.IT$SubType
+data$Pseudotime <- cds$Pseudotime
+
+gene <- "Sox11(+)"
+df <- data.frame(
+  UMAP_1 = data$UMAP_1,
+  UMAP_2 = data$UMAP_2,
+  value = data[,gene]
+)
+df$value[df$value>3] <- 3
+df$value[df$value<0] <- 0
+df <- df[order(df$value),]
+df <- df[df$UMAP_1<0 & df$UMAP_1 > -12 & df$UMAP_2<8,]
+
+Figure_3G <- 
+  ggplot(df, mapping=aes(x=UMAP_1, y=UMAP_2, color=value)) +
+  geom_point() +
+  theme_void() +
+  theme(legend.position = "none") +
+  coord_fixed() +
+  scale_color_gradientn(colours = c("lightblue3", "lightblue", "white", "red", "red4"), limits = c(0,3))
+Figure_3G
 ```
+
+
+```{r}
+#| eval: false
+
+ggsave("../../Figure/Figure3/Figure_3G/Sox11(+)_UMAP.png", plot = Figure_3F, 
+       height = 6, width = 6, units = "in")
+```
+
+
 
 

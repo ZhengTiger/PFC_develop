@@ -1,15 +1,22 @@
 # PFC develop
 
-The goal of this project is to decipher the molecular and spatial signatures of neural circuits in the developing mouse prefrontal cortex
+Single-cell spatiotemporal transcriptome dynamics of mouse prefrontal cortex intratelencephalic neurons during postnatal development.
 
-<img src="https://github.com/ZhengTiger/PFC_develop/blob/main/images/PFC_develop.png" width="100%" />
+<img src="https://zhengtiger.github.io/picx-images-hosting/PFCdev/Figure_1A.2h8jm97w9c.webp" width="100%" />
 
 ## Summary
 
+The prefrontal cortex (PFC) is a core regulatory center for higher cognitive functions in the mammalian brain. In early postnatal mice, the PFC remains incompletely mature, particularly the intratelencephalic (IT) neurons located in superficial layers. However, the molecular developmental trajectories and regulatory mechanisms of IT neurons during the critical postnatal period (1-2 weeks) for circuit establishment, remain poorly characterized at single-cell resolution. Here, we performed single-cell RNA sequencing analysis on mouse PFC isolated at different developmental time points, and integrated with spatial transcriptomic data. Our study systematically deciphered the spatiotemporal transcriptome dynamics of mouse PFC during postnatal development, with particular emphasis on the heterogeneity of IT neurons. We identified dynamically expressed genes during postnatal development, including cadherin and axon guidance molecule genes, as well as specific transcriptional regulators that control the maturation of IT neurons in different layers. Furthermore, we also revealed that glial cells play crucial regulatory roles in IT neuron development through specific signaling pathways. Our study provides a comprehensive single-cell atlas of postnatal mouse PFC development, offering important insights into the mechanisms of neural development and circuit assembly in PFC.
+
 ## Data Visualization
+
+We developed is a shiny application **PFCdev-web** that allows users to interactively access our data. You can access our online website at <https://huggingface.co/spaces/TigerZheng/PFCdev-web>
 
 ## Code View
 
+The code of this project can be viewed at <https://zhengtiger.github.io/PFC_develop>
+
 ## Citation
 
-This project is still in progress
+Our project has been released in the following publication:
+

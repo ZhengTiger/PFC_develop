@@ -4,8 +4,6 @@ date: "2024-12-01"
 date-format: YYYY-MM-DD
 ---
 
-# monocle3 拟时序分析
-
 ```{r}
 library(Seurat)
 library(monocle)
@@ -19,11 +17,23 @@ seu.harmony@meta.data <- seu.harmony.metadata
 ```
 
 
+
+## Neuron
+
+```{r}
+seu.IT <- subset(seu.harmony, cells=colnames(seu.harmony)[which(
+  seu.harmony$SubType_v4 %in% c("Im L2/3 IT","Im L4/5 IT","Im L5 IT","Im L6 IT","L2/3 IT","L4/5 IT","L5 IT","L6 IT")
+)])
+```
+
+
+### 1
+
 提取 seurat 中的数据，构建 cds 对象：
 
 ```{r}
-expr_matrix <- GetAssayData(seu.harmony, assay = 'RNA', slot = 'counts')
-p_data <- seu.harmony@meta.data
+expr_matrix <- GetAssayData(seu.IT, assay = 'RNA', slot = 'counts')
+p_data <- seu.IT@meta.data
 f_data <- data.frame(gene_short_name = rownames(expr_matrix))
 rownames(f_data) <- rownames(expr_matrix)
 
@@ -41,19 +51,114 @@ cds <- newCellDataSet(as(as.matrix(expr_matrix), "sparseMatrix"),
 ```{r}
 cds <- estimateSizeFactors(cds)
 cds <- estimateDispersions(cds)
+cds <- detectGenes(cds, min_expr = 0.1)
 ```
 
-过滤<10个细胞的gene
+
+### 2 构建轨迹
 
 ```{r}
-cds <- detectGenes(cds, min_expr = 0.1)
-expressed_genes <- row.names(subset(fData(cds), num_cells_expressed >= 10))
+# Trajectory step 1: choose genes that define a cell's progress
+#seu <- seu.IT
+#Idents(seu) <- "SubType_v2"
+#SubType_marker <- FindAllMarkers(seu, logfc.threshold = 0.25)
+#write.csv(SubType_marker, "../../data/rds/Figure4/SubType_marker.csv")
+#SubType_marker <- read.csv("../../data/rds/Figure4/SubType_marker.csv", row.names = 1)
+seu.IT <- FindVariableFeatures(seu.IT, selection.method = "vst", nfeatures = 2000)
+HVGs <- unique(VariableFeatures(seu.IT))
+ordering_genes <- HVGs
+cds <- setOrderingFilter(cds, ordering_genes)
+#plot_ordering_genes(cds)
+
+# Trajectory step 2: reduce data dimensionality
+cds <- reduceDimension(cds, max_components = 2, method = 'DDRTree')
+
+# Trajectory step 3: order cells along the trajectory
+cds <- orderCells(cds)
+
+plot_cell_trajectory(cds, color_by = "orig.ident")+
+  facet_wrap(~orig.ident,nrow=1)
+```
+
+
+```{r}
+plot_complex_cell_trajectory(cds, x=1, y=2, color_by="SubType_v4")
 ```
 
 
 
 
 
+## Noneuron
+
+```{r}
+seu.NOneuron <- subset(seu.harmony, cells=colnames(seu.harmony)[which(
+  seu.harmony$SubType_v2 %in% c("NPC", "Astro", "OPC", "Oligo") &
+  seu.harmony@reductions$umap@cell.embeddings[,"UMAP_2"] > 5  
+)])
+```
+
+### 1
+
+提取 seurat 中的数据，构建 cds 对象：
+
+```{r}
+expr_matrix <- GetAssayData(seu.NOneuron, assay = 'RNA', slot = 'counts')
+p_data <- seu.NOneuron@meta.data
+f_data <- data.frame(gene_short_name = rownames(expr_matrix))
+rownames(f_data) <- rownames(expr_matrix)
+
+pd <- new("AnnotatedDataFrame", data = p_data)
+fd <- new("AnnotatedDataFrame", data = f_data)
+cds.NOneuron <- newCellDataSet(as(as.matrix(expr_matrix), "sparseMatrix"),
+                               phenoData = pd, featureData = fd,
+                               lowerDetectionLimit = 0.5,
+                               expressionFamily = negbinomial.size())
+```
+
+
+估计size factor和离散度:
+
+```{r}
+cds.NOneuron <- estimateSizeFactors(cds.NOneuron)
+cds.NOneuron <- estimateDispersions(cds.NOneuron)
+cds.NOneuron <- detectGenes(cds.NOneuron, min_expr = 0.1)
+```
+
+
+### 2 构建轨迹
+
+```{r}
+# Trajectory step 1: choose genes that define a cell's progress
+#seu <- seu.NOneuron
+#Idents(seu) <- "SubType_v2"
+#SubType_marker <- FindAllMarkers(seu, logfc.threshold = 0.25)
+#write.csv(SubType_marker, "../../data/rds/Figure5/SubType_marker_NOneuron.csv")
+SubType_marker <- read.csv("../../data/rds/Figure5/SubType_marker_NOneuron.csv", row.names = 1)
+ordering_genes <- unique(SubType_marker$gene[abs(SubType_marker$avg_log2FC)>0.5])
+#seu.IT <- FindVariableFeatures(seu.IT, selection.method = "vst", nfeatures = 2000)
+#HVGs <- unique(VariableFeatures(seu.IT))
+#ordering_genes <- HVGs
+
+cds.NOneuron <- setOrderingFilter(cds.NOneuron, ordering_genes)
+#plot_ordering_genes(cds)
+
+# Trajectory step 2: reduce data dimensionality
+cds.NOneuron <- reduceDimension(cds.NOneuron, max_components = 2, method = 'DDRTree')
+
+# Trajectory step 3: order cells along the trajectory
+cds.NOneuron <- orderCells(cds.NOneuron)
+cds.NOneuron <- orderCells(cds.NOneuron, root_state = 2)
+
+plot_cell_trajectory(cds.NOneuron, color_by = "Pseudotime")+
+  facet_wrap(~orig.ident,nrow=1)
+```
+
+
+
+```{r}
+saveRDS(cds.NOneuron, "../../data/rds/Figure5/cds.NOneuron.rds")
+```
 
 
 

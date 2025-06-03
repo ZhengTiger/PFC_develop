@@ -12,7 +12,7 @@ load_aba_data('F:/1.课题/5.PFC发育/VoxHunt/voxhunt_data/voxhunt_data')
 
 ```{r}
 voxhunt::plot_annotation(
-  'P56', annotation_level = "custom_4",
+  'P56', annotation_level = "custom_3",
   slices = 10,
   alpha = 1,
   show_legend = T) +
@@ -21,77 +21,27 @@ voxhunt::plot_annotation(
 
 
 ```{r}
-E13 <- readRDS("F:/1.课题/5.PFC发育/VoxHunt/voxhunt_data/voxhunt_data/E13.rds")
-E18 <- readRDS("F:/1.课题/5.PFC发育/VoxHunt/voxhunt_data/voxhunt_data/E18.rds")
-P4 <- readRDS("F:/1.课题/5.PFC发育/VoxHunt/voxhunt_data/voxhunt_data/P4.rds")
-P14 <- readRDS("F:/1.课题/5.PFC发育/VoxHunt/voxhunt_data/voxhunt_data/P14.rds")
-P56 <- readRDS("F:/1.课题/5.PFC发育/VoxHunt/voxhunt_data/voxhunt_data/P56.rds")
-
-# E18
-E18_all <- E18$row_meta
-E18_DPall <- E18$row_meta[which(E18$row_meta$custom_4=="dorsal pallium"),]
-E18_PFC <- E18_DPall[which(E18_DPall$z>=5 & E18_DPall$z<=14 & E18_DPall$x<=15),]
-E18_counts <- t(as.matrix(E18$matrix[E18_PFC$voxel,]))
-rownames(E18_counts) <- str_to_title(rownames(E18_counts))
-E18_metadata <- as.data.frame(E18$row_meta[which(E18$row_meta$voxel %in% E18_PFC$voxel),])
-rownames(E18_metadata) <- E18_metadata$voxel
-seu_E18_PFC <- CreateSeuratObject(
-  counts = E18_counts,
-  meta.data = E18_metadata,
-)
-E18_all$PFC <- "no"
-E18_all$PFC[which(E18_all$voxel %in% E18_metadata$voxel)] <- "yes"
-
-# P4
-P4_all <- P4$row_meta
-P4_DPall <- P4$row_meta[which(P4$row_meta$custom_4=="dorsal pallium"),]
-P4_PFC <- P4_DPall[which(P4_DPall$z>=7 & P4_DPall$z<=17 & P4_DPall$x<=23),]
-P4_counts <- t(as.matrix(P4$matrix[P4_PFC$voxel,]))
-rownames(P4_counts) <- str_to_title(rownames(P4_counts))
-P4_metadata <- as.data.frame(P4$row_meta[which(P4$row_meta$voxel %in% P4_PFC$voxel),])
-rownames(P4_metadata) <- P4_metadata$voxel
-seu_P4_PFC <- CreateSeuratObject(
-  counts = P4_counts,
-  meta.data = P4_metadata,
-)
-P4_all$PFC <- "no"
-P4_all$PFC[which(P4_all$voxel %in% P4_metadata$voxel)] <- "yes"
-
-# P14
-P14_all <- P14$row_meta
-P14_DPall <- P14$row_meta[which(P14$row_meta$custom_4=="dorsal pallium"),]
-P14_PFC <- P14_DPall[which(P14_DPall$z>=8 & P14_DPall$z<=19 & P14_DPall$x<=25),]
-P14_counts <- t(as.matrix(P14$matrix[P14_PFC$voxel,]))
-rownames(P14_counts) <- str_to_title(rownames(P14_counts))
-P14_metadata <- as.data.frame(P14$row_meta[which(P14$row_meta$voxel %in% P14_PFC$voxel),])
-rownames(P14_metadata) <- P14_metadata$voxel
-seu_P14_PFC <- CreateSeuratObject(
-  counts = P14_counts,
-  meta.data = P14_metadata,
-)
-P14_all$PFC <- "no"
-P14_all$PFC[which(P14_all$voxel %in% P14_metadata$voxel)] <- "yes"
-
-# P56
-P56_all <- P56$row_meta[which(P56$row_meta$z>=0 & P56$row_meta$z<=22),]
-P56_DPall <- P56_all[which(P56_all$custom_4=="frontal cortex"),]
-P56_PFC <- P56_DPall
-P56_counts <- t(as.matrix(P56$matrix[P56_PFC$voxel,]))
-rownames(P56_counts) <- str_to_title(rownames(P56_counts))
-P56_metadata <- as.data.frame(P56$row_meta[which(P56$row_meta$voxel %in% P56_PFC$voxel),])
-rownames(P56_metadata) <- P56_metadata$voxel
-seu_P56_PFC <- CreateSeuratObject(
-  counts = P56_counts,
-  meta.data = P56_metadata,
-)
-P56_all$PFC <- "no"
-P56_all$PFC[which(P56_all$voxel %in% P56_PFC$voxel)] <- "yes"
-
-saveRDS(seu_E18_PFC, "../../data/rds/Allen_dev/seu_E18_PFC.rds")
-saveRDS(seu_P4_PFC, "../../data/rds/Allen_dev/seu_P4_PFC.rds")
-saveRDS(seu_P14_PFC, "../../data/rds/Allen_dev/seu_P14_PFC.rds")
-saveRDS(seu_P56_PFC, "../../data/rds/Allen_dev/seu_P56_PFC.rds")
+voxhunt::plot_expression(
+  'P56', gene = "CALB1",
+  slices = 10,
+  alpha = 1,
+  show_legend = T) +
+  coord_fixed()
 ```
+
+
+```{r}
+#E18.5
+plot_expression('E18.5', genes = 'ROBO1', slices = 10) & no_legend()
+```
+
+```{r}
+hubgene <- read.csv("../../data/rds/top50hubgene.csv", row.names = 1)
+```
+
+
+
+
 
 
 ```{r}
@@ -100,39 +50,65 @@ ggplot(P4_DPall_PFC, aes(x=x, y=y, color=P4_counts["Cux2",])) +
 ```
 
 
+
+
+
+
+
+
+
+
+
 ```{r}
-library(plotly)
+df <- read.csv("../../data/rds/Allen_dev/P56_Tangram_SubType.csv", row.names = 1)
+df$x <- sp_P56$x
+df$y <- sp_P56$y
+df$z <- sp_P56$z
 
-data <- P56_all
-data <- as.data.frame(data)
-
-data <- data %>%
-  mutate(z=-z+max(z)*2) %>%
-  bind_rows(data, .id = 'hemisphere')
-
-gyrdpu <- grDevices::colorRampPalette(c('#e5e7e9', RColorBrewer::brewer.pal(n=9, name="RdPu")))(100)
-
-fig <- plot_ly(data, x = ~x, y = ~z, z = ~y,
-               #size = ~Calb1,
-               size = I(30),
-               #sizes = c(10, 1000),
-               color = ~PFC,
-               colors = c('#e5e7e9', '#BF382A'),
-               type = 'scatter3d',
-               mode = 'markers')
-fig <- fig %>% layout(scene = list(aspectmode = 'data',
-                                   xaxis = list(title = 'X',showgrid = F),
-                                   yaxis = list(title = 'Z',showgrid = F),
-                                   zaxis = list(title = 'Y',showgrid = F)),
-                      annotations = list(
-                        x = 1.13,
-                        y = 1.05,
-                        text = 'Miles/(US) gallon',
-                        xref = 'paper',
-                        yref = 'paper',
-                        showarrow = FALSE
-                        ))
-fig
+gyrdpu <- grDevices::colorRampPalette(c('lightgray', RColorBrewer::brewer.pal(n=9, name="RdPu")))(100)
+ggplot(df[which(df$z==14),], aes(x=x, y=y, fill=L2.3.IT)) +
+  geom_raster() + 
+  coord_fixed() +
+  scale_fill_gradientn(colours = gyrdpu) +
+  theme_void()
 ```
+
+
+```{r}
+sp_seu_E18_PFC <- readRDS("../../data/rds/Allen_dev/sp_seu_E18_PFC.rds")
+sp_seu_P56_PFC <- readRDS("../../data/rds/Allen_dev/sp_seu_P56_PFC.rds")
+```
+
+```{r}
+#E18.5
+plot_expression('E18.5', genes = 'ROBO2', slices = 10) & no_legend()
+```
+
+```{r}
+data1 <- data.frame(
+  x = sp_seu_E18_PFC$x,
+  y = sp_seu_E18_PFC$y,
+  z = sp_seu_E18_PFC$z,
+  L = sp_seu_E18_PFC@assays$RNA$counts["Slit2",],
+  R = sp_seu_E18_PFC@assays$RNA$counts["Robo1",]
+)
+data1$LR <- data1$L*data1$R
+
+gyrdpu <- grDevices::colorRampPalette(c('lightgray', RColorBrewer::brewer.pal(n=9, name="RdPu")))(100)
+ggplot(data1[which(data1$z==10),], aes(x=x, y=y, fill=LR)) +
+  geom_raster() + 
+  coord_fixed() +
+  scale_fill_gradientn(colours = gyrdpu) +
+  theme_void()
+```
+
+
+
+
+
+
+
+
+
 
 

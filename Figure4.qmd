@@ -11,51 +11,185 @@ date-format: YYYY-MM-DD
 #| message: false
 
 library(Seurat)
+library(tidyverse)
+library(scRNAtoolVis)
 library(hdWGCNA)
 library(patchwork)
-library(ggplot2)
 library(ggalt)
-library(cowplot)
-library(tidyverse)
-library(monocle3)
-library(xgboost)
-library(scCustomize)
-library(ggpointdensity)
-library("Nebulosa")
 source('bin/Palettes.R')
 ```
 
-
 ```{r}
-seu.harmony <- readRDS('../../data/rds/seu.harmony.rds')
-seu.harmony.metadata <- readRDS('../../data/rds/seu.harmony.metadata.rds')
+seu.harmony <- readRDS('../data/seu.harmony.rds')
+seu.harmony.metadata <- readRDS('../data/seu.harmony.metadata.rds')
 seu.harmony@meta.data <- seu.harmony.metadata
+seu.IT <- subset(seu.harmony, cells=colnames(seu.harmony)[which(
+  seu.harmony$SubType %in% names(col_SubType)[1:8]
+)])
+seu.Ex <- seu.harmony[,seu.harmony$SubType %in% names(col_SubType)[1:11]]
 ```
 
 ```{r}
-seu.In <- subset(seu.harmony, cells=colnames(seu.harmony)[which(
-  seu.harmony$SubType %in% c("Lamp5", "Pvalb", "Sst", "Vip")
-)])
+gene_lib <- read.csv('../../data/rds/Figure2/gene_lib.csv')
+
+AG <- unique(str_to_title(gene_lib$Axon_Guidance))
+CAM <- unique(str_to_title(gene_lib$CAM))
+all_gene <- unique(c(AG, CAM))
+
+# filter
+seu <- seu.Ex
+all_gene <- all_gene[which(all_gene %in% rownames(seu))]
+# gene expression filter
+all_gene_exp <- AverageExpression(
+  seu, features=all_gene, assays="RNA", slot="data", group.by="SubType"
+  )$RNA
+all_gene_exp <- as.data.frame(log1p(all_gene_exp))
+all_gene_exp$max <- apply(all_gene_exp, 1, max)
+# gene cell percentage filter
+all_gene_pct <- as.data.frame(t(as.matrix(seu@assays$RNA@data[all_gene,])))
+all_gene_pct$SubType <- as.character(seu$SubType)
+all_gene_pct <- 
+  all_gene_pct |>
+  dplyr::group_by(SubType) |>
+  dplyr::summarize(across(1:length(all_gene), function(x){
+    length(which(x>0))/length(x)
+    })) |>
+  as.data.frame()
+rownames(all_gene_pct) <- all_gene_pct$SubType
+all_gene_pct <- as.data.frame(t(all_gene_pct[,-1]))
+all_gene_pct$max <- apply(all_gene_pct, 1, max)
+
+all_gene <- all_gene[which(all_gene_exp$max>0.1 & all_gene_pct$max>0.1)]
+AG <- AG[which(AG %in% all_gene)]
+CAM <- CAM[which(CAM %in% all_gene)]
+AG <- AG[which(!(AG %in% CAM))]
+all_gene <- c(CAM,AG)
 ```
+
 
 
 
 
 ## Figure_4A
 
-```{r fig.width=10, fig.height=8}
-seu <- seu.In
-seu$Time <- seu$orig.ident
-seu$Time[which(seu$Time %in% c("Adult1", "Adult2", "Adult3"))] <- "Adult"
-seu$Time <- factor(seu$Time, levels = c("P0","P4","P10","Adult"))
-seu$SubType <- factor(seu$SubType, levels = names(col_SubType))
-DimPlot(seu,
-        reduction = 'umap', group.by = "SubType", label = F, split.by = "Time",
-        cols = col_SubType, ncol = 2) +
-  theme(axis.line = element_blank(), axis.ticks = element_blank(), 
-        axis.text = element_blank(), plot.title = element_text(size = 30)) +
-  labs(x='', y='', title = "") +
-  coord_fixed()
+```{r}
+DEGs_all <- read.csv("../data/Figure2/DEGs_Time_Neuron.csv")
+DEGs_all <- DEGs_all[DEGs_all$gene %in% all_gene,]
+colnames(DEGs_all)[1] <- "gene"
+colnames(DEGs_all)[7] <- "cluster"
+
+P4_cluster <- c("P4_IT","P4_PT","P4_NP","P4_CT","P4_Lamp5","P4_Pvalb","P4_Sst","P4_Vip")
+P10_cluster <- c("P10_IT","P10_PT","P10_NP","P10_CT","P10_Lamp5","P10_Pvalb","P10_Sst","P10_Vip")
+Adult_cluster <- c("Adult_IT","Adult_PT","Adult_NP","Adult_CT","Adult_Lamp5","Adult_Pvalb","Adult_Sst","Adult_Vip")
+P4_vs_P0_DEGs <- DEGs_all[DEGs_all$cluster %in% P4_cluster,]
+P10_vs_P4_DEGs <- DEGs_all[DEGs_all$cluster %in% P10_cluster,]
+Adult_vs_P10_DEGs <- DEGs_all[DEGs_all$cluster %in% Adult_cluster,]
+```
+
+### Figure_4A_1
+
+```{r fig.width=6, fig.height=6}
+#| message: false
+#| warning: false
+
+tile.col <- c("IT"="#0a6ddd","PT"="#a1bc6a","NP"="#f7bc3e","CT"="#f7fa10",
+              "Lamp5"="#0e0786","Pvalb"="#6902a4","Sst"="#df6361","Vip"="#31b69e")
+P4_vs_P0_DEGs$cluster <- gsub("P4_","",P4_vs_P0_DEGs$cluster)
+P4_vs_P0_DEGs$cluster <- factor(P4_vs_P0_DEGs$cluster,
+                                levels = names(tile.col))
+P4_vs_P0_DEGs <- P4_vs_P0_DEGs[,-1]
+Figure_4A_1 <- 
+  jjVolcano(diffData = P4_vs_P0_DEGs, 
+          aesCol = c('purple','orange'),
+          topGeneN = 3,
+          tile.col = tile.col,
+          size = 2, segment.size = 0.1,
+          fontface = 'italic',
+          polar = T,
+          seed = 20230727)+
+  ylim(-5,5) +
+  labs(title = 'P4_vs_P0') +
+  theme(plot.title = element_text(hjust = 0.5))
+Figure_4A_1
+```
+
+```{r}
+#| eval: false
+
+ggsave("../../Figure/Figure4/Figure_4A_1.pdf", plot = Figure_4A_1,
+       height = 6, width = 6, units = "in")
+```
+
+
+### Figure_4A_2
+
+```{r fig.width=6, fig.height=6}
+#| message: false
+#| warning: false
+
+tile.col <- c("IT"="#0a6ddd","PT"="#a1bc6a","NP"="#f7bc3e","CT"="#f7fa10",
+              "Lamp5"="#0e0786","Pvalb"="#6902a4","Sst"="#df6361","Vip"="#31b69e")
+P10_vs_P4_DEGs$cluster <- gsub("P10_","",P10_vs_P4_DEGs$cluster)
+P10_vs_P4_DEGs$cluster <- factor(P10_vs_P4_DEGs$cluster,
+                                       levels = names(tile.col))
+P10_vs_P4_DEGs <- P10_vs_P4_DEGs[,-1]
+Figure_4A_2 <- 
+  jjVolcano(diffData = P10_vs_P4_DEGs, 
+          aesCol = c('purple','orange'),
+          topGeneN = 3,
+          tile.col = tile.col,
+          size = 2, segment.size = 0.1,
+          fontface = 'italic',
+          polar = T,
+          seed = 20230727)+
+  ylim(-5,5) +
+  labs(title = 'P10_vs_P4') +
+  theme(plot.title = element_text(hjust = 0.5))
+Figure_4A_2
+```
+
+```{r}
+#| eval: false
+
+ggsave("../../Figure/Figure4/Figure_4A_2.pdf", plot = Figure_4A_2,
+       height = 6, width = 6, units = "in")
+```
+
+
+### Figure_4A_3
+
+```{r fig.width=6, fig.height=6}
+#| message: false
+#| warning: false
+
+tile.col <- c("IT"="#0a6ddd","PT"="#a1bc6a","NP"="#f7bc3e","CT"="#f7fa10",
+              "Lamp5"="#0e0786","Pvalb"="#6902a4","Sst"="#df6361","Vip"="#31b69e")
+Adult_vs_P10_DEGs$cluster <- gsub("Adult_","",Adult_vs_P10_DEGs$cluster)
+#Adult_vs_P10_DEGs_filter <- Adult_vs_P10_DEGs[-grep("Gm", Adult_vs_P10_DEGs$gene),]
+Adult_vs_P10_DEGs$cluster <- factor(Adult_vs_P10_DEGs$cluster,
+                                           levels = names(tile.col))
+Adult_vs_P10_DEGs <- Adult_vs_P10_DEGs[,-1]
+
+Figure_4A_3 <- 
+  jjVolcano(diffData = Adult_vs_P10_DEGs, 
+          aesCol = c('purple','orange'),
+          topGeneN = 3,
+          tile.col = tile.col,
+          size = 2, segment.size = 0.1,
+          fontface = 'italic',
+          polar = T,
+          seed = 20230727)+
+  ylim(-5,5) +
+  labs(title = 'Adult_vs_P10') +
+  theme(plot.title = element_text(hjust = 0.5))
+Figure_4A_3
+```
+
+```{r}
+#| eval: false
+
+ggsave("../../Figure/Figure4/Figure_4A_3.pdf", plot = Figure_4A_3,
+       height = 6, width = 6, units = "in")
 ```
 
 
@@ -65,160 +199,33 @@ DimPlot(seu,
 ## Figure_4B
 
 ```{r}
-# 去掉<100cell 的 cluster
-seu.P0 <- subset(seu.In, cells=colnames(seu.In)[which(
-  seu.In$orig.ident == "P0"
-)])
-seu.P4 <- subset(seu.In, cells=colnames(seu.In)[which(
-  seu.In$orig.ident == "P4"
-)])
-seu.P10 <- subset(seu.In, cells=colnames(seu.In)[which(
-  seu.In$orig.ident == "P10"
-)])
-seu.Adult <- subset(seu.In, cells=colnames(seu.In)[which(
-  seu.In$orig.ident %in% c("Adult1", "Adult2", "Adult3")
-)])
+seurat_obj <- readRDS("../data/Figure4/seu.Ex.hdwgcna.rds")
+```
+
+```{r fig.width=6, fig.height=6}
+#| warning: false
+#| message: false
+#| eval: false
+
+set.seed(20241220)
+modules <- GetModules(seurat_obj)
+mods <- levels(modules$module)
+mods <- mods[mods != 'grey']
+
+Figure_4B <- 
+  HubGeneNetworkPlot(
+  seurat_obj,
+  n_hubs = 5, n_other=50,
+  edge_prop = 0.8,
+  edge.alpha = 0.8,
+  mods = mods,  
+  return_graph=FALSE
+)
+Figure_4B
 ```
 
 ```{r}
-SubType <- c("Lamp5" = 0,"Pvalb"=1,"Sst"=2,"Vip"=3)
-HVGs <- FindVariableFeatures(seu.In, selection.method = "vst", nfeatures = 2000)
-HVGs <- VariableFeatures(seu.In)
-
-DMatrix_P0 <- xgb.DMatrix(
-  data = t(seu.P0@assays$RNA@data[HVGs,]),
-  label = as.numeric(match(seu.P0$SubType, names(SubType)) - 1))
-DMatrix_P4 <- xgb.DMatrix(
-  data = t(seu.P4@assays$RNA@data[HVGs,]),
-  label = as.numeric(match(seu.P4$SubType, names(SubType)) - 1))
-DMatrix_P10 <- xgb.DMatrix(
-  data = t(seu.P10@assays$RNA@data[HVGs,]),
-  label = as.numeric(match(seu.P10$SubType, names(SubType)) - 1))
-DMatrix_Adult <- xgb.DMatrix(
-  data = t(seu.Adult@assays$RNA@data[HVGs,]),
-  label = as.numeric(match(seu.Adult$SubType, names(SubType)) - 1))
-
-# P0 → P4
-cv <- xgb.cv(data = DMatrix_P0, nrounds = 1000, nfold = 5, max_depth = 5, eta = 0.5,
-             early_stopping_rounds = 5, objective = "multi:softmax", 
-             num_class=9, verbose = F)
-model_xgb <- xgboost(data=DMatrix_P0, max_depth=5, eta=0.5, nthread = 5,
-                     nround = cv$best_iteration, objective = "multi:softmax",
-                     num_class=9, verbose = F)
-pre_P0_P4 <- predict(model_xgb, newdata = DMatrix_P4)
-df_P0_P4 <- as.data.frame.array(table(names(SubType[pre_P0_P4+1]), seu.P4$SubType))
-
-# P4 → P10
-cv <- xgb.cv(data = DMatrix_P4, nrounds = 1000, nfold = 5, max_depth = 5, eta = 0.5,
-             early_stopping_rounds = 5, objective = "multi:softmax", 
-             num_class=9, verbose = F)
-model_xgb <- xgboost(data=DMatrix_P4, max_depth=5, eta=0.5, nthread = 5,
-                     nround = cv$best_iteration, objective = "multi:softmax",
-                     num_class=9, verbose = F)
-pre_P4_P10 <- predict(model_xgb, newdata = DMatrix_P10)
-df_P4_P10 <- as.data.frame.array(table(names(SubType[pre_P4_P10+1]), seu.P10$SubType))
-
-# P10 → Adult
-cv <- xgb.cv(data = DMatrix_P10, nrounds = 1000, nfold = 5, max_depth = 5, 
-             eta = 0.5, early_stopping_rounds = 5, objective = "multi:softmax", 
-             num_class=9, verbose = F)
-model_xgb <- xgboost(data=DMatrix_P10, max_depth=5, eta=0.5, nthread = 5,
-                     nround = cv$best_iteration, objective = "multi:softmax",
-                     num_class=9, verbose = F)
-pre_P10_Adult <- predict(model_xgb, newdata = DMatrix_Adult)
-df_P10_Adult <- as.data.frame.array(table(names(SubType[pre_P10_Adult+1]),
-                                          seu.Adult$SubType))
-```
-
-
-```{r}
-df1 <- df_P0_P4
-#df1 <- df1[rowSums(df1)>=50, colSums(df1)>=50]
-df2 <- df_P4_P10
-#df2 <- df2[rowSums(df2)>=50, colSums(df2)>=50]
-df3 <- df_P10_Adult
-#df3 <- df3[rowSums(df3)>=50, colSums(df3)>=50]
-
-df1_mean <- df1/rowSums(df1)
-df1_mean$P0 <- rownames(df1)
-df1_mean_long <- pivot_longer(df1_mean, !P0, names_to = "P4", values_to = "Value")
-df1$P0 <- rownames(df1)
-df1_long <- pivot_longer(df1, !P0, names_to = "P4", values_to = "Value")
-df1_long$P0 <- paste("P0", df1_long$P0)
-df1_long$P4 <- paste("P4", df1_long$P4)
-colnames(df1_long) <- c('source', 'target', 'value')
-df1_long$Prob <- df1_mean_long$Value
-
-df2_mean <- df2/rowSums(df2)
-df2_mean$P4 <- rownames(df2)
-df2_mean_long <- pivot_longer(df2_mean, !P4, names_to = "P10", values_to = "Value")
-df2$P4 <- rownames(df2)
-df2_long <- pivot_longer(df2, !P4, names_to = "P10", values_to = "Value")
-df2_long$P4 <- paste("P4", df2_long$P4)
-df2_long$P10 <- paste("P10", df2_long$P10)
-colnames(df2_long) <- c('source', 'target', 'value')
-df2_long$Prob <- df2_mean_long$Value
-
-df3_mean <- df3/rowSums(df3)
-df3_mean$P10 <- rownames(df3)
-df3_mean_long <- pivot_longer(df3_mean, !P10, names_to = "Adult", 
-                              values_to = "Value")
-df3$P10 <- rownames(df3)
-df3_long <- pivot_longer(df3, !P10, names_to = "Adult", values_to = "Value")
-df3_long$P10 <- paste("P10", df3_long$P10)
-df3_long$Adult <- paste("Adult", df3_long$Adult)
-colnames(df3_long) <- c('source', 'target', 'value')
-df3_long$Prob <- df3_mean_long$Value
-
-col <- c("Vip"="#f8a635", "Lamp5"="#0e0786", "Pvalb"="#6902a4", "Sst"="#df6361")
-
-links <- rbind(df1_long, df2_long, df3_long)
-#links <- df3_long
-links$value <- links$Prob
-links$source <- gsub(" ","_",links$source)
-links$target <- gsub(" ","_",links$target)
-links <- links[which(links$value != 0),]
-nodes <- paste(rep(c("P0","P4","P10","Adult"), each=length(col)),
-               rep(names(col), 4), sep="_")
-nodes <- nodes[which(nodes %in% unique(c(links$source, links$target)))]
-nodes <- data.frame(name=nodes)
-nodes$index <- 0:(nrow(nodes) - 1)
-links <- merge(links, nodes, by.x="source", by.y="name")
-links <- merge(links, nodes, by.x="target", by.y="name")
-names(links) <- c("target","source","Value","Prob","IDsource","IDtarget")
-links$group <- "links_a"
-links$group[which(links$Prob>0.1 & links$Prob<0.8)] <- "links_b"
-links$group[which(links$Prob >= 0.8)] <- "links_c"
-nodes$group <- nodes$name
-
-
-domain <- c("links_a", "links_b", "links_c", nodes$name)
-range <- c("#ebfafa", "#e489dc", "#6860ff", 
-           as.character(c(col, col, col, col)))
-colourScale <- paste('d3.scaleOrdinal() .domain(["', domain[1], sep = '')
-for (i in 2:length(domain)){
-  colourScale <- paste(colourScale, '", "', domain[i], sep = '')
-}
-colourScale <- paste(colourScale, '"]) .range(["', sep = '')
-colourScale <- paste(colourScale, range[1], sep = '')
-for (i in 2:length(range)){
-  colourScale <- paste(colourScale,'", "', range[i], sep = '')
-}
-colourScale <- paste(colourScale,'"])', sep = '')
-```
-
-
-```{r}
-p <- sankeyNetwork(
-  Links = links, Nodes = nodes, Source = "IDsource", Target = "IDtarget", 
-  Value = "Value", NodeID = "name", colourScale = colourScale, LinkGroup="group",
-  NodeGroup="group", iterations= 0, width = 400, height = 400)
-p
-```
-
-
-```{r}
-saveNetwork(p,"../../Figure/Figure4/Figure_4B/Figure_4B.html")
+knitr::include_graphics("./images/Figure_4B.png", dpi = 300)
 ```
 
 
@@ -227,22 +234,129 @@ saveNetwork(p,"../../Figure/Figure4/Figure_4B/Figure_4B.html")
 
 ## Figure_4C
 
-```{r fig.width=6, fig.height=4.5}
-col <- c("Vip"="#f8a635", "Lamp5"="#0e0786", "Pvalb"="#6902a4", "Sst"="#df6361")
-df <- table(seu$Time,seu$SubType)
-df <- df[,names(col)]
-df <- as.data.frame.array(df/rowSums(df))
-df$Time <- rownames(df)
-df_long <- pivot_longer(df, !Time, names_to = "SubType", values_to = "Value")
-df_long$Time <- factor(df_long$Time, levels = c("P0","P4","P10","Adult"))
+### Figure_4C_1
 
-ggplot(df_long, aes(x=Time, y=Value, color=SubType, group=SubType)) +
-  geom_line(linewidth=1.5) +
-  geom_point(aes(fill=SubType), shape=21, color="black" , size=5) +
-  scale_color_manual(values = col) +
-  scale_fill_manual(values = col) +
-  labs(x="", y="Cell proportion", title="") +
-  theme_classic(base_size = 14)
+```{r fig.width=10, fig.height=4}
+#| warning: false
+#| message: false
+
+plot_list <- ModuleFeaturePlot(
+  seurat_obj,
+  features='hMEs',
+  order=TRUE,
+  title = FALSE
+)
+
+wrap_plots(plot_list, ncol=5)
+```
+
+```{r}
+#| eval: false
+
+for (i in 1:5){
+  ggsave(filename=paste("../../Figure/Figure4/Figure_4C_1/M",i,".png",sep=""),
+         plot_list[[i]], 
+         width=4, height = 4, units = "in")
+}
+```
+
+
+
+### Figure_4C_2
+
+```{r fig.width=10, fig.height=4}
+seurat_obj$Time <- seurat_obj$orig.ident
+exp_mean <- AverageExpression(
+  seurat_obj, 
+  features = seurat_obj@misc$CAM_AG$wgcna_genes,
+  assays = "RNA",
+  slot = "data",
+  group.by = "Time")
+exp_mean_zscore <- as.data.frame(t(scale(t(exp_mean$RNA))))
+exp_mean_zscore$module <- seurat_obj@misc$CAM_AG$wgcna_modules$module
+exp_mean_zscore$gene <- rownames(exp_mean_zscore)
+exp_mean_zscore <- exp_mean_zscore[which(exp_mean_zscore$module != "grey"),]
+exp_mean_long <- pivot_longer(exp_mean_zscore, !c(module,gene), names_to = "Time",
+                              values_to = "Exp")
+
+plist <- list()
+M_color <- c("M1"="turquoise","M2"="yellow","M3"="green","M4"="brown","M5"="blue")
+for (i in 1:5){
+  module <- paste("M",i,sep="")
+  df <- exp_mean_long[which(exp_mean_long$module==module),]
+  df$Time <- factor(df$Time, levels = c("P0","P4","P10","Adult"))
+  df_mean <- 
+    df |>
+    group_by(Time) |>
+    dplyr::summarize(across(Exp, ~ mean(.x, na.rm = TRUE)))
+  df_mean$Time <- factor(df_mean$Time, levels = c("P0","P4","P10","Adult"))
+  
+  plist[[i]] <- 
+    ggplot(df, aes(x=Time, y=Exp)) +
+    geom_line(aes(group=gene), color=M_color[i], alpha=0.3) +
+    stat_xspline(df_mean, mapping=aes(x=Time, y=Exp, group=1), 
+               spline_shape=-0.4, color="black", linewidth=1) +
+    theme_void(base_size = 10) +
+    theme(plot.title = element_text(hjust = 0.5),
+          panel.grid = element_blank()) +
+    scale_y_continuous(limits = c(-1.5,1.5)) +
+    coord_fixed()
+  #ggsave(filename=paste("../../Figure/Figure4/Figure_4C_2/M",i,".png",sep=""),
+  #       plist[[i]], 
+  #       width=4, height = 4, units = "in")
+}
+
+cowplot::plot_grid(plotlist = plist, ncol = 5)
+```
+
+
+
+### Figure_4C_3
+
+```{r fig.width=5, fig.height=6}
+SubType_order <- names(col_SubType)[1:11]
+M_order <- c("M4","M5","M3","M1","M2")
+M_color <- c("M1"="turquoise","M2"="yellow","M3"="green","M4"="brown","M5"="blue")
+
+hub_df <- GetHubGenes(seurat_obj, n_hubs = 20)
+hub_df$module <- factor(hub_df$module, levels = M_order)
+hub_df <- hub_df[order(hub_df$module),]
+
+seurat_obj$Cluster <- seurat_obj$SubType_v4
+
+exp_mean <- AverageExpression(
+  seurat_obj, 
+  features = hub_df$gene_name,
+  assays = "RNA",
+  slot = "data",
+  group.by = "Cluster")
+exp_mean_zscore <- as.data.frame(t(scale(t(exp_mean$RNA))))
+
+annotation_row = data.frame(
+  Module = rep(M_order,each=20)
+)
+rownames(annotation_row) <- rownames(exp_mean_zscore)
+ann_colors = list(
+  Module = M_color
+)
+
+breaks <- seq(-2,2,0.01)
+col <- colorRampPalette(c("lightblue3", "lightblue", "white", "red", "red4"))(length(breaks))
+
+mat <- exp_mean_zscore[,SubType_order]
+mat[mat>2] <- 2
+mat[mat< -2] <- -2
+Figure_4C_3 <- 
+  pheatmap::pheatmap(mat,
+         cluster_rows = F, cluster_cols = F,
+         breaks = breaks,
+         color = col,
+         fontsize_col = 10,
+         annotation_row = annotation_row,
+         annotation_colors = ann_colors,
+         annotation_names_row=F, annotation_names_col=F, annotation_legend=F,
+         show_colnames = T, show_rownames = F, angle_col=45, border_color=NA
+         )
 ```
 
 
@@ -251,53 +365,95 @@ ggplot(df_long, aes(x=Time, y=Value, color=SubType, group=SubType)) +
 
 ## Figure_4D
 
-```{r fig.width=6, fig.height=3}
-col <- c("Vip"="#f8a635", "Lamp5"="#0e0786", "Pvalb"="#6902a4", "Sst"="#df6361")
-Time_SubType_order <- paste(
-  rep(c("P0","P4","P10","Adult"), length(col)),
-  rep(names(col), each=4)
-  )
-seu$Time_SubType <- paste(seu$Time, seu$SubType)
-seu$Time_SubType <- factor(
-  seu$Time_SubType,
-  levels = Time_SubType_order)
+```{r}
+#| eval: false
 
-DotPlot(
-  seu,
-  features = c('Vip','Lamp5','Pvalb','Sst'),
-  group.by = 'Time_SubType',
-  col.min=0, col.max=2, dot.scale = 6) +
-  coord_flip() +
-  scale_x_discrete(limits=rev) +
-  scale_color_gradientn(colours = c("lightblue3", "lightblue", "white", "red", "red4")) +
-  theme_bw() +
-  theme(axis.title.x = element_blank(), axis.title.y = element_blank(),
-        axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
-  geom_hline(yintercept = c(4.5,8.5,12.5))
+ModuleNetworkPlot(
+  seurat_obj,
+  outdir = '../../Figure/Figure4/ModuleNetwork'
+)
 ```
+
+```{r}
+knitr::include_graphics("./images/Figure_4D.png", dpi = 300)
+```
+
 
 
 
 
 ## Figure_4E
 
-```{r fig.width=5, fig.height=10}
-gene_list <- c('Vip','Lamp5','Pvalb','Sst')
-plist <- list()
-for (i in 1:length(gene_list)){
-  plist[[i]] <- 
-    FeaturePlot_scCustom(
-      seurat_object = seu, features = c(gene_list[i]), order = T,
-      colors_use = c("lightblue3", "lightblue", "white", "red", "red4"),
-      split.by = "Time", num_columns = 1) +
-      coord_fixed() & theme_void()
-}
+```{r fig.width=6, fig.height=6}
+#| message: false
 
-plist[[1]]
+seu <- seu.IT
+seu$orig.ident <- factor(seu$orig.ident, levels = c("P1","P4","P10","Adult"))
+gene_list <- c("Unc5d","Plxna4","Robo2","Clstn2","Cntn2")
+
+Figure_4E <- 
+  VlnPlot(seu, features = rev(gene_list), group.by = "orig.ident", cols=col_Time,
+        split.by = "orig.ident",
+        stack = TRUE, flip = TRUE) +
+  theme(legend.position = "none", axis.text.x = element_text(angle = 0, hjust = 0.5)) +
+  labs(x="")
+Figure_4E
+```
+
+```{r}
+#| eval: false
+
+ggsave("../../Figure/Figure4/Figure_4E.pdf", plot = Figure_4E,
+       height = 6, width = 6, units = "in")
 ```
 
 
 
+
+
+## Figure_4F
+
+```{r}
+#| eval: false
+
+ModuleNetworkPlot(
+  seurat_obj,
+  outdir = '../../Figure/Figure4/ModuleNetwork'
+)
+```
+
+```{r}
+knitr::include_graphics("./images/Figure_4F.png", dpi = 300)
+```
+
+
+
+
+
+## Figure_4G
+
+```{r fig.width=6, fig.height=6}
+#| message: false
+
+seu <- seu.IT
+seu$orig.ident <- factor(seu$orig.ident, levels = c("P1","P4","P10","Adult"))
+gene_list <- c("App","Nptn","Clstn1","Clstn3","Camk2a")
+
+Figure_4G <- 
+  VlnPlot(seu, features = rev(gene_list), group.by = "orig.ident", cols=col_Time,
+        split.by = "orig.ident",
+        stack = TRUE, flip = TRUE) +
+  theme(legend.position = "none", axis.text.x = element_text(angle = 0, hjust = 0.5)) +
+  labs(x="")
+Figure_4G
+```
+
+```{r}
+#| eval: false
+
+ggsave("../../Figure/Figure4/Figure_4G.pdf", plot = Figure_4G,
+       height = 6, width = 6, units = "in")
+```
 
 
 

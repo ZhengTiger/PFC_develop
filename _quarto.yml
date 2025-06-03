@@ -3,18 +3,29 @@ project:
   output-dir: docs
 
 book:
-  title: "PFC_develop"
+  title: "PFC develop"
   author: "Hu Zheng"
-  date: "2024/9/23"
+  date: "2024/12/01"
   date-format: YYYY-MM-DD
   chapters:
     - index.qmd
     
-    - part: "Analysis"
+    - part: "Main Figure"
       chapters:
-        - clusting.qmd
+        - Figure1.qmd
+        - Figure2.qmd
+        - Figure3.qmd
+        - Figure4.qmd
+        - Figure5.qmd
 
-bibliography: references.bib
+    - part: "Supplemental Figure"
+      chapters:
+        - Figure-S1.qmd
+        - Figure-S2.qmd
+        - Figure-S3.qmd
+        - Figure-S4.qmd
+        - Figure-S5.qmd
+        - Figure-S6.qmd
 
 format:
   html:
