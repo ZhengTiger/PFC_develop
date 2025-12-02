@@ -1,0 +1,13 @@
+---
+author: "Hu Zheng"
+date: "2024-12-01"
+date-format: YYYY-MM-DD
+---
+
+# FigureS7
+
+```{r}
+knitr::include_graphics("./images/FigureS6.jpg", dpi = 300)
+```
+
+

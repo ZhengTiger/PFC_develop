@@ -253,5 +253,29 @@ ggsave("../../Figure/FigureS2/Figure_S2E_Clstn2.pdf", plot = Figure_S2E,
 
 
 
+## Other
 
+```{r fig.width=6, fig.height=4}
+seu <- subset(seu.harmony, cells=colnames(seu.harmony)[seu.harmony$SubType %in% names(col_SubType)[16:21]])
+seu$Group <- seu$SubType
+data <- table(seu$orig.ident, seu$Group)
+data <- as.data.frame(data/rowSums(data))
+colnames(data) <- c("Time", "SubType", "Prob")
+data$Time <- factor(data$Time, levels = c("P1","P4","P10","Adult"))
+data$SubType <- factor(data$SubType, 
+                       levels = names(col_SubType)[16:21])
+
+Figure_S2C <- 
+  ggplot(data, aes(x=Time, y=Prob, color=SubType, fill=SubType, group=SubType)) +
+  geom_line(linewidth=1.5) +
+  geom_point(shape=21, color="black", size=3) +
+  labs(x="", y="Propotion (%)") +
+  scale_y_continuous(breaks=seq(0,0.66,0.2), limits = c(0,0.66),
+                     expand = expansion(mult = c(0, 0.05))) +
+  theme_classic(base_size = 15) +
+  theme(legend.position = "none") +
+  scale_fill_manual(values=col_SubType) +
+  scale_color_manual(values=col_SubType)
+Figure_S2C
+```
 

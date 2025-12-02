@@ -15,6 +15,8 @@ library(tidyverse)
 library(ggsignif)
 library(scRNAtoolVis)
 library(ggrepel)
+library(xgboost)
+library(Matrix)
 source('bin/Palettes.R')
 ```
 
@@ -65,16 +67,16 @@ ggsave("../../Figure/Figure2/Figure_2A.pdf", plot = Figure_2A,
 seu <- seu.neuron
 # 去掉<50cell 的 cluster
 seu.P0 <- subset(seu, cells=colnames(seu)[which(
-  seu$orig.ident == "P0" & seu$SubType_v4 %in% c("Im L2/3 IT","Im L4/5 IT","Im L5 IT","Im L6 IT","L6 IT","L5 PT","L5 NP","L6 CT","Lamp5","Pvalb","Sst","Vip")
+  seu$orig.ident == "P1" & seu$SubType %in% c("Im L2/3 IT","Im L4/5 IT","Im L5 IT","Im L6 IT","L6 IT","L5 PT","L5 NP","L6 CT","Lamp5","Pvalb","Sst","Vip")
 )])
 seu.P4 <- subset(seu, cells=colnames(seu)[which(
-  seu$orig.ident == "P4" & seu$SubType_v4 %in% c("Im L2/3 IT","Im L4/5 IT","Im L5 IT","Im L6 IT","L5 IT","L6 IT","L5 PT","L5 NP","L6 CT","Lamp5","Pvalb","Sst","Vip")
+  seu$orig.ident == "P4" & seu$SubType %in% c("Im L2/3 IT","Im L4/5 IT","Im L5 IT","Im L6 IT","L5 IT","L6 IT","L5 PT","L5 NP","L6 CT","Lamp5","Pvalb","Sst","Vip")
 )])
 seu.P10 <- subset(seu, cells=colnames(seu)[which(
-  seu$orig.ident == "P10" & seu$SubType_v4 %in% c("Im L2/3 IT","Im L4/5 IT","Im L5 IT","Im L6 IT","L2/3 IT","L4/5 IT","L5 IT","L6 IT","L5 PT","L5 NP","L6 CT","Lamp5","Pvalb","Sst","Vip")
+  seu$orig.ident == "P10" & seu$SubType %in% c("Im L2/3 IT","Im L4/5 IT","Im L5 IT","Im L6 IT","L2/3 IT","L4/5 IT","L5 IT","L6 IT","L5 PT","L5 NP","L6 CT","Lamp5","Pvalb","Sst","Vip")
 )])
 seu.Adult <- subset(seu, cells=colnames(seu)[which(
-  seu$orig.ident == "Adult" & seu$SubType_v4 %in% c("L2/3 IT","L4/5 IT","L5 IT","L6 IT","L5 PT","L5 NP","L6 CT","Lamp5","Pvalb","Sst","Vip")
+  seu$orig.ident == "Adult" & seu$SubType %in% c("L2/3 IT","L4/5 IT","L5 IT","L6 IT","L5 PT","L5 NP","L6 CT","Lamp5","Pvalb","Sst","Vip")
 )])
 
 SubType <- c("Im L2/3 IT"=0,"Im L4/5 IT"=1,"Im L5 IT"=2,"Im L6 IT"=3,"L2/3 IT"=4,"L4/5 IT"=5,"L5 IT"=6,"L6 IT"=7,"L5 PT"=8,"L5 NP"=9,"L6 CT"=10,"Lamp5"=11,"Pvalb"=12,"Sst"=13,"Vip"=14)
@@ -83,16 +85,16 @@ HVGs <- VariableFeatures(seu.neuron)
 
 DMatrix_P0 <- xgb.DMatrix(
   data = t(seu.P0@assays$RNA@data[HVGs,]),
-  label = as.numeric(match(seu.P0$SubType_v4, names(SubType)) - 1))
+  label = as.numeric(match(seu.P0$SubType, names(SubType)) - 1))
 DMatrix_P4 <- xgb.DMatrix(
   data = t(seu.P4@assays$RNA@data[HVGs,]),
-  label = as.numeric(match(seu.P4$SubType_v4, names(SubType)) - 1))
+  label = as.numeric(match(seu.P4$SubType, names(SubType)) - 1))
 DMatrix_P10 <- xgb.DMatrix(
   data = t(seu.P10@assays$RNA@data[HVGs,]),
-  label = as.numeric(match(seu.P10$SubType_v4, names(SubType)) - 1))
+  label = as.numeric(match(seu.P10$SubType, names(SubType)) - 1))
 DMatrix_Adult <- xgb.DMatrix(
   data = t(seu.Adult@assays$RNA@data[HVGs,]),
-  label = as.numeric(match(seu.Adult$SubType_v4, names(SubType)) - 1))
+  label = as.numeric(match(seu.Adult$SubType, names(SubType)) - 1))
 
 # P0 → P4
 cv <- xgb.cv(data = DMatrix_P0, nrounds = 1000, nfold = 5, max_depth = 5, eta = 0.5,
@@ -102,7 +104,7 @@ model_xgb <- xgboost(data=DMatrix_P0, max_depth=5, eta=0.5, nthread = 5,
                      nround = cv$best_iteration, objective = "multi:softmax",
                      num_class=15, verbose = F)
 pre_P0_P4 <- predict(model_xgb, newdata = DMatrix_P4)
-df_P0_P4 <- as.data.frame.array(table(names(SubType[pre_P0_P4+1]), seu.P4$SubType_v4))
+df_P0_P4 <- as.data.frame.array(table(names(SubType[pre_P0_P4+1]), seu.P4$SubType))
 
 # P4 → P10
 cv <- xgb.cv(data = DMatrix_P4, nrounds = 1000, nfold = 5, max_depth = 5, eta = 0.5,
@@ -112,7 +114,7 @@ model_xgb <- xgboost(data=DMatrix_P4, max_depth=5, eta=0.5, nthread = 5,
                      nround = cv$best_iteration, objective = "multi:softmax",
                      num_class=15, verbose = F)
 pre_P4_P10 <- predict(model_xgb, newdata = DMatrix_P10)
-df_P4_P10 <- as.data.frame.array(table(names(SubType[pre_P4_P10+1]),seu.P10$SubType_v4))
+df_P4_P10 <- as.data.frame.array(table(names(SubType[pre_P4_P10+1]),seu.P10$SubType))
 
 # P10 → Adult
 cv <- xgb.cv(data = DMatrix_P10, nrounds = 1000, nfold = 5, max_depth = 5, 
@@ -122,7 +124,7 @@ model_xgb <- xgboost(data=DMatrix_P10, max_depth=5, eta=0.5, nthread = 5,
                      nround = cv$best_iteration, objective = "multi:softmax",
                      num_class=15, verbose = F)
 pre_P10_Adult <- predict(model_xgb, newdata = DMatrix_Adult)
-df_P10_Adult <- as.data.frame.array(table(names(SubType[pre_P10_Adult+1]),seu.Adult$SubType_v4))
+df_P10_Adult <- as.data.frame.array(table(names(SubType[pre_P10_Adult+1]),seu.Adult$SubType))
 
 df1 <- df_P0_P4
 df1 <- df1[rowSums(df1)>=50, colSums(df1)>=50]

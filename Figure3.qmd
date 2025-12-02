@@ -69,6 +69,17 @@ ggsave("../../Figure/Figure4/Figure_3A.pdf", plot = Figure_3A,
 ```{r fig.width=5, fig.height=4}
 #| warning: false
 
+#cds$orig.ident <- factor(cds$orig.ident, levels = rev(c("P1","P4","P10","Adult")))
+Figure_3B <- 
+  plot_cell_trajectory(cds, color_by = "orig.ident",cell_size=1) +
+  scale_color_manual(values = col_Time)
+Figure_3B$data <- Figure_S3B$data[sample(nrow(Figure_S3B$data)), ]
+Figure_3B
+```
+
+```{r fig.width=5, fig.height=4}
+#| warning: false
+
 Figure_3B <- 
   plot_cell_trajectory(cds, color_by = "Pseudotime") +
   scale_color_gradientn(colours = sciRcolor::pal_scircolor(96))
@@ -160,7 +171,7 @@ regulons_incidMat <- SCopeLoomR::get_regulons(loom, column.attr.name="Regulons")
 regulonAUC <- assay(SCopeLoomR::get_regulons_AUC(loom,column.attr.name='RegulonsAUC'))
 ```
 
-```{r fig.width=6, fig.height=4}
+```{r fig.width=5, fig.height=4}
 #| message: false
 
 seu <- seu.IT
@@ -191,7 +202,7 @@ Figure_3E
 #| eval: false
 
 ggsave("../../Figure/Figure3/Figure_3E.pdf", plot = Figure_3E, 
-       height = 3, width = 6.5, units = "in")
+       height = 3, width = 8, units = "in")
 ```
 
 

@@ -66,10 +66,11 @@ ggsave("../../Figure/FigureS3/Figure_S3A.pdf", plot = Figure_S3A,
 ```{r fig.width=5, fig.height=4}
 #| warning: false
 
-cds$orig.ident <- factor(cds$orig.ident, levels = c("P1","P4","P10","Adult"))
+#cds$orig.ident <- factor(cds$orig.ident, levels = rev(c("P1","P4","P10","Adult")))
 Figure_S3B <- 
-  plot_cell_trajectory(cds, color_by = "orig.ident") +
+  plot_cell_trajectory(cds, color_by = "orig.ident",cell_size=1) +
   scale_color_manual(values = col_Time)
+Figure_S3B$data <- Figure_S3B$data[sample(nrow(Figure_S3B$data)), ]
 Figure_S3B
 ```
 

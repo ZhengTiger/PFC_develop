@@ -453,3 +453,108 @@ seu.combined@meta.data <- seu.combined@meta.data[,meta_name]
 
 
 
+
+
+
+## 批次效应
+
+```{r}
+all.list <- readRDS('../../data/rds/old/all.list.rds')
+seu.harmony <- readRDS('../data/seu.harmony.rds')
+seu.harmony.metadata <- readRDS('../data/seu.harmony.metadata.rds')
+seu.harmony@meta.data <- seu.harmony.metadata
+```
+
+
+```{r fig.width=6, fig.height=4}
+df1 <- data.frame(
+  PC_1 = all.list[["P0"]]@reductions$pca@cell.embeddings[,"PC_1"],
+  PC_2 = seu.harmony@reductions$pca@cell.embeddings[,"PC_2"],
+  Sample = seu.harmony$orig.ident
+)
+df1$Sample <- factor(df1$Sample, levels = c("P1","P4","P10","Adult"))
+df1 <- df1[order(df1$Sample),]
+
+p1 <- 
+  ggplot(df1, aes(x=PC_1, y=PC_2, color=Sample)) +
+  geom_point(size=0.5) +
+  scale_color_manual(values=col_Time) +
+  theme_classic() +
+  coord_fixed()
+```
+
+
+
+
+
+```{r fig.width=6, fig.height=4}
+df1 <- data.frame(
+  PC_1 = seu@reductions$pca@cell.embeddings[,"PC_1"],
+  PC_2 = seu@reductions$pca@cell.embeddings[,"PC_2"],
+  Sample = seu$orig.ident
+)
+df1$Sample <- factor(df1$Sample, levels = c("P1","P4","P10","Adult"))
+df1 <- df1[order(df1$Sample),]
+
+p1 <- 
+  ggplot(df1, aes(x=PC_1, y=PC_2, color=Sample)) +
+  geom_point(size=0.5) +
+  scale_color_manual(values=col_Time) +
+  theme_classic() +
+  coord_fixed()
+```
+
+
+```{r fig.width=6, fig.height=4}
+df1 <- data.frame(
+  PC_1 = seu@reductions$harmony@cell.embeddings[,"harmony_1"],
+  PC_2 = seu@reductions$harmony@cell.embeddings[,"harmony_2"],
+  Sample = seu$orig.ident
+)
+df1$Sample <- factor(df1$Sample, levels = c("P1","P4","P10","Adult"))
+df1 <- df1[order(df1$Sample),]
+
+p2 <- 
+  ggplot(df1, aes(x=PC_1, y=PC_2, color=Sample)) +
+  geom_point(size=0.5) +
+  scale_color_manual(values=col_Time) +
+  theme_classic() +
+  coord_fixed()
+```
+
+
+```{r fig.width=8, fig.height=4}
+p <- cowplot::plot_grid(p1, p2)
+p
+```
+
+```{r}
+ggsave("../../Figure/毕业论文/Harmony.pdf", plot = p,
+       height = 4, width = 8, units = "in")
+```
+
+
+
+
+```{r}
+seu <- seu.harmony
+seu <- NormalizeData(seu)
+seu <- FindVariableFeatures(seu, nfeatures = 2000)
+seu <- ScaleData(seu)
+seu <- RunPCA(seu, features = VariableFeatures(object = seu))
+seu <- RunUMAP(seu, reduction = "pca", dims = 1:30)
+
+seu <- RunHarmony(seu, "orig.ident")
+```
+
+
+
+```{r fig.width=4, fig.height=4}
+DimPlot(seu, reduction = 'umap', group.by = "orig.ident", label = F, 
+        cols = col_Time) +
+  theme_classic() +
+  coord_fixed()
+```
+
+
+

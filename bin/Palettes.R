@@ -11,3 +11,12 @@ col_SubType <- c("Im L2/3 IT"="#062e60", "Im L4/5 IT"="#4393c3", "Im L5 IT"="#a6
                  "Oligo"="#614e96","OPC"="#ed30a6")
 
 col_Time <- c("P1"="#440154FF","P4"="#2D708EFF","P10"="#85D54AFF","Adult"="#FDE725FF")
+
+#col_Disease <- c("AD"="#40e0d0","ADHD"="#00ff00","BD"="#a52a2a","DPD"="#ff0000","EP"="#ffff00",
+#                 "MA"="#0000ff","OCD"="#d2b48c","PD"="#ff00ff","PSC"="#ffc0cb","SCZ"="#a020f0")
+
+col_Disease <- c("ADHD"="#40e0d0","ANO"="#0000ff","ASD"="#a52a2a","BP"="#00ff00","MDD"="#ff0000",
+                 "OCD"="#ffff00","SCZ"="#d2b48c","TS"="#ff00ff")
+
+
+

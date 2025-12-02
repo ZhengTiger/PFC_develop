@@ -1,13 +1,101 @@
----
-author: "Hu Zheng"
-date: "2024-12-01"
-date-format: YYYY-MM-DD
----
-
-# FigureS6
+# Figure6
 
 ```{r}
-knitr::include_graphics("./images/FigureS6.jpg", dpi = 300)
+#| warning: false
+#| message: false
+
+library(Seurat)
+library(tidyverse)
+library(scCustomize)
+source('bin/Palettes.R')
 ```
+
+```{r}
+seu.harmony <- readRDS('../data/seu.harmony.rds')
+seu.harmony.metadata <- readRDS('../data/seu.harmony.metadata.rds')
+seu.harmony@meta.data <- seu.harmony.metadata
+```
+
+
+
+
+## Figure_S6B
+
+```{r fig.width=5, fig.height=5}
+#| message: false
+
+MDD_subtype <- c("P1 Lamp5","P1 Vip","P1 Im L2/3 IT","P1 Pvalb","P1 Sst","P1 L6 IT","P1 Im L5 IT","P4 Im L6 IT","P4 L6 IT","P4 L5 IT","P10 Im L6 IT","P10 L6 IT","P10 Lamp5","Adult L6 IT","Adult L5 PT","Adult L6 CT","Adult Sst","Adult L5 IT")
+seu <- seu.harmony[,seu.harmony$SubType %in% names(col_SubType)[1:8]]
+#seu <- seu.harmony
+seu$Time_Subtype <- paste(seu$orig.ident, seu$SubType)
+seu <- seu[,seu$Time_Subtype %in% MDD_subtype]
+
+seu$orig.ident <- factor(seu$orig.ident, levels = c("P1","P4","P10","Adult"))
+gene_list <- c("Dkk3")
+
+Figure_S6B <- 
+  VlnPlot_scCustom(seurat_object = seu, features = gene_list, group.by = "orig.ident",
+                 pt.size = 0) & NoLegend() &
+  geom_boxplot(width=0.1, outlier.size=0, fill="lightgray") &
+  scale_fill_manual(values = col_Time) &
+  theme(axis.text.x = element_text(angle = 0, hjust = 0.5)) &
+  labs(x="")
+Figure_S6B
+```
+
+
+```{r}
+#| eval: false
+
+ggsave("../../Figure/FigureS6/Figure_S6B_Dkk3.pdf", plot = Figure_S6B, 
+       height = 6, width = 5, units = "in")
+```
+
+
+
+
+
+
+
+```{r fig.width=5, fig.height=5}
+#| message: false
+
+MA_subtype <- c("P1 Microglia","P4 Astro","P10 Astro","P10 Microglia","Adult Astro","Adult Microglia")
+MA_subtype <- c("P1 Astro","P4 Astro","P10 Astro","Adult Astro")
+#MA_subtype <- c("P1 Microglia","P4 Microglia","P10 Microglia","Adult Microglia")
+seu <- seu.harmony
+seu$Time_Subtype <- paste(seu$orig.ident, seu$SubType)
+seu <- seu[,seu$Time_Subtype %in% MA_subtype]
+
+seu$orig.ident <- factor(seu$orig.ident, levels = c("P1","P4","P10","Adult"))
+gene_list <- c("Ets1")
+
+Figure_S6B <- 
+  VlnPlot_scCustom(seurat_object = seu, features = gene_list, group.by = "orig.ident",
+                 pt.size = 0) & NoLegend() &
+  geom_boxplot(width=0.1, outlier.size=0, fill="lightgray") &
+  scale_fill_manual(values = col_Time) &
+  theme(axis.text.x = element_text(angle = 0, hjust = 0.5)) &
+  labs(x="")
+Figure_S6B
+```
+
+
+```{r}
+#| eval: false
+
+ggsave("../../Figure/FigureS6/Figure_S6B_Dkk3.pdf", plot = Figure_S6B, 
+       height = 6, width = 5, units = "in")
+```
+
+
+
+
+
+
+
+
+
+
 
 

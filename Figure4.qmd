@@ -105,18 +105,20 @@ Figure_4A_1 <-
           tile.col = tile.col,
           size = 2, segment.size = 0.1,
           fontface = 'italic',
-          polar = T,
+          polar = F,
           seed = 20230727)+
-  ylim(-5,5) +
-  labs(title = 'P4_vs_P0') +
-  theme(plot.title = element_text(hjust = 0.5))
+  ylim(-3,3) +
+  labs(title = '',x='',y='') +
+  theme(plot.title = element_text(hjust = 0.5),
+        legend.position = "nine", axis.text.y = element_blank(),
+        axis.title.x = element_blank())
 Figure_4A_1
 ```
 
 ```{r}
 #| eval: false
 
-ggsave("../../Figure/Figure4/Figure_4A_1.pdf", plot = Figure_4A_1,
+ggsave("../../Figure/Figure4/Figure_4A_1.png", plot = Figure_4A_1,
        height = 6, width = 6, units = "in")
 ```
 
@@ -140,18 +142,20 @@ Figure_4A_2 <-
           tile.col = tile.col,
           size = 2, segment.size = 0.1,
           fontface = 'italic',
-          polar = T,
+          polar = F,
           seed = 20230727)+
-  ylim(-5,5) +
-  labs(title = 'P10_vs_P4') +
-  theme(plot.title = element_text(hjust = 0.5))
+  ylim(-3,3) +
+  labs(title = '', x='',y='') +
+  theme(plot.title = element_text(hjust = 0.5),
+        legend.position = "none",
+        axis.title.x = element_blank())
 Figure_4A_2
 ```
 
 ```{r}
 #| eval: false
 
-ggsave("../../Figure/Figure4/Figure_4A_2.pdf", plot = Figure_4A_2,
+ggsave("../../Figure/Figure4/Figure_4A_2.png", plot = Figure_4A_2,
        height = 6, width = 6, units = "in")
 ```
 
@@ -177,18 +181,20 @@ Figure_4A_3 <-
           tile.col = tile.col,
           size = 2, segment.size = 0.1,
           fontface = 'italic',
-          polar = T,
+          polar = F,
           seed = 20230727)+
-  ylim(-5,5) +
-  labs(title = 'Adult_vs_P10') +
-  theme(plot.title = element_text(hjust = 0.5))
+  ylim(-3,3) +
+  labs(title = '',x='',y='') +
+  theme(plot.title = element_text(hjust = 0.5),
+        legend.position = "none",
+        axis.title.x = element_blank())
 Figure_4A_3
 ```
 
 ```{r}
 #| eval: false
 
-ggsave("../../Figure/Figure4/Figure_4A_3.pdf", plot = Figure_4A_3,
+ggsave("../../Figure/Figure4/Figure_4A_3.png", plot = Figure_4A_3,
        height = 6, width = 6, units = "in")
 ```
 
