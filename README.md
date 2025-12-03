@@ -13,6 +13,7 @@ In early postnatal brain, the prefrontal cortex (PFC) remains immature and highl
 We developed is a shiny application **PFCdev-web** that allows users to interactively access our data. You can access our online website at <https://huggingface.co/spaces/TigerZheng/PFCdev-web>
 
 <img src="https://ZhengTiger.github.io/picx-images-hosting/PFCdev/PFCdev-demo.1zipezv8tf.gif" width="100%" />
+<img src="https://github.com/ZhengTiger/PFC_develop/blob/main/images/PFCdev-demo.gif" width="100%" />
 
 Users can browse the following content through the scRNAseq page:
 
