@@ -5,7 +5,7 @@ project:
 book:
   title: "PFC develop"
   author: "Hu Zheng"
-  date: "2024/12/01"
+  date: "2025/12/01"
   date-format: YYYY-MM-DD
   chapters:
     - index.qmd
@@ -17,6 +17,7 @@ book:
         - Figure3.qmd
         - Figure4.qmd
         - Figure5.qmd
+        - Figure6.qmd
 
     - part: "Supplemental Figure"
       chapters:
@@ -26,6 +27,7 @@ book:
         - Figure-S4.qmd
         - Figure-S5.qmd
         - Figure-S6.qmd
+        - Figure-S7.qmd
 
 format:
   html:

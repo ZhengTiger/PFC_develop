@@ -1,6 +1,6 @@
 ---
 author: "Hu Zheng"
-date: "2024-12-01"
+date: "2025-12-01"
 date-format: YYYY-MM-DD
 ---
 
@@ -21,8 +21,6 @@ source('bin/Palettes.R')
 
 ```{r}
 seu.harmony <- readRDS('../data/seu.harmony.rds')
-seu.harmony.metadata <- readRDS('../data/seu.harmony.metadata.rds')
-seu.harmony@meta.data <- seu.harmony.metadata
 seu.IT <- subset(seu.harmony, cells=colnames(seu.harmony)[which(
   seu.harmony$SubType %in% names(col_SubType)[1:8]
 )])
@@ -86,8 +84,6 @@ P10_vs_P4_DEGs <- DEGs_all[DEGs_all$cluster %in% P10_cluster,]
 Adult_vs_P10_DEGs <- DEGs_all[DEGs_all$cluster %in% Adult_cluster,]
 ```
 
-### Figure_4A_1
-
 ```{r fig.width=6, fig.height=6}
 #| message: false
 #| warning: false
@@ -98,7 +94,7 @@ P4_vs_P0_DEGs$cluster <- gsub("P4_","",P4_vs_P0_DEGs$cluster)
 P4_vs_P0_DEGs$cluster <- factor(P4_vs_P0_DEGs$cluster,
                                 levels = names(tile.col))
 P4_vs_P0_DEGs <- P4_vs_P0_DEGs[,-1]
-Figure_4A_1 <- 
+Figure_4A <- 
   jjVolcano(diffData = P4_vs_P0_DEGs, 
           aesCol = c('purple','orange'),
           topGeneN = 3,
@@ -112,89 +108,13 @@ Figure_4A_1 <-
   theme(plot.title = element_text(hjust = 0.5),
         legend.position = "nine", axis.text.y = element_blank(),
         axis.title.x = element_blank())
-Figure_4A_1
+Figure_4A
 ```
 
 ```{r}
 #| eval: false
 
-ggsave("../../Figure/Figure4/Figure_4A_1.png", plot = Figure_4A_1,
-       height = 6, width = 6, units = "in")
-```
-
-
-### Figure_4A_2
-
-```{r fig.width=6, fig.height=6}
-#| message: false
-#| warning: false
-
-tile.col <- c("IT"="#0a6ddd","PT"="#a1bc6a","NP"="#f7bc3e","CT"="#f7fa10",
-              "Lamp5"="#0e0786","Pvalb"="#6902a4","Sst"="#df6361","Vip"="#31b69e")
-P10_vs_P4_DEGs$cluster <- gsub("P10_","",P10_vs_P4_DEGs$cluster)
-P10_vs_P4_DEGs$cluster <- factor(P10_vs_P4_DEGs$cluster,
-                                       levels = names(tile.col))
-P10_vs_P4_DEGs <- P10_vs_P4_DEGs[,-1]
-Figure_4A_2 <- 
-  jjVolcano(diffData = P10_vs_P4_DEGs, 
-          aesCol = c('purple','orange'),
-          topGeneN = 3,
-          tile.col = tile.col,
-          size = 2, segment.size = 0.1,
-          fontface = 'italic',
-          polar = F,
-          seed = 20230727)+
-  ylim(-3,3) +
-  labs(title = '', x='',y='') +
-  theme(plot.title = element_text(hjust = 0.5),
-        legend.position = "none",
-        axis.title.x = element_blank())
-Figure_4A_2
-```
-
-```{r}
-#| eval: false
-
-ggsave("../../Figure/Figure4/Figure_4A_2.png", plot = Figure_4A_2,
-       height = 6, width = 6, units = "in")
-```
-
-
-### Figure_4A_3
-
-```{r fig.width=6, fig.height=6}
-#| message: false
-#| warning: false
-
-tile.col <- c("IT"="#0a6ddd","PT"="#a1bc6a","NP"="#f7bc3e","CT"="#f7fa10",
-              "Lamp5"="#0e0786","Pvalb"="#6902a4","Sst"="#df6361","Vip"="#31b69e")
-Adult_vs_P10_DEGs$cluster <- gsub("Adult_","",Adult_vs_P10_DEGs$cluster)
-#Adult_vs_P10_DEGs_filter <- Adult_vs_P10_DEGs[-grep("Gm", Adult_vs_P10_DEGs$gene),]
-Adult_vs_P10_DEGs$cluster <- factor(Adult_vs_P10_DEGs$cluster,
-                                           levels = names(tile.col))
-Adult_vs_P10_DEGs <- Adult_vs_P10_DEGs[,-1]
-
-Figure_4A_3 <- 
-  jjVolcano(diffData = Adult_vs_P10_DEGs, 
-          aesCol = c('purple','orange'),
-          topGeneN = 3,
-          tile.col = tile.col,
-          size = 2, segment.size = 0.1,
-          fontface = 'italic',
-          polar = F,
-          seed = 20230727)+
-  ylim(-3,3) +
-  labs(title = '',x='',y='') +
-  theme(plot.title = element_text(hjust = 0.5),
-        legend.position = "none",
-        axis.title.x = element_blank())
-Figure_4A_3
-```
-
-```{r}
-#| eval: false
-
-ggsave("../../Figure/Figure4/Figure_4A_3.png", plot = Figure_4A_3,
+ggsave("../../Figure/Figure4/Figure_4A_P4_vs_P0.png", plot = Figure_4A,
        height = 6, width = 6, units = "in")
 ```
 
@@ -203,6 +123,16 @@ ggsave("../../Figure/Figure4/Figure_4A_3.png", plot = Figure_4A_3,
 
 
 ## Figure_4B
+
+```{r}
+knitr::include_graphics("./images/Figure_4B.png", dpi = 300)
+```
+
+
+
+
+
+## Figure_4C
 
 ```{r}
 seurat_obj <- readRDS("../data/Figure4/seu.Ex.hdwgcna.rds")
@@ -231,16 +161,16 @@ Figure_4B
 ```
 
 ```{r}
-knitr::include_graphics("./images/Figure_4B.png", dpi = 300)
+knitr::include_graphics("./images/Figure_4C.png", dpi = 300)
 ```
 
 
 
 
 
-## Figure_4C
+## Figure_4D
 
-### Figure_4C_1
+### Figure_4D_1
 
 ```{r fig.width=10, fig.height=4}
 #| warning: false
@@ -260,7 +190,7 @@ wrap_plots(plot_list, ncol=5)
 #| eval: false
 
 for (i in 1:5){
-  ggsave(filename=paste("../../Figure/Figure4/Figure_4C_1/M",i,".png",sep=""),
+  ggsave(filename=paste("../../Figure/Figure4/Figure_4D_1/M",i,".png",sep=""),
          plot_list[[i]], 
          width=4, height = 4, units = "in")
 }
@@ -268,7 +198,7 @@ for (i in 1:5){
 
 
 
-### Figure_4C_2
+### Figure_4D_2
 
 ```{r fig.width=10, fig.height=4}
 seurat_obj$Time <- seurat_obj$orig.ident
@@ -307,7 +237,7 @@ for (i in 1:5){
           panel.grid = element_blank()) +
     scale_y_continuous(limits = c(-1.5,1.5)) +
     coord_fixed()
-  #ggsave(filename=paste("../../Figure/Figure4/Figure_4C_2/M",i,".png",sep=""),
+  #ggsave(filename=paste("../../Figure/Figure4/Figure_4D_2/M",i,".png",sep=""),
   #       plist[[i]], 
   #       width=4, height = 4, units = "in")
 }
@@ -317,7 +247,7 @@ cowplot::plot_grid(plotlist = plist, ncol = 5)
 
 
 
-### Figure_4C_3
+### Figure_4D_3
 
 ```{r fig.width=5, fig.height=6}
 SubType_order <- names(col_SubType)[1:11]
@@ -352,7 +282,7 @@ col <- colorRampPalette(c("lightblue3", "lightblue", "white", "red", "red4"))(le
 mat <- exp_mean_zscore[,SubType_order]
 mat[mat>2] <- 2
 mat[mat< -2] <- -2
-Figure_4C_3 <- 
+Figure_4D_3 <- 
   pheatmap::pheatmap(mat,
          cluster_rows = F, cluster_cols = F,
          breaks = breaks,
@@ -369,7 +299,7 @@ Figure_4C_3 <-
 
 
 
-## Figure_4D
+## Figure_4E
 
 ```{r}
 #| eval: false
@@ -381,36 +311,7 @@ ModuleNetworkPlot(
 ```
 
 ```{r}
-knitr::include_graphics("./images/Figure_4D.png", dpi = 300)
-```
-
-
-
-
-
-## Figure_4E
-
-```{r fig.width=6, fig.height=6}
-#| message: false
-
-seu <- seu.IT
-seu$orig.ident <- factor(seu$orig.ident, levels = c("P1","P4","P10","Adult"))
-gene_list <- c("Unc5d","Plxna4","Robo2","Clstn2","Cntn2")
-
-Figure_4E <- 
-  VlnPlot(seu, features = rev(gene_list), group.by = "orig.ident", cols=col_Time,
-        split.by = "orig.ident",
-        stack = TRUE, flip = TRUE) +
-  theme(legend.position = "none", axis.text.x = element_text(angle = 0, hjust = 0.5)) +
-  labs(x="")
-Figure_4E
-```
-
-```{r}
-#| eval: false
-
-ggsave("../../Figure/Figure4/Figure_4E.pdf", plot = Figure_4E,
-       height = 6, width = 6, units = "in")
+knitr::include_graphics("./images/Figure_4E.png", dpi = 300)
 ```
 
 
@@ -419,17 +320,27 @@ ggsave("../../Figure/Figure4/Figure_4E.pdf", plot = Figure_4E,
 
 ## Figure_4F
 
-```{r}
-#| eval: false
+```{r fig.width=6, fig.height=6}
+#| message: false
 
-ModuleNetworkPlot(
-  seurat_obj,
-  outdir = '../../Figure/Figure4/ModuleNetwork'
-)
+seu <- seu.IT
+seu$orig.ident <- factor(seu$orig.ident, levels = c("P1","P4","P10","Adult"))
+gene_list <- c("Unc5d","Plxna4","Robo2","Clstn2","Cntn2")
+
+Figure_4F <- 
+  VlnPlot(seu, features = rev(gene_list), group.by = "orig.ident", cols=col_Time,
+        split.by = "orig.ident",
+        stack = TRUE, flip = TRUE) +
+  theme(legend.position = "none", axis.text.x = element_text(angle = 0, hjust = 0.5)) +
+  labs(x="")
+Figure_4F
 ```
 
 ```{r}
-knitr::include_graphics("./images/Figure_4F.png", dpi = 300)
+#| eval: false
+
+ggsave("../../Figure/Figure4/Figure_4F.pdf", plot = Figure_4F,
+       height = 6, width = 6, units = "in")
 ```
 
 
@@ -438,30 +349,9 @@ knitr::include_graphics("./images/Figure_4F.png", dpi = 300)
 
 ## Figure_4G
 
-```{r fig.width=6, fig.height=6}
-#| message: false
-
-seu <- seu.IT
-seu$orig.ident <- factor(seu$orig.ident, levels = c("P1","P4","P10","Adult"))
-gene_list <- c("App","Nptn","Clstn1","Clstn3","Camk2a")
-
-Figure_4G <- 
-  VlnPlot(seu, features = rev(gene_list), group.by = "orig.ident", cols=col_Time,
-        split.by = "orig.ident",
-        stack = TRUE, flip = TRUE) +
-  theme(legend.position = "none", axis.text.x = element_text(angle = 0, hjust = 0.5)) +
-  labs(x="")
-Figure_4G
-```
-
 ```{r}
-#| eval: false
-
-ggsave("../../Figure/Figure4/Figure_4G.pdf", plot = Figure_4G,
-       height = 6, width = 6, units = "in")
+knitr::include_graphics("./images/Figure_4G.png", dpi = 300)
 ```
-
-
 
 
 

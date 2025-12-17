@@ -1,6 +1,6 @@
 ---
 author: "Hu Zheng"
-date: "2024-12-01"
+date: "2025-12-01"
 date-format: YYYY-MM-DD
 ---
 
@@ -22,8 +22,6 @@ source('bin/Palettes.R')
 
 ```{r}
 seu.harmony <- readRDS('../data/seu.harmony.rds')
-seu.harmony.metadata <- readRDS('../data/seu.harmony.metadata.rds')
-seu.harmony@meta.data <- seu.harmony.metadata
 seu.IT <- subset(seu.harmony, cells=colnames(seu.harmony)[which(
   seu.harmony$SubType %in% names(col_SubType)[1:8]
 )])
@@ -69,20 +67,10 @@ ggsave("../../Figure/Figure4/Figure_3A.pdf", plot = Figure_3A,
 ```{r fig.width=5, fig.height=4}
 #| warning: false
 
-#cds$orig.ident <- factor(cds$orig.ident, levels = rev(c("P1","P4","P10","Adult")))
 Figure_3B <- 
   plot_cell_trajectory(cds, color_by = "orig.ident",cell_size=1) +
   scale_color_manual(values = col_Time)
-Figure_3B$data <- Figure_S3B$data[sample(nrow(Figure_S3B$data)), ]
-Figure_3B
-```
-
-```{r fig.width=5, fig.height=4}
-#| warning: false
-
-Figure_3B <- 
-  plot_cell_trajectory(cds, color_by = "Pseudotime") +
-  scale_color_gradientn(colours = sciRcolor::pal_scircolor(96))
+Figure_3B$data <- Figure_3B$data[sample(nrow(Figure_3B$data)), ]
 Figure_3B
 ```
 
@@ -92,6 +80,7 @@ Figure_3B
 ggsave("../../Figure/Figure3/Figure_3B.pdf", plot = Figure_3B,
        height = 4, width = 5, units = "in")
 ```
+
 
 
 
@@ -164,6 +153,16 @@ knitr::include_graphics("./images/Figure_3D.png", dpi = 300)
 ## Figure_3E
 
 ```{r}
+knitr::include_graphics("./images/Figure_3E.png", dpi = 300)
+```
+
+
+
+
+
+## Figure_3F
+
+```{r}
 #| message: false
 
 loom <- open_loom('../data/Figure3/SCENIC/aucell.loom')
@@ -171,7 +170,7 @@ regulons_incidMat <- SCopeLoomR::get_regulons(loom, column.attr.name="Regulons")
 regulonAUC <- assay(SCopeLoomR::get_regulons_AUC(loom,column.attr.name='RegulonsAUC'))
 ```
 
-```{r fig.width=5, fig.height=4}
+```{r fig.width=10, fig.height=4}
 #| message: false
 
 seu <- seu.IT
@@ -182,7 +181,7 @@ regulonsToPlot_mat <- scale(t(regulonAUC[regulonsToPlot,]))
 seu@meta.data <- cbind(seu@meta.data, regulonsToPlot_mat)
 seu$Time_subtype <- factor(seu$SubType, levels = names(col_SubType)[1:8])
 
-Figure_3E <- 
+Figure_3F <- 
   DotPlot(
   seu,
   features = regulonsToPlot,
@@ -195,13 +194,13 @@ Figure_3E <-
   theme(axis.text.x = element_text(angle = 25, hjust = 1)) +
   geom_hline(yintercept = c(4.5), linetype="dashed") +
   labs(x="",y="")
-Figure_3E
+Figure_3F
 ```
 
 ```{r}
 #| eval: false
 
-ggsave("../../Figure/Figure3/Figure_3E.pdf", plot = Figure_3E, 
+ggsave("../../Figure/Figure3/Figure_3F.pdf", plot = Figure_3F, 
        height = 3, width = 8, units = "in")
 ```
 
@@ -209,7 +208,7 @@ ggsave("../../Figure/Figure3/Figure_3E.pdf", plot = Figure_3E,
 
 
 
-## Figure_3F
+## Figure_3G
 
 ```{r fig.width=6, fig.height=6}
 #| message: false
@@ -239,16 +238,15 @@ edges <- data.frame(
 
 graph_data <- tidygraph::tbl_graph(nodes = nodes, edges = edges, directed = TRUE)
 
-# 绘制网络图
+# TF network
 ggraph(graph_data, layout = "stress", circular = TRUE) +
   geom_edge_arc(aes(edge_colour = edge.colour, edge_width = edge.width)) +
   geom_node_point(aes(colour = node.colour, size = node.size)) +
   geom_node_label(aes(label = node), size = 5, repel = TRUE) +
   theme_void() +
-  #scale_color_manual(values = c("#6468c5", "#e56967")) +
   scale_edge_color_gradientn(colors = rev(sciRcolor::pal_scircolor(85))) +
   scale_edge_width_continuous(range = c(0.2, 3)) +
-  scale_size_continuous(guide = "none") +  # 移除 node.size 的图例[^36^]
+  scale_size_continuous(guide = "none") +
   theme(
     legend.position = "right",
     legend.title = element_text(size = 10),
@@ -260,14 +258,14 @@ ggraph(graph_data, layout = "stress", circular = TRUE) +
 ```{r}
 #| eval: false
 
-ggsave('../../Figure/Figure3/Figure_3F/Sox11_netplot.pdf',width = 6, height = 5)
+ggsave('../../Figure/Figure3/Figure_3G/Sox11_netplot.pdf', width = 6, height = 5)
 ```
 
 
 
 
 
-## Figure_3G-J
+## Figure_3H-K
 
 ```{r fig.width=6, fig.height=6}
 data <- as.data.frame(regulonsToPlot_mat)
@@ -288,21 +286,21 @@ df$value[df$value<0] <- 0
 df <- df[order(df$value),]
 df <- df[df$UMAP_1<0 & df$UMAP_1 > -12 & df$UMAP_2<8,]
 
-Figure_3G <- 
+Figure_3H <- 
   ggplot(df, mapping=aes(x=UMAP_1, y=UMAP_2, color=value)) +
   geom_point() +
   theme_void() +
   theme(legend.position = "none") +
   coord_fixed() +
   scale_color_gradientn(colours = c("lightblue3", "lightblue", "white", "red", "red4"), limits = c(0,3))
-Figure_3G
+Figure_3H
 ```
 
 
 ```{r}
 #| eval: false
 
-ggsave("../../Figure/Figure3/Figure_3G/Sox11(+)_UMAP.png", plot = Figure_3F, 
+ggsave("../../Figure/Figure3/Figure_3H/Sox11(+)_UMAP.png", plot = Figure_3H, 
        height = 6, width = 6, units = "in")
 ```
 

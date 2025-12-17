@@ -1,6 +1,6 @@
 ---
 author: "Hu Zheng"
-date: "2024-12-01"
+date: "2025-12-01"
 date-format: YYYY-MM-DD
 ---
 
@@ -14,6 +14,7 @@ library(Seurat)
 library(tidyverse)
 library(monocle)
 library(CellChat)
+library(scCustomize)
 source('bin/Palettes.R')
 ```
 
@@ -23,8 +24,6 @@ source('bin/Palettes.R')
 #| message: false
 
 seu.harmony <- readRDS('../data/seu.harmony.rds')
-seu.harmony.metadata <- readRDS('../data/seu.harmony.metadata.rds')
-seu.harmony@meta.data <- seu.harmony.metadata
 seu.NOneuron <- subset(seu.harmony, cells=colnames(seu.harmony)[which(
   seu.harmony$SubType %in% c("NPC", "Astro", "OPC", "Oligo") &
   seu.harmony@reductions$umap@cell.embeddings[,"UMAP_2"] > 5  
@@ -78,6 +77,7 @@ ggsave("../../Figure/FigureS5/Figure_S5A.pdf", plot = Figure_S5A,
 
 ```{r fig.width=5, fig.height=4}
 #| warning: false
+#| message: false
 
 cds$orig.ident <- factor(cds$orig.ident, levels = c("P1","P4","P10","Adult"))
 Figure_S5B <- 
@@ -153,51 +153,46 @@ ggsave("../../Figure/FigureS5/Figure_S5D.pdf", plot = Figure_S5D,
 
 
 
-## Figure_S5E-F
+## Figure_S5E-H
 
 ```{r}
 group <- c(rep("IT",8), rep("Non-Neuronal",4))
 names(group) <- names(col_SubType)[c(1:8,17,19:21)]
 Neuron <- names(group)[c(1:8)]
 Non_neuron <- names(group)[c(9:12)]
-#P1
+# P1
 df.P1 <- rankNet(P1.CellChat, slot.name = "net", measure = c("weight"),
                  sources.use = Non_neuron[-3], targets.use = Neuron[-c(5:7)],
                  mode='single', return.data = T)
 df.P1 <- df.P1$signaling.contribution
 df.P1$Time <- "P1"
 P1.top10 <- as.character(df.P1$name[df.P1$contribution>0.1])
-#df.P0 <- df.P0[df.P0$contribution > 0.5,]
 
-#P4
+# P4
 df.P4 <- rankNet(P4.CellChat, slot.name = "net", measure = c("weight"),
                  sources.use = Non_neuron, targets.use = Neuron[-c(5:6)],
                  mode='single', return.data = T)
 df.P4 <- df.P4$signaling.contribution
 df.P4$Time <- "P4"
 P4.top10 <- as.character(df.P4$name[df.P4$contribution>0.1])
-#df.P4 <- df.P4[df.P4$contribution > 0.5,]
 
-#P10
+# P10
 df.P10 <- rankNet(P10.CellChat, slot.name = "net", measure = c("weight"),
                   sources.use = Non_neuron, targets.use = Neuron,
                   mode='single', return.data = T)
 df.P10 <- df.P10$signaling.contribution
 df.P10$Time <- "P10"
 P10.top10 <- as.character(df.P10$name[df.P10$contribution>0.1])
-#df.P10 <- df.P10[df.P10$contribution > 0.5,]
 
-#Adult
+# Adult
 df.Adult <- rankNet(Adult.CellChat, slot.name = "net", measure = c("weight"),
                     sources.use = Non_neuron, targets.use = Neuron[-c(1:4)],
                     mode='single', return.data = T)
 df.Adult <- df.Adult$signaling.contribution
 df.Adult$Time <- "Adult"
 Adult.top10 <- as.character(df.Adult$name[df.Adult$contribution>0.1])
-#df.Adult <- df.Adult[df.Adult$contribution > 0.5,]
 
 
-#name <- unique(c(df.P0$name, df.P4$name, df.P10$name, df.Adult$name))
 name <- unique(c(P1.top10, P4.top10, P10.top10, Adult.top10))
 mat <- matrix(nrow = length(name), ncol = 4)
 rownames(mat) <- name
@@ -222,7 +217,7 @@ df_long$name <- factor(df_long$name, levels = rev(df$name))
 
 all.name <- levels(df_long$name)
 
-#P1
+# P1
 df.P1 <- netVisual_bubble(
   P1.CellChat, sources.use = Non_neuron, targets.use = Neuron, 
   pairLR.use = data.frame("interaction_name" = all.name), 
@@ -232,7 +227,7 @@ df.P1 <- df.P1[!(is.na(df.P1$source)),]
 df.P1 <- df.P1[!(is.na(df.P1$target)),]
 df.P1$source.target <- paste("P1", df.P1$source.target)
 
-#P4
+# P4
 df.P4 <- netVisual_bubble(
   P4.CellChat, sources.use = Non_neuron, targets.use = Neuron, 
   pairLR.use = data.frame("interaction_name" = all.name), 
@@ -242,7 +237,7 @@ df.P4 <- df.P4[!(is.na(df.P4$source)),]
 df.P4 <- df.P4[!(is.na(df.P4$target)),]
 df.P4$source.target <- paste("P4", df.P4$source.target)
 
-#P4
+# P10
 df.P10 <- netVisual_bubble(
   P10.CellChat, sources.use = Non_neuron, targets.use = Neuron, 
   pairLR.use = data.frame("interaction_name" = all.name), 
@@ -252,7 +247,7 @@ df.P10 <- df.P10[!(is.na(df.P10$source)),]
 df.P10 <- df.P10[!(is.na(df.P10$target)),]
 df.P10$source.target <- paste("P10", df.P10$source.target)
 
-#P4
+# Adult
 df.Adult <- netVisual_bubble(
   Adult.CellChat, sources.use = Non_neuron, targets.use = Neuron, 
   pairLR.use = data.frame("interaction_name" = all.name), 
@@ -307,6 +302,71 @@ Figure_S5E
 ggsave("../../Figure/FigureS5/Figure_S5E/Figure_S5E_OPC.pdf", plot = Figure_S5E,
        height = 6.0, width = 10, units = "in")
 ```
+
+
+
+
+
+## Figure_S5I
+
+```{r fig.width=6, fig.height=4}
+#| message: false
+
+seu <- seu.NOneuron[,seu.NOneuron$SubType=="Astro"]
+seu$orig.ident <- factor(seu$orig.ident, levels = c("P1","P4","P10","Adult"))
+gene_list <- c("Slit2")
+
+Figure_S5I_1 <- 
+  VlnPlot_scCustom(seurat_object = seu, features = gene_list, group.by = "orig.ident",
+                 pt.size = 0) & NoLegend() &
+  geom_boxplot(width=0.1, outlier.size=0, fill="lightgray") &
+  scale_fill_manual(values = col_Time) &
+  labs(x="")
+Figure_S5I_1
+```
+
+```{r}
+#| eval: false
+
+ggsave("../../Figure/Figure5/Figure_S5I/Figure_S5I_Slit2.pdf", plot = Figure_S5I_1, 
+       height = 4, width = 4.5, units = "in")
+```
+
+
+```{r fig.width=6, fig.height=4}
+#| message: false
+
+seu <- seu.harmony[,seu.harmony$SubType %in% names(col_SubType)[1:8]]
+
+seu$orig.ident <- factor(seu$orig.ident, levels = c("P1","P4","P10","Adult"))
+gene_list <- c("Robo1")
+
+Figure_S5I_2 <- 
+  VlnPlot_scCustom(seurat_object = seu, features = gene_list, group.by = "orig.ident",
+                 pt.size = 0) & NoLegend() &
+  geom_boxplot(width=0.1, outlier.size=0, fill="lightgray") &
+  scale_fill_manual(values = col_Time) &
+  labs(x="")
+Figure_S5I_2
+```
+
+```{r}
+#| eval: false
+
+ggsave("../../Figure/Figure5/Figure_S5I/Figure_S5I_Robo1.pdf", plot = Figure_S5I_2, 
+       height = 4, width = 6, units = "in")
+```
+
+
+
+
+
+## Figure_S5J
+
+```{r}
+knitr::include_graphics("./images/Figure_S5J.png", dpi = 300)
+```
+
 
 
 

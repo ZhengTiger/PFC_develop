@@ -1,6 +1,6 @@
 ---
 author: "Hu Zheng"
-date: "2024-12-01"
+date: "2025-12-01"
 date-format: YYYY-MM-DD
 ---
 
@@ -21,8 +21,6 @@ source('bin/Palettes.R')
 
 ```{r}
 seu.harmony <- readRDS('../data/seu.harmony.rds')
-seu.harmony.metadata <- readRDS('../data/seu.harmony.metadata.rds')
-seu.harmony@meta.data <- seu.harmony.metadata
 seu.IT <- subset(seu.harmony, cells=colnames(seu.harmony)[which(
   seu.harmony$SubType %in% names(col_SubType)[1:8]
 )])
@@ -65,12 +63,11 @@ ggsave("../../Figure/FigureS3/Figure_S3A.pdf", plot = Figure_S3A,
 
 ```{r fig.width=5, fig.height=4}
 #| warning: false
+#| message: false
 
-#cds$orig.ident <- factor(cds$orig.ident, levels = rev(c("P1","P4","P10","Adult")))
 Figure_S3B <- 
-  plot_cell_trajectory(cds, color_by = "orig.ident",cell_size=1) +
-  scale_color_manual(values = col_Time)
-Figure_S3B$data <- Figure_S3B$data[sample(nrow(Figure_S3B$data)), ]
+  plot_cell_trajectory(cds, color_by = "Pseudotime") +
+  scale_color_gradientn(colours = sciRcolor::pal_scircolor(96))
 Figure_S3B
 ```
 

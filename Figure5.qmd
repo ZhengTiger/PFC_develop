@@ -1,6 +1,6 @@
 ---
 author: "Hu Zheng"
-date: "2024-12-01"
+date: "2025-12-01"
 date-format: YYYY-MM-DD
 ---
 
@@ -15,6 +15,9 @@ library(tidyverse)
 library(monocle)
 library(CellChat)
 library(scCustomize)
+library(imager)
+library(spatstat.geom)
+library(ggsignif)
 source('bin/Palettes.R')
 ```
 
@@ -24,8 +27,6 @@ source('bin/Palettes.R')
 #| message: false
 
 seu.harmony <- readRDS('../data/seu.harmony.rds')
-seu.harmony.metadata <- readRDS('../data/seu.harmony.metadata.rds')
-seu.harmony@meta.data <- seu.harmony.metadata
 seu.NOneuron <- subset(seu.harmony, cells=colnames(seu.harmony)[which(
   seu.harmony$SubType %in% c("NPC", "Astro", "OPC", "Oligo") &
   seu.harmony@reductions$umap@cell.embeddings[,"UMAP_2"] > 5  
@@ -41,17 +42,6 @@ P1.CellChat <- readRDS("../data/Figure5/P1.CellChat.rds")
 P4.CellChat <- readRDS("../data/Figure5/P4.CellChat.rds")
 P10.CellChat <- readRDS("../data/Figure5/P10.CellChat.rds")
 Adult.CellChat <- readRDS("../data/Figure5/Adult.CellChat.rds")
-```
-
-
-```{r}
-#P0.NeuronChat <- readRDS("../../data/rds/Figure5/P0.NeuronChat.rds")
-#P4.NeuronChat <- readRDS("../../data/rds/Figure5/P4.NeuronChat.rds")
-#P10.NeuronChat <- readRDS("../../data/rds/Figure5/P10.NeuronChat.rds")
-#Adult.NeuronChat <- readRDS("../../data/rds/Figure5/Adult.NeuronChat.rds")
-
-
-all.CellChat <- readRDS("../../data/rds/Figure5/all.CellChat.rds")
 ```
 
 
@@ -93,6 +83,7 @@ ggsave("../../Figure/Figure5/Figure_5A.pdf", plot = Figure_5A,
 
 ```{r fig.width=5, fig.height=4}
 #| warning: false
+#| message: false
 
 Figure_5B <- 
   plot_cell_trajectory(cds, color_by = "Pseudotime") +
@@ -115,6 +106,7 @@ ggsave("../../Figure/Figure5/Figure_5B.pdf", plot = Figure_5B,
 
 ```{r fig.width=10, fig.height=5}
 #| warning: false
+
 cds$SubType <- seu.NOneuron$SubType
 cds$SubType <- factor(
   cds$SubType, 
@@ -272,14 +264,13 @@ group <- c(rep("IT",8), rep("Non-Neuronal",4))
 names(group) <- names(col_SubType)[c(1:8,17,19:21)]
 Neuron <- names(group)[c(1:8)]
 Non_neuron <- names(group)[c(9:12)]
-#P1
+# P1
 df.P1 <- rankNet(P1.CellChat, slot.name = "net", measure = c("weight"),
                  sources.use = Non_neuron[-3], targets.use = Neuron[-c(5:7)],
                  mode='single', return.data = T)
 df.P1 <- df.P1$signaling.contribution
 df.P1$Time <- "P1"
 P1.top10 <- as.character(df.P1$name[df.P1$contribution>0.1])
-#df.P0 <- df.P0[df.P0$contribution > 0.5,]
 
 #P4
 df.P4 <- rankNet(P4.CellChat, slot.name = "net", measure = c("weight"),
@@ -288,27 +279,23 @@ df.P4 <- rankNet(P4.CellChat, slot.name = "net", measure = c("weight"),
 df.P4 <- df.P4$signaling.contribution
 df.P4$Time <- "P4"
 P4.top10 <- as.character(df.P4$name[df.P4$contribution>0.1])
-#df.P4 <- df.P4[df.P4$contribution > 0.5,]
 
-#P10
+# P10
 df.P10 <- rankNet(P10.CellChat, slot.name = "net", measure = c("weight"),
                   sources.use = Non_neuron, targets.use = Neuron,
                   mode='single', return.data = T)
 df.P10 <- df.P10$signaling.contribution
 df.P10$Time <- "P10"
 P10.top10 <- as.character(df.P10$name[df.P10$contribution>0.1])
-#df.P10 <- df.P10[df.P10$contribution > 0.5,]
 
-#Adult
+# Adult
 df.Adult <- rankNet(Adult.CellChat, slot.name = "net", measure = c("weight"),
                     sources.use = Non_neuron[-1], targets.use = Neuron[-c(1:4)],
                     mode='single', return.data = T)
 df.Adult <- df.Adult$signaling.contribution
 df.Adult$Time <- "Adult"
 Adult.top10 <- as.character(df.Adult$name[df.Adult$contribution>0.1])
-#df.Adult <- df.Adult[df.Adult$contribution > 0.5,]
 
-#name <- unique(c(df.P0$name, df.P4$name, df.P10$name, df.Adult$name))
 name <- unique(c(P1.top10, P4.top10, P10.top10, Adult.top10))
 mat <- matrix(nrow = length(name), ncol = 4)
 rownames(mat) <- name
@@ -339,6 +326,8 @@ Figure_5F
 ```
 
 ```{r}
+#| eval: false
+
 ggsave("../../Figure/Figure5/Figure_5F.pdf", plot = Figure_5F, 
        height = 5.5, width = 3, units = "in")
 ```
@@ -375,28 +364,28 @@ knitr::include_graphics("./images/Figure_5GH.png", dpi = 300)
 
 
 
-## Figure_5I-J
+## Figure_5I
 
 ```{r fig.width=6, fig.height=4}
 #| message: false
 
-seu <- seu.NOneuron[,seu.NOneuron$SubType=="Astro"]
+seu <- seu.NOneuron[,seu.NOneuron$SubType=="Oligo"]
 seu$orig.ident <- factor(seu$orig.ident, levels = c("P1","P4","P10","Adult"))
-gene_list <- c("Slit2")
+gene_list <- c("Sema3d")
 
-Figure_5I <- 
+Figure_5I_1 <- 
   VlnPlot_scCustom(seurat_object = seu, features = gene_list, group.by = "orig.ident",
                  pt.size = 0) & NoLegend() &
   geom_boxplot(width=0.1, outlier.size=0, fill="lightgray") &
   scale_fill_manual(values = col_Time) &
   labs(x="")
-Figure_5I
+Figure_5I_1
 ```
 
 ```{r}
 #| eval: false
 
-ggsave("../../Figure/Figure5/Figure_5H/Figure_5H_Sema3d.pdf", plot = Figure_5H, 
+ggsave("../../Figure/Figure5/Figure_5I/Figure_5I_Sema3d.pdf", plot = Figure_5I_1, 
        height = 4, width = 4.5, units = "in")
 ```
 
@@ -407,22 +396,151 @@ ggsave("../../Figure/Figure5/Figure_5H/Figure_5H_Sema3d.pdf", plot = Figure_5H,
 seu <- seu.harmony[,seu.harmony$SubType %in% names(col_SubType)[1:8]]
 
 seu$orig.ident <- factor(seu$orig.ident, levels = c("P1","P4","P10","Adult"))
-gene_list <- c("Robo1")
+gene_list <- c("Plxna1")
 
-Figure_5I <- 
+Figure_5I_2 <- 
   VlnPlot_scCustom(seurat_object = seu, features = gene_list, group.by = "orig.ident",
                  pt.size = 0) & NoLegend() &
   geom_boxplot(width=0.1, outlier.size=0, fill="lightgray") &
   scale_fill_manual(values = col_Time) &
   labs(x="")
-Figure_5I
+Figure_5I_2
 ```
 
 ```{r}
 #| eval: false
 
-ggsave("../../Figure/Figure5/Figure_5H/Figure_5J_Robo1.pdf", plot = Figure_5H, 
+ggsave("../../Figure/Figure5/Figure_5I/Figure_5I_Plxna1.pdf", plot = Figure_5I_2, 
        height = 4, width = 6, units = "in")
+```
+
+
+
+
+
+## Figure_5J
+
+```{r}
+# SpaGene function
+LR_score <- function(data, k){
+  expr <- t(data[,c("Sema3d", "Plxna1")])
+  location <- data[,c("x", "y")]
+  LRpair <- c("Sema3d","Plxna1")
+  nnmatrix <- RANN::nn2(location, k=k)$nn.idx
+  ligand <- expr[LRpair[1],]
+  receptor <- expr[LRpair[2],]
+  LRexp <- rbind(ligand,receptor)
+  neighexp <- apply(nnmatrix,1,function(x){apply(LRexp[,x[2:k]],1,max)})
+  LRadd <- pmax(LRexp[1,]*neighexp[2,], LRexp[2,]*neighexp[1,])
+  LRadd_max <- quantile(LRadd, probs=0.95)
+  LRadd[LRadd>LRadd_max] <- LRadd_max
+  tmpLRadd <- data.frame(x=location[,1], y=location[,2], LR=LRadd)
+  tmpLRadd$LR <- log1p(tmpLRadd$LR)
+  return(tmpLRadd$LR)
+}
+
+P10 <- read.csv("../../Figure/基因表达比较/基因表达比较/cellpose_csv/P10.csv")
+Adult <- read.csv("../../Figure/基因表达比较/基因表达比较/cellpose_csv/Adult.csv")
+P10$Sema3d_Plxna1 <- LR_score(P10, 5)
+Adult$Sema3d_Plxna1 <- LR_score(Adult, 5)
+```
+
+```{r fig.width=6, fig.height=6}
+mask <- load.image("../../Figure/基因表达比较/基因表达比较/cellpose_csv/P10_mask.png")
+expr <- P10
+  
+mask_df <- as.data.frame(mask, wide = "c")
+colnames(mask_df)[3] <- "cell_id"
+mask_df <- mask_df[mask_df$cell_id !=0,]
+cell_id <- unique(mask_df$cell_id)
+mask_df$exp <- expr$Sema3d_Plxna1[match(mask_df$cell_id, cell_id)]
+mask_df$y <- -mask_df$y
+
+Figure_5J_P10 <- ggplot(mask_df, aes(x=x,y=y,color=exp)) +
+  geom_point(size=0.5) +
+  scale_colour_gradientn(colours = rev(sciRcolor::pal_scircolor(85)),
+                         limit=c(0,6)) +
+  labs(x="", y="") +
+  theme_void() +
+  theme(panel.grid = element_blank(),
+        legend.position = "none") +
+  coord_fixed()
+  
+Figure_5J_P10
+```
+
+```{r}
+#| eval: false
+
+ggsave("../../Figure/Figure5/Figure_5J_P10.png", plot = Figure_5J_P10, 
+       height = 6, width = 6, units = "in")
+```
+
+```{r fig.width=6, fig.height=6}
+mask <- load.image("../../Figure/基因表达比较/基因表达比较/cellpose_csv/Adult_mask.png")
+expr <- Adult
+  
+mask_df <- as.data.frame(mask, wide = "c")
+colnames(mask_df)[3] <- "cell_id"
+mask_df <- mask_df[mask_df$cell_id !=0,]
+cell_id <- unique(mask_df$cell_id)
+mask_df$exp <- expr$Sema3d_Plxna1[match(mask_df$cell_id, cell_id)]
+mask_df$y <- -mask_df$y
+
+Figure_5J_Adult <- ggplot(mask_df, aes(x=x,y=y,color=exp)) +
+  geom_point(size=0.5) +
+  scale_colour_gradientn(colours = rev(sciRcolor::pal_scircolor(85)),
+                         limit=c(0,6)) +
+  labs(x="", y="") +
+  theme_void() +
+  theme(panel.grid = element_blank(),
+        legend.position = "none") +
+  coord_fixed()
+  
+Figure_5J_Adult
+```
+
+```{r}
+#| eval: false
+
+ggsave("../../Figure/Figure5/Figure_5J_Adult.png", plot = Figure_5J_Adult, 
+       height = 6, width = 6, units = "in")
+```
+
+
+
+
+
+## Figure_5K
+
+```{r fig.width=5, fig.height=5}
+df <- data.frame(
+  x=c(rep("P10",nrow(P10)), rep("Adult",nrow(Adult))),
+  y=c(P10$Sema3d_Plxna1, Adult$Sema3d_Plxna1)
+)
+df$x <- factor(df$x, levels = c("P10","Adult"))
+
+Figure_5K <- ggplot(df, aes(x=x, y=y, fill=x)) +
+  geom_boxplot() +
+  theme_classic(base_size = 15) +
+  theme(legend.position = "none") +
+  scale_fill_manual(values = col_Time) +
+  scale_y_continuous(limits = c(0,6)) +
+  labs(x="", y="Sema3d_Plxna1 expression")
+Figure_5K
+```
+
+```{r}
+p <- t.test(P10$Sema3d_Plxna1, Adult$Sema3d_Plxna1, alternative = "two.sided",
+       paired = FALSE)
+p$p.value
+```
+
+```{r}
+#| eval: false
+
+ggsave("../../Figure/Figure5/Figure_5K.pdf", plot = p, 
+       height = 5, width = 5, units = "in")
 ```
 
 

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Hu Zheng">
-<meta name="dcterms.date" content="2024-12-01">
+<meta name="dcterms.date" content="2025-12-01">
 
 <title>PFC develop</title>
 <style>
@@ -188,6 +188,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Figure5</span></span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Figure6.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Figure6</span></span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -202,37 +208,43 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Figure-S1.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">FigureS1</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">FigureS1</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Figure-S2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">FigureS2</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">FigureS2</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Figure-S3.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">FigureS3</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">FigureS3</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Figure-S4.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">FigureS4</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">FigureS4</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Figure-S5.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">FigureS5</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">FigureS5</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Figure-S6.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">FigureS6</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">FigureS6</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Figure-S7.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">FigureS7</span></span></a>
   </div>
 </li>
       </ul>
@@ -249,7 +261,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#pfc-develop" id="toc-pfc-develop" class="nav-link active" data-scroll-target="#pfc-develop">PFC develop</a>
   <ul class="collapse">
-  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
+  <li><a href="#abstract" id="toc-abstract" class="nav-link" data-scroll-target="#abstract">Abstract</a></li>
   <li><a href="#data-visualization" id="toc-data-visualization" class="nav-link" data-scroll-target="#data-visualization">Data Visualization</a></li>
   <li><a href="#code-view" id="toc-code-view" class="nav-link" data-scroll-target="#code-view">Code View</a></li>
   <li><a href="#citation" id="toc-citation" class="nav-link" data-scroll-target="#citation">Citation</a></li>
@@ -279,7 +291,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">2024-12-01</p>
+      <p class="date">2025-12-01</p>
     </div>
   </div>
   
@@ -293,23 +305,36 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="pfc-develop" class="level1 unnumbered">
 <h1 class="unnumbered">PFC develop</h1>
-<p>Single-cell spatiotemporal transcriptome dynamics of mouse prefrontal cortex intratelencephalic neurons during postnatal development.</p>
-<p><img src="https://zhengtiger.github.io/picx-images-hosting/PFCdev/Figure_1A.2h8jm97w9c.webp" width="100%"></p>
-<section id="summary" class="level2">
-<h2 class="anchored" data-anchor-id="summary">Summary</h2>
-<p>The prefrontal cortex (PFC) is a core regulatory center for higher cognitive functions in the mammalian brain. In early postnatal mice, the PFC remains incompletely mature, particularly the intratelencephalic (IT) neurons located in superficial layers. However, the molecular developmental trajectories and regulatory mechanisms of IT neurons during the critical postnatal period (1-2 weeks) for circuit establishment, remain poorly characterized at single-cell resolution. Here, we performed single-cell RNA sequencing analysis on mouse PFC isolated at different developmental time points, and integrated with spatial transcriptomic data. Our study systematically deciphered the spatiotemporal transcriptome dynamics of mouse PFC during postnatal development, with particular emphasis on the heterogeneity of IT neurons. We identified dynamically expressed genes during postnatal development, including cadherin and axon guidance molecule genes, as well as specific transcriptional regulators that control the maturation of IT neurons in different layers. Furthermore, we also revealed that glial cells play crucial regulatory roles in IT neuron development through specific signaling pathways. Our study provides a comprehensive single-cell atlas of postnatal mouse PFC development, offering important insights into the mechanisms of neural development and circuit assembly in PFC.</p>
+<p>A single-cell spatiotemporal transcriptomic atlas of mouse prefrontal cortex maps dynamics of intratelencephalic neurons during postnatal development</p>
+<p><img src="https://github.com/ZhengTiger/picx-images-hosting/raw/master/PFCdev/Figure1A.3yer620cdm.webp" width="100%"></p>
+<section id="abstract" class="level2">
+<h2 class="anchored" data-anchor-id="abstract">Abstract</h2>
+<p>In early postnatal brain, the prefrontal cortex (PFC) remains immature and highly plastic, particularly for the intratelencephalic (IT) neurons. However, the spatiotemporal molecular and cellular dynamics of PFC during this period remain poorly characterized. Here, we performed spatiotemporal single-cell RNA analysis on mouse PFC during different postnatal time points and systematically delineated the molecular and cellular dynamics of mouse PFC during early postnatal development, among which IT neurons exhibit most dramatic alterations. Based on these comprehensive spatiotemporal atlases of PFC, we deciphered the time-specific molecular and cellular characteristics during the maturation process of IT neurons in PFC, particularly the dynamic expression programs of genes regulating axon development and synaptic formation, and the risk genes of neurological developmental diseases. Furthermore, we revealed the dynamic neuron-glia interaction patterns and the underlying signaling pathways during early postnatal period. Our study provided a comprehensive resource and important insights for PFC development and PFC-associated neurological diseases.</p>
 </section>
 <section id="data-visualization" class="level2">
 <h2 class="anchored" data-anchor-id="data-visualization">Data Visualization</h2>
 <p>We developed is a shiny application <strong>PFCdev-web</strong> that allows users to interactively access our data. You can access our online website at <a href="https://huggingface.co/spaces/TigerZheng/PFCdev-web" class="uri">https://huggingface.co/spaces/TigerZheng/PFCdev-web</a></p>
+<p><img src="https://github.com/ZhengTiger/PFC_develop/blob/main/images/PFCdev-demo.gif" width="100%"></p>
+<p>Users can browse the following content through the scRNAseq page:</p>
+<ul>
+<li>Select dataset: Select datasets containing different cell types</li>
+<li>Select celltype: Select different resolutions to view cell clusters on UMAP</li>
+<li>Select gene: Select different genes to view their expression</li>
+</ul>
+<p>Users can browse the following content through the spatial page:</p>
+<ul>
+<li>Spatial Clustering: Select different cell subtypes to view their spatial distribution</li>
+<li>Spatial Gene Expression: Select different genes to view their spatial expression</li>
+</ul>
 </section>
 <section id="code-view" class="level2">
 <h2 class="anchored" data-anchor-id="code-view">Code View</h2>
-<p>The code of this project can be viewed at <a href="https://zhengtiger.github.io/PFC_develop" class="uri">https://zhengtiger.github.io/PFC_develop</a></p>
+<p>We compiled the code for this study using Quarto documentation, which contains the code for all the figures in this study. You can access the documents at <a href="https://zhengtiger.github.io/PFC_develop" class="uri">https://zhengtiger.github.io/PFC_develop</a>.</p>
 </section>
 <section id="citation" class="level2">
 <h2 class="anchored" data-anchor-id="citation">Citation</h2>
 <p>Our project has been released in the following publication:</p>
+<pre><code>Zheng H, Yan K, et al. A single-cell spatiotemporal transcriptomic atlas of mouse prefrontal cortex maps dynamics of intratelencephalic neurons during postnatal development. PLOS Biology.</code></pre>
 
 
 <!-- -->
@@ -777,35 +802,47 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="sourceCode" id="cb1" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># PFC develop {.unnumbered}</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>Single-cell spatiotemporal transcriptome dynamics of mouse prefrontal cortex intratelencephalic neurons during postnatal development.</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">img</span><span class="ot"> src</span><span class="op">=</span><span class="st">"https://zhengtiger.github.io/picx-images-hosting/PFCdev/Figure_1A.2h8jm97w9c.webp"</span><span class="ot"> width</span><span class="op">=</span><span class="st">"100%"</span><span class="ot"> </span><span class="dt">/&gt;</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">## Summary</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>The prefrontal cortex (PFC) is a core regulatory center for higher cognitive functions in the mammalian brain. In early postnatal mice, the PFC remains incompletely mature, particularly the intratelencephalic (IT) neurons located in superficial layers. However, the molecular developmental trajectories and regulatory mechanisms of IT neurons during the critical postnatal period (1-2 weeks) for circuit establishment, remain poorly characterized at single-cell resolution. Here, we performed single-cell RNA sequencing analysis on mouse PFC isolated at different developmental time points, and integrated with spatial transcriptomic data. Our study systematically deciphered the spatiotemporal transcriptome dynamics of mouse PFC during postnatal development, with particular emphasis on the heterogeneity of IT neurons. We identified dynamically expressed genes during postnatal development, including cadherin and axon guidance molecule genes, as well as specific transcriptional regulators that control the maturation of IT neurons in different layers. Furthermore, we also revealed that glial cells play crucial regulatory roles in IT neuron development through specific signaling pathways. Our study provides a comprehensive single-cell atlas of postnatal mouse PFC development, offering important insights into the mechanisms of neural development and circuit assembly in PFC.</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">## Data Visualization</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>We developed is a shiny application **PFCdev-web** that allows users to interactively access our data. You can access our online website at <span class="ot">&lt;https://huggingface.co/spaces/TigerZheng/PFCdev-web&gt;</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="fu">## Code View</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>The code of this project can be viewed at <span class="ot">&lt;https://zhengtiger.github.io/PFC_develop&gt;</span></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="fu">## Citation</span></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>Our project has been released in the following publication:</span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb2" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># PFC develop {.unnumbered}</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>A single-cell spatiotemporal transcriptomic atlas of mouse prefrontal cortex maps dynamics of intratelencephalic neurons during postnatal development</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">img</span><span class="ot"> src</span><span class="op">=</span><span class="st">"https://github.com/ZhengTiger/picx-images-hosting/raw/master/PFCdev/Figure1A.3yer620cdm.webp"</span><span class="ot"> width</span><span class="op">=</span><span class="st">"100%"</span><span class="ot"> </span><span class="dt">/&gt;</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">## Abstract</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>In early postnatal brain, the prefrontal cortex (PFC) remains immature and highly plastic, particularly for the intratelencephalic (IT) neurons. However, the spatiotemporal molecular and cellular dynamics of PFC during this period remain poorly characterized. Here, we performed spatiotemporal single-cell RNA analysis on mouse PFC during different postnatal time points and systematically delineated the molecular and cellular dynamics of mouse PFC during early postnatal development, among which IT neurons exhibit most dramatic alterations. Based on these comprehensive spatiotemporal atlases of PFC, we deciphered the time-specific molecular and cellular characteristics during the maturation process of IT neurons in PFC, particularly the dynamic expression programs of genes regulating axon development and synaptic formation, and the risk genes of neurological developmental diseases. Furthermore, we revealed the dynamic neuron-glia interaction patterns and the underlying signaling pathways during early postnatal period. Our study provided a comprehensive resource and important insights for PFC development and PFC-associated neurological diseases.</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="fu">## Data Visualization</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>We developed is a shiny application **PFCdev-web** that allows users to interactively access our data. You can access our online website at <span class="ot">&lt;https://huggingface.co/spaces/TigerZheng/PFCdev-web&gt;</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">img</span><span class="ot"> src</span><span class="op">=</span><span class="st">"https://github.com/ZhengTiger/PFC_develop/blob/main/images/PFCdev-demo.gif"</span><span class="ot"> width</span><span class="op">=</span><span class="st">"100%"</span><span class="ot"> </span><span class="dt">/&gt;</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>Users can browse the following content through the scRNAseq page:</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Select dataset: Select datasets containing different cell types</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Select celltype: Select different resolutions to view cell clusters on UMAP</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Select gene: Select different genes to view their expression</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>Users can browse the following content through the spatial page:</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Spatial Clustering: Select different cell subtypes to view their spatial distribution</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Spatial Gene Expression: Select different genes to view their spatial expression</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a><span class="fu">## Code View</span></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>We compiled the code for this study using Quarto documentation, which contains the code for all the figures in this study. You can access the documents at <span class="ot">&lt;https://zhengtiger.github.io/PFC_develop&gt;</span>. </span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a><span class="fu">## Citation</span></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>Our project has been released in the following publication:</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a><span class="in">Zheng H, Yan K, et al. A single-cell spatiotemporal transcriptomic atlas of mouse prefrontal cortex maps dynamics of intratelencephalic neurons during postnatal development. PLOS Biology.</span></span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 

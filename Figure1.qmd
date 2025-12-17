@@ -1,6 +1,6 @@
 ---
 author: "Hu Zheng"
-date: "2024-12-01"
+date: "2025-12-01"
 date-format: YYYY-MM-DD
 ---
 
@@ -21,8 +21,6 @@ source('bin/Palettes.R')
 #| message: false
 
 seu.harmony <- readRDS('../data/seu.harmony.rds')
-seu.harmony.metadata <- readRDS('../data/seu.harmony.metadata.rds')
-seu.harmony@meta.data <- seu.harmony.metadata
 ```
 
 
@@ -32,7 +30,7 @@ seu.harmony@meta.data <- seu.harmony.metadata
 ## Figure_1A
 
 ```{r}
-knitr::include_graphics("./images/Figure_1A.png", dpi = 300)
+knitr::include_graphics("./images/Figure_1A.jpg", dpi = 300)
 ```
 
 
@@ -74,9 +72,8 @@ seu$orig.ident <- factor(seu$orig.ident, levels = c("P1","P4","P10","Adult"))
 
 Figure_1C <- 
   DimPlot(seu,
-          reduction = 'umap', group.by = "orig.ident", label = F, shuffle=T, seed=123,
-          cols = col_Time) +
-  #theme_bw() +
+          reduction = 'umap', group.by = "orig.ident", label = F, shuffle=T,
+          seed=123, cols = col_Time) +
   theme(panel.grid = element_blank(), 
         axis.text = element_blank(), axis.ticks = element_blank(),
         panel.border = element_rect(color = "black", linewidth = 1)) +
@@ -95,6 +92,7 @@ ggsave("../../Figure/Figure1/Figure_1C.pdf", plot = Figure_1C,
 
 
 
+
 ## Figure_1D
 
 ```{r fig.width=5, fig.height=5}
@@ -105,8 +103,7 @@ Figure_1D <-
     seu.harmony, 
     cells = colnames(seu.harmony)[which(seu.harmony$SubType %in% names(col_SubType)[1:8])]),
     features = "Cd24a", order = F) +
-  scale_color_gradientn(colours = c("lightblue3", "lightblue", "white", "red", "red4"),
-                        limits=c(0,4), na.value = "red4") +
+  scale_color_gradientn(colours = c("lightblue3", "lightblue", "white", "red", "red4"), limits=c(0,4), na.value = "red4") +
   coord_fixed() +
   theme_void() +
   theme(legend.position = "none") +
@@ -216,7 +213,6 @@ for (i in 1:length(col_SubType)){
     y = data$y_rotated,
     col = data[,subtype_i]
   )
-  #df_i$col[!data$SubType==subtype_i] <- 0
   df_i$col[df_i$col>1] <- 1
   df_i$col[df_i$col<0.05] <- 0
   
@@ -226,14 +222,12 @@ for (i in 1:length(col_SubType)){
     scale_color_gradient(low = "#f7f7f7", high=col_SubType[i],
                           na.value = "#f7f7f7",
                           limits = c(0,max(df_i$col)),
-                         #limits = c(0,1),
                           breaks = c(0,max(df_i$col))) +
     coord_fixed() +
     theme_void() +
     theme(legend.position = "none")
   subtype_i <- gsub("/","",subtype_i)
-  #ggsave(paste("../../Figure/Figure1/Figure_1H/",i,".P1_",subtype_i,".png",sep=""), 
-  #       plot = plist[[i]], height = 5, width = 5, units = "in")
+  #ggsave(paste("../../Figure/Figure1/Figure_1H/",i,".P1_",subtype_i,".png",sep=""), plot = plist[[i]], height = 5, width = 5, units = "in")
 }
 
 plist[[1]]
@@ -289,7 +283,6 @@ for (i in 1:length(col_SubType)){
     y = data$y_rotated,
     col = data[,subtype_i]
   )
-  df_i$col[!data$SubType==subtype_i] <- 0
   df_i$col[df_i$col>1] <- 1
   df_i$col[df_i$col<0.05] <- 0
   plist[[i]] <- 
@@ -303,8 +296,7 @@ for (i in 1:length(col_SubType)){
     theme_void() +
     theme(legend.position = "none")
   subtype_i <- gsub("/","",subtype_i)
-  #ggsave(paste("../../Figure/Figure1/Figure_1J/",i,".P77_",subtype_i,".png",sep=""), 
-  #       plot = plist[[i]], height = 5, width = 5, units = "in")
+  #ggsave(paste("../../Figure/Figure1/Figure_1J/",i,".P77_",subtype_i,".png",sep=""), plot = plist[[i]], height = 5, width = 5, units = "in")
 }
 plist[[5]]
 ```

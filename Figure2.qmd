@@ -1,6 +1,6 @@
 ---
 author: "Hu Zheng"
-date: "2024-12-01"
+date: "2025-12-01"
 date-format: YYYY-MM-DD
 ---
 
@@ -23,8 +23,6 @@ source('bin/Palettes.R')
 
 ```{r}
 seu.harmony <- readRDS('../data/seu.harmony.rds')
-seu.harmony.metadata <- readRDS('../data/seu.harmony.metadata.rds')
-seu.harmony@meta.data <- seu.harmony.metadata
 seu.neuron <- seu.harmony[,seu.harmony$SubType %in% names(col_SubType)[1:15]]
 ```
 
@@ -65,7 +63,6 @@ ggsave("../../Figure/Figure2/Figure_2A.pdf", plot = Figure_2A,
 #| eval: false
 
 seu <- seu.neuron
-# 去掉<50cell 的 cluster
 seu.P0 <- subset(seu, cells=colnames(seu)[which(
   seu$orig.ident == "P1" & seu$SubType %in% c("Im L2/3 IT","Im L4/5 IT","Im L5 IT","Im L6 IT","L6 IT","L5 PT","L5 NP","L6 CT","Lamp5","Pvalb","Sst","Vip")
 )])
@@ -170,7 +167,6 @@ col <- c("Im_L2/3_IT"="#062e60", "Im_L4/5_IT"="#4393c3", "Im_L5_IT"="#a6cee3", "
          "L6_CT"="#f7fa10", "Lamp5"="#0e0786", "Pvalb"="#6902a4", "Sst"="#df6361","Vip"="#f8a635")
       
 links <- rbind(df1_long, df2_long, df3_long)
-#links <- df3_long
 links$value <- links$Prob
 links$source <- gsub(" ","_",links$source)
 links$target <- gsub(" ","_",links$target)
@@ -342,7 +338,6 @@ Figure_2D_1 <-
           tile.col = tile.col,
           size = 2, segment.size = 0.1,
           fontface = 'italic',
-          polar = T,
           seed = 20230727)+
   ylim(-5,5) +
   labs(title = 'P4_vs_P0') +

@@ -1,5 +1,407 @@
 [
   {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "PFC develop",
+    "section": "",
+    "text": "PFC develop\nA single-cell spatiotemporal transcriptomic atlas of mouse prefrontal cortex maps dynamics of intratelencephalic neurons during postnatal development",
+    "crumbs": [
+      "PFC develop"
+    ]
+  },
+  {
+    "objectID": "index.html#abstract",
+    "href": "index.html#abstract",
+    "title": "PFC develop",
+    "section": "Abstract",
+    "text": "Abstract\nIn early postnatal brain, the prefrontal cortex (PFC) remains immature and highly plastic, particularly for the intratelencephalic (IT) neurons. However, the spatiotemporal molecular and cellular dynamics of PFC during this period remain poorly characterized. Here, we performed spatiotemporal single-cell RNA analysis on mouse PFC during different postnatal time points and systematically delineated the molecular and cellular dynamics of mouse PFC during early postnatal development, among which IT neurons exhibit most dramatic alterations. Based on these comprehensive spatiotemporal atlases of PFC, we deciphered the time-specific molecular and cellular characteristics during the maturation process of IT neurons in PFC, particularly the dynamic expression programs of genes regulating axon development and synaptic formation, and the risk genes of neurological developmental diseases. Furthermore, we revealed the dynamic neuron-glia interaction patterns and the underlying signaling pathways during early postnatal period. Our study provided a comprehensive resource and important insights for PFC development and PFC-associated neurological diseases.",
+    "crumbs": [
+      "PFC develop"
+    ]
+  },
+  {
+    "objectID": "index.html#data-visualization",
+    "href": "index.html#data-visualization",
+    "title": "PFC develop",
+    "section": "Data Visualization",
+    "text": "Data Visualization\nWe developed is a shiny application PFCdev-web that allows users to interactively access our data. You can access our online website at https://huggingface.co/spaces/TigerZheng/PFCdev-web\n\nUsers can browse the following content through the scRNAseq page:\n\nSelect dataset: Select datasets containing different cell types\nSelect celltype: Select different resolutions to view cell clusters on UMAP\nSelect gene: Select different genes to view their expression\n\nUsers can browse the following content through the spatial page:\n\nSpatial Clustering: Select different cell subtypes to view their spatial distribution\nSpatial Gene Expression: Select different genes to view their spatial expression",
+    "crumbs": [
+      "PFC develop"
+    ]
+  },
+  {
+    "objectID": "index.html#code-view",
+    "href": "index.html#code-view",
+    "title": "PFC develop",
+    "section": "Code View",
+    "text": "Code View\nWe compiled the code for this study using Quarto documentation, which contains the code for all the figures in this study. You can access the documents at https://zhengtiger.github.io/PFC_develop.",
+    "crumbs": [
+      "PFC develop"
+    ]
+  },
+  {
+    "objectID": "index.html#citation",
+    "href": "index.html#citation",
+    "title": "PFC develop",
+    "section": "Citation",
+    "text": "Citation\nOur project has been released in the following publication:\nZheng H, Yan K, et al. A single-cell spatiotemporal transcriptomic atlas of mouse prefrontal cortex maps dynamics of intratelencephalic neurons during postnatal development. PLOS Biology.",
+    "crumbs": [
+      "PFC develop"
+    ]
+  },
+  {
+    "objectID": "Figure1.html",
+    "href": "Figure1.html",
+    "title": "1  Figure1",
+    "section": "",
+    "text": "1.1 Figure_1A\nCode\nknitr::include_graphics(\"./images/Figure_1A.jpg\", dpi = 300)",
+    "crumbs": [
+      "Main Figure",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Figure1</span>"
+    ]
+  },
+  {
+    "objectID": "Figure1.html#figure_1b",
+    "href": "Figure1.html#figure_1b",
+    "title": "1  Figure1",
+    "section": "1.2 Figure_1B",
+    "text": "1.2 Figure_1B\n\n\nCode\nseu &lt;- seu.harmony\nseu$SubType &lt;- factor(seu$SubType, levels = names(col_SubType))\nFigure_1B &lt;- \n  DimPlot(seu,\n        reduction = 'umap', group.by = \"SubType\", label = T, \n        cols = col_SubType) +\n  theme(axis.line = element_blank(), axis.ticks = element_blank(), \n        axis.text = element_blank(), plot.title = element_text(size = 30)) +\n  labs(x='', y='', title = \"\") +\n  coord_fixed()\nFigure_1B\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave(\"../../Figure/Figure1/Figure_1B.pdf\", plot = Figure_1B,\n       height = 6, width = 8, units = \"in\")",
+    "crumbs": [
+      "Main Figure",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Figure1</span>"
+    ]
+  },
+  {
+    "objectID": "Figure1.html#figure_1c",
+    "href": "Figure1.html#figure_1c",
+    "title": "1  Figure1",
+    "section": "1.3 Figure_1C",
+    "text": "1.3 Figure_1C\n\n\nCode\nseu &lt;- seu.harmony\nseu$orig.ident &lt;- factor(seu$orig.ident, levels = c(\"P1\",\"P4\",\"P10\",\"Adult\"))\n\nFigure_1C &lt;- \n  DimPlot(seu,\n          reduction = 'umap', group.by = \"orig.ident\", label = F, shuffle=T,\n          seed=123, cols = col_Time) +\n  theme(panel.grid = element_blank(), \n        axis.text = element_blank(), axis.ticks = element_blank(),\n        panel.border = element_rect(color = \"black\", linewidth = 1)) +\n  labs(x='', y='', title = \"\") +\n  coord_fixed()\nFigure_1C\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave(\"../../Figure/Figure1/Figure_1C.pdf\", plot = Figure_1C,\n       height = 6, width = 8, units = \"in\")",
+    "crumbs": [
+      "Main Figure",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Figure1</span>"
+    ]
+  },
+  {
+    "objectID": "Figure1.html#figure_1d",
+    "href": "Figure1.html#figure_1d",
+    "title": "1  Figure1",
+    "section": "1.4 Figure_1D",
+    "text": "1.4 Figure_1D\n\n\nCode\nFigure_1D &lt;- \n  FeaturePlot(subset(\n    seu.harmony, \n    cells = colnames(seu.harmony)[which(seu.harmony$SubType %in% names(col_SubType)[1:8])]),\n    features = \"Cd24a\", order = F) +\n  scale_color_gradientn(colours = c(\"lightblue3\", \"lightblue\", \"white\", \"red\", \"red4\"), limits=c(0,4), na.value = \"red4\") +\n  coord_fixed() +\n  theme_void() +\n  theme(legend.position = \"none\") +\n  labs(title = \"\")\nFigure_1D\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave(\"../../Figure/Figure1/Figure_1D/Cd24a.png\", plot = Figure_1D,\n       height = 5, width = 5, units = \"in\")",
+    "crumbs": [
+      "Main Figure",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Figure1</span>"
+    ]
+  },
+  {
+    "objectID": "Figure1.html#figure_1e",
+    "href": "Figure1.html#figure_1e",
+    "title": "1  Figure1",
+    "section": "1.5 Figure_1E",
+    "text": "1.5 Figure_1E\n\n\nCode\nknitr::include_graphics(\"./images/Figure_1E.jpg\", dpi = 300)",
+    "crumbs": [
+      "Main Figure",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Figure1</span>"
+    ]
+  },
+  {
+    "objectID": "Figure1.html#figure_1f",
+    "href": "Figure1.html#figure_1f",
+    "title": "1  Figure1",
+    "section": "1.6 Figure_1F",
+    "text": "1.6 Figure_1F\n\n\nCode\ndf &lt;- seu.harmony@meta.data[,c(\"orig.ident\",\"SubType\")]\ndf &lt;- table(df$orig.ident, df$SubType)\ndf &lt;- as.data.frame(df/rowSums(df))\ncolnames(df) &lt;- c(\"Time\", \"Subtype\", \"Prob\")\ndf$Time &lt;- factor(df$Time, levels = rev(c(\"P1\",\"P4\",\"P10\",\"Adult\")))\ndf$Subtype &lt;- factor(df$Subtype, levels = rev(names(col_SubType)))\n\nFigure_1F &lt;- \n  ggplot(df, aes(x = Time, y = Prob, fill = Subtype)) + \n  geom_bar(stat = \"identity\", width = 0.9) +\n  scale_fill_manual(values = col_SubType) +\n  labs(x='', y='', title='') +\n  theme_minimal(base_size = 15) +\n  theme(panel.grid = element_blank(), plot.title = element_text(hjust = 0.5),\n        legend.position = \"bottom\",\n        legend.title = element_blank()) +\n  labs(title = \"Transcriptome subtype proporation\") +\n  coord_flip()\nFigure_1F\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave(\"../../Figure/Figure1/Figure_1F.pdf\", plot = Figure_1F,\n       height = 3, width = 8, units = \"in\")",
+    "crumbs": [
+      "Main Figure",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Figure1</span>"
+    ]
+  },
+  {
+    "objectID": "Figure1.html#figure_1g",
+    "href": "Figure1.html#figure_1g",
+    "title": "1  Figure1",
+    "section": "1.7 Figure_1G",
+    "text": "1.7 Figure_1G\n\n\nCode\ncolumn &lt;- c(\"x_rotated\",\"y_rotated\",\"Im.L2.3.IT\",\"Im.L4.5.IT\",\"Im.L5.IT\",\"Im.L6.IT\",\"L2.3.IT\",\"L4.5.IT\",\"L5.IT\",\"L6.IT\",\"L5.PT\",\"L5.NP\",\"L6.CT\",\"Lamp5\",\"Pvalb\",\"Sst\",\"Vip\",\"NPC\",\"Astro\",\"Endo\",\"Microglia\",\"Oligo\",\"OPC\")\nP1_cell2loc &lt;- read.csv(\"../data/Figure1/P1_cell2location.csv\", row.names = 1)\nP1_cell2loc &lt;- P1_cell2loc[,column]\ncolnames(P1_cell2loc) &lt;- c(\"x_rotated\",\"y_rotated\",names(col_SubType))\nP1_cell2loc$SubType &lt;- as.character(apply(P1_cell2loc[,names(col_SubType)], 1, function(x){\n  names(which.max(x))\n}))\n\ndata &lt;- P1_cell2loc\nFigure_1G &lt;- \n  ggplot(data, mapping = aes(x_rotated, y_rotated, color=SubType)) +\n  geom_point(size = 2) +\n  scale_color_manual(values = col_SubType) +\n  coord_fixed() +\n  theme_void() +\n  theme(legend.position = \"none\")\n\nFigure_1G\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave(\"../../Figure/Figure1/Figure_1G.png\", plot = Figure_1G, \n       height = 5, width = 5, units = \"in\")",
+    "crumbs": [
+      "Main Figure",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Figure1</span>"
+    ]
+  },
+  {
+    "objectID": "Figure1.html#figure_1h",
+    "href": "Figure1.html#figure_1h",
+    "title": "1  Figure1",
+    "section": "1.8 Figure_1H",
+    "text": "1.8 Figure_1H\n\n\nCode\ndata &lt;- P1_cell2loc\nplist &lt;- list()\nfor (i in 1:length(col_SubType)){\n  subtype_i &lt;- names(col_SubType)[i]\n  df_i &lt;- data.frame(\n    x = data$x_rotated,\n    y = data$y_rotated,\n    col = data[,subtype_i]\n  )\n  df_i$col[df_i$col&gt;1] &lt;- 1\n  df_i$col[df_i$col&lt;0.05] &lt;- 0\n  \n  plist[[i]] &lt;- \n    ggplot(df_i, aes(x=x, y=y, color=col)) +\n    geom_point(size=2) +\n    scale_color_gradient(low = \"#f7f7f7\", high=col_SubType[i],\n                          na.value = \"#f7f7f7\",\n                          limits = c(0,max(df_i$col)),\n                          breaks = c(0,max(df_i$col))) +\n    coord_fixed() +\n    theme_void() +\n    theme(legend.position = \"none\")\n  subtype_i &lt;- gsub(\"/\",\"\",subtype_i)\n  #ggsave(paste(\"../../Figure/Figure1/Figure_1H/\",i,\".P1_\",subtype_i,\".png\",sep=\"\"), plot = plist[[i]], height = 5, width = 5, units = \"in\")\n}\n\nplist[[1]]",
+    "crumbs": [
+      "Main Figure",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Figure1</span>"
+    ]
+  },
+  {
+    "objectID": "Figure1.html#figure_i",
+    "href": "Figure1.html#figure_i",
+    "title": "1  Figure1",
+    "section": "1.9 Figure_I",
+    "text": "1.9 Figure_I\n\n\nCode\ncolumn &lt;- c(\"x_rotated\",\"y_rotated\",\"Im.L2.3.IT\",\"Im.L4.5.IT\",\"Im.L5.IT\",\"Im.L6.IT\",\"L2.3.IT\",\"L4.5.IT\",\"L5.IT\",\"L6.IT\",\"L5.PT\",\"L5.NP\",\"L6.CT\",\"Lamp5\",\"Pvalb\",\"Sst\",\"Vip\",\"NPC\",\"Astro\",\"Endo\",\"Microglia\",\"Oligo\",\"OPC\")\nP77_cell2loc &lt;- read.csv(\"../data/Figure1/P77_cell2location.csv\", row.names = 1)\nP77_cell2loc &lt;- P77_cell2loc[,column]\ncolnames(P77_cell2loc) &lt;- c(\"x_rotated\",\"y_rotated\",names(col_SubType))\nP77_cell2loc$SubType &lt;- as.character(apply(P77_cell2loc[,names(col_SubType)], 1, function(x){\n  names(which.max(x))\n}))\n\ndata &lt;- P77_cell2loc\nFigure_1I &lt;- \n  ggplot(data, mapping = aes(x_rotated, y_rotated, color=SubType)) +\n  geom_point(size = 0.8) +\n  scale_color_manual(values = col_SubType) +\n  coord_fixed() +\n  theme_void() +\n  theme(legend.position = \"none\")\n\nFigure_1I\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave(\"../../Figure/Figure1/Figure_1I.png\", plot = Figure_1I, \n       height = 5, width = 5, units = \"in\")",
+    "crumbs": [
+      "Main Figure",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Figure1</span>"
+    ]
+  },
+  {
+    "objectID": "Figure1.html#figure_1j",
+    "href": "Figure1.html#figure_1j",
+    "title": "1  Figure1",
+    "section": "1.10 Figure_1J",
+    "text": "1.10 Figure_1J\n\n\nCode\ndata &lt;- P77_cell2loc\nplist &lt;- list()\nfor (i in 1:length(col_SubType)){\n  subtype_i &lt;- names(col_SubType)[i]\n  df_i &lt;- data.frame(\n    x = data$x_rotated,\n    y = data$y_rotated,\n    col = data[,subtype_i]\n  )\n  df_i$col[df_i$col&gt;1] &lt;- 1\n  df_i$col[df_i$col&lt;0.05] &lt;- 0\n  plist[[i]] &lt;- \n    ggplot(df_i, aes(x=x, y=y, color=col)) +\n    geom_point(size=0.8) +\n    scale_color_gradient(low = \"#f7f7f7\", high=col_SubType[i],\n                          na.value = \"#f7f7f7\",\n                          limits = c(0,max(df_i$col)), \n                          breaks = c(0,max(df_i$col))) +\n    coord_fixed() +\n    theme_void() +\n    theme(legend.position = \"none\")\n  subtype_i &lt;- gsub(\"/\",\"\",subtype_i)\n  #ggsave(paste(\"../../Figure/Figure1/Figure_1J/\",i,\".P77_\",subtype_i,\".png\",sep=\"\"), plot = plist[[i]], height = 5, width = 5, units = \"in\")\n}\nplist[[5]]",
+    "crumbs": [
+      "Main Figure",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Figure1</span>"
+    ]
+  },
+  {
+    "objectID": "Figure2.html",
+    "href": "Figure2.html",
+    "title": "2  Figure2",
+    "section": "",
+    "text": "2.1 Figure_2A\nCode\nseu &lt;- seu.neuron\nseu$SubType &lt;- factor(seu$SubType, levels = names(col_SubType)[1:15])\nFigure_2A &lt;- \n  DimPlot(seu,\n        reduction = 'umap', group.by = \"SubType\", label = T, \n        cols = col_SubType) +\n  theme(axis.line = element_blank(), axis.ticks = element_blank(), \n        axis.text = element_blank(), plot.title = element_text(size = 30)) +\n  labs(x='', y='', title = \"\") +\n  coord_fixed()\nFigure_2A\nCode\nggsave(\"../../Figure/Figure2/Figure_2A.pdf\", plot = Figure_2A,\n       height = 6, width = 8, units = \"in\")",
+    "crumbs": [
+      "Main Figure",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Figure2</span>"
+    ]
+  },
+  {
+    "objectID": "Figure2.html#figure_2b",
+    "href": "Figure2.html#figure_2b",
+    "title": "2  Figure2",
+    "section": "2.2 Figure_2B",
+    "text": "2.2 Figure_2B\n\n\nCode\nseu &lt;- seu.neuron\nseu.P0 &lt;- subset(seu, cells=colnames(seu)[which(\n  seu$orig.ident == \"P1\" & seu$SubType %in% c(\"Im L2/3 IT\",\"Im L4/5 IT\",\"Im L5 IT\",\"Im L6 IT\",\"L6 IT\",\"L5 PT\",\"L5 NP\",\"L6 CT\",\"Lamp5\",\"Pvalb\",\"Sst\",\"Vip\")\n)])\nseu.P4 &lt;- subset(seu, cells=colnames(seu)[which(\n  seu$orig.ident == \"P4\" & seu$SubType %in% c(\"Im L2/3 IT\",\"Im L4/5 IT\",\"Im L5 IT\",\"Im L6 IT\",\"L5 IT\",\"L6 IT\",\"L5 PT\",\"L5 NP\",\"L6 CT\",\"Lamp5\",\"Pvalb\",\"Sst\",\"Vip\")\n)])\nseu.P10 &lt;- subset(seu, cells=colnames(seu)[which(\n  seu$orig.ident == \"P10\" & seu$SubType %in% c(\"Im L2/3 IT\",\"Im L4/5 IT\",\"Im L5 IT\",\"Im L6 IT\",\"L2/3 IT\",\"L4/5 IT\",\"L5 IT\",\"L6 IT\",\"L5 PT\",\"L5 NP\",\"L6 CT\",\"Lamp5\",\"Pvalb\",\"Sst\",\"Vip\")\n)])\nseu.Adult &lt;- subset(seu, cells=colnames(seu)[which(\n  seu$orig.ident == \"Adult\" & seu$SubType %in% c(\"L2/3 IT\",\"L4/5 IT\",\"L5 IT\",\"L6 IT\",\"L5 PT\",\"L5 NP\",\"L6 CT\",\"Lamp5\",\"Pvalb\",\"Sst\",\"Vip\")\n)])\n\nSubType &lt;- c(\"Im L2/3 IT\"=0,\"Im L4/5 IT\"=1,\"Im L5 IT\"=2,\"Im L6 IT\"=3,\"L2/3 IT\"=4,\"L4/5 IT\"=5,\"L5 IT\"=6,\"L6 IT\"=7,\"L5 PT\"=8,\"L5 NP\"=9,\"L6 CT\"=10,\"Lamp5\"=11,\"Pvalb\"=12,\"Sst\"=13,\"Vip\"=14)\nHVGs &lt;- FindVariableFeatures(seu.neuron, selection.method = \"vst\", nfeatures = 2000)\nHVGs &lt;- VariableFeatures(seu.neuron)\n\nDMatrix_P0 &lt;- xgb.DMatrix(\n  data = t(seu.P0@assays$RNA@data[HVGs,]),\n  label = as.numeric(match(seu.P0$SubType, names(SubType)) - 1))\nDMatrix_P4 &lt;- xgb.DMatrix(\n  data = t(seu.P4@assays$RNA@data[HVGs,]),\n  label = as.numeric(match(seu.P4$SubType, names(SubType)) - 1))\nDMatrix_P10 &lt;- xgb.DMatrix(\n  data = t(seu.P10@assays$RNA@data[HVGs,]),\n  label = as.numeric(match(seu.P10$SubType, names(SubType)) - 1))\nDMatrix_Adult &lt;- xgb.DMatrix(\n  data = t(seu.Adult@assays$RNA@data[HVGs,]),\n  label = as.numeric(match(seu.Adult$SubType, names(SubType)) - 1))\n\n# P0 → P4\ncv &lt;- xgb.cv(data = DMatrix_P0, nrounds = 1000, nfold = 5, max_depth = 5, eta = 0.5,\n             early_stopping_rounds = 5, objective = \"multi:softmax\", \n             num_class=15, verbose = F)\nmodel_xgb &lt;- xgboost(data=DMatrix_P0, max_depth=5, eta=0.5, nthread = 5,\n                     nround = cv$best_iteration, objective = \"multi:softmax\",\n                     num_class=15, verbose = F)\npre_P0_P4 &lt;- predict(model_xgb, newdata = DMatrix_P4)\ndf_P0_P4 &lt;- as.data.frame.array(table(names(SubType[pre_P0_P4+1]), seu.P4$SubType))\n\n# P4 → P10\ncv &lt;- xgb.cv(data = DMatrix_P4, nrounds = 1000, nfold = 5, max_depth = 5, eta = 0.5,\n             early_stopping_rounds = 5, objective = \"multi:softmax\", \n             num_class=15, verbose = F)\nmodel_xgb &lt;- xgboost(data=DMatrix_P4, max_depth=5, eta=0.5, nthread = 5,\n                     nround = cv$best_iteration, objective = \"multi:softmax\",\n                     num_class=15, verbose = F)\npre_P4_P10 &lt;- predict(model_xgb, newdata = DMatrix_P10)\ndf_P4_P10 &lt;- as.data.frame.array(table(names(SubType[pre_P4_P10+1]),seu.P10$SubType))\n\n# P10 → Adult\ncv &lt;- xgb.cv(data = DMatrix_P10, nrounds = 1000, nfold = 5, max_depth = 5, \n             eta = 0.5, early_stopping_rounds = 5, objective = \"multi:softmax\", \n             num_class=15, verbose = F)\nmodel_xgb &lt;- xgboost(data=DMatrix_P10, max_depth=5, eta=0.5, nthread = 5,\n                     nround = cv$best_iteration, objective = \"multi:softmax\",\n                     num_class=15, verbose = F)\npre_P10_Adult &lt;- predict(model_xgb, newdata = DMatrix_Adult)\ndf_P10_Adult &lt;- as.data.frame.array(table(names(SubType[pre_P10_Adult+1]),seu.Adult$SubType))\n\ndf1 &lt;- df_P0_P4\ndf1 &lt;- df1[rowSums(df1)&gt;=50, colSums(df1)&gt;=50]\ndf2 &lt;- df_P4_P10\ndf2 &lt;- df2[rowSums(df2)&gt;=50, colSums(df2)&gt;=50]\ndf3 &lt;- df_P10_Adult\ndf3 &lt;- df3[rowSums(df3)&gt;=50, colSums(df3)&gt;=50]\n\ndf1_mean &lt;- df1/rowSums(df1)\ndf1_mean$P0 &lt;- rownames(df1)\ndf1_mean_long &lt;- pivot_longer(df1_mean, !P0, names_to = \"P4\", values_to = \"Value\")\ndf1$P0 &lt;- rownames(df1)\ndf1_long &lt;- pivot_longer(df1, !P0, names_to = \"P4\", values_to = \"Value\")\ndf1_long$P0 &lt;- paste(\"P0\", df1_long$P0)\ndf1_long$P4 &lt;- paste(\"P4\", df1_long$P4)\ncolnames(df1_long) &lt;- c('source', 'target', 'value')\ndf1_long$Prob &lt;- df1_mean_long$Value\n\ndf2_mean &lt;- df2/rowSums(df2)\ndf2_mean$P4 &lt;- rownames(df2)\ndf2_mean_long &lt;- pivot_longer(df2_mean, !P4, names_to = \"P10\", values_to = \"Value\")\ndf2$P4 &lt;- rownames(df2)\ndf2_long &lt;- pivot_longer(df2, !P4, names_to = \"P10\", values_to = \"Value\")\ndf2_long$P4 &lt;- paste(\"P4\", df2_long$P4)\ndf2_long$P10 &lt;- paste(\"P10\", df2_long$P10)\ncolnames(df2_long) &lt;- c('source', 'target', 'value')\ndf2_long$Prob &lt;- df2_mean_long$Value\n\ndf3_mean &lt;- df3/rowSums(df3)\ndf3_mean$P10 &lt;- rownames(df3)\ndf3_mean_long &lt;- pivot_longer(df3_mean, !P10, names_to = \"Adult\", \n                              values_to = \"Value\")\ndf3$P10 &lt;- rownames(df3)\ndf3_long &lt;- pivot_longer(df3, !P10, names_to = \"Adult\", values_to = \"Value\")\ndf3_long$P10 &lt;- paste(\"P10\", df3_long$P10)\ndf3_long$Adult &lt;- paste(\"Adult\", df3_long$Adult)\ncolnames(df3_long) &lt;- c('source', 'target', 'value')\ndf3_long$Prob &lt;- df3_mean_long$Value\n\ncol &lt;- c(\"Im_L2/3_IT\"=\"#062e60\", \"Im_L4/5_IT\"=\"#4393c3\", \"Im_L5_IT\"=\"#a6cee3\", \"Im_L6_IT\"=\"#66bd63\", \n         \"L2/3_IT\"=\"#342a85\", \"L4/5_IT\"=\"#0a6ddd\", \"L5_IT\"=\"#009acd\", \n         \"L6_IT\"=\"#31b69e\", \"L5_PT\"=\"#a1bc6a\", \"L5_NP\"=\"#f7bc3e\", \n         \"L6_CT\"=\"#f7fa10\", \"Lamp5\"=\"#0e0786\", \"Pvalb\"=\"#6902a4\", \"Sst\"=\"#df6361\",\"Vip\"=\"#f8a635\")\n      \nlinks &lt;- rbind(df1_long, df2_long, df3_long)\nlinks$value &lt;- links$Prob\nlinks$source &lt;- gsub(\" \",\"_\",links$source)\nlinks$target &lt;- gsub(\" \",\"_\",links$target)\nlinks &lt;- links[which(links$value != 0),]\nnodes &lt;- paste(rep(c(\"P0\",\"P4\",\"P10\",\"Adult\"), each=length(col)),\n               rep(names(col), 4), sep=\"_\")\nnodes &lt;- nodes[which(nodes %in% unique(c(links$source, links$target)))]\nnodes &lt;- data.frame(name=nodes)\nnodes$index &lt;- 0:(nrow(nodes) - 1)\nlinks &lt;- merge(links, nodes, by.x=\"source\", by.y=\"name\")\nlinks &lt;- merge(links, nodes, by.x=\"target\", by.y=\"name\")\nnames(links) &lt;- c(\"target\",\"source\",\"Value\",\"Prob\",\"IDsource\",\"IDtarget\")\nlinks$group &lt;- \"links_a\"\nlinks$group[which(links$Prob&gt;0.1 & links$Prob&lt;0.8)] &lt;- \"links_b\"\nlinks$group[which(links$Prob &gt;= 0.8)] &lt;- \"links_c\"\nnodes$group &lt;- nodes$name\n\n\ndomain &lt;- c(\"links_a\", \"links_b\", \"links_c\", nodes$name)\nrange &lt;- c(\"#ebfafa\", \"#e489dc\", \"#6860ff\", \n           as.character(c(col[-c(5:7)], col[-c(5:6)], col, col[-c(1:4)])))\ncolourScale &lt;- paste('d3.scaleOrdinal() .domain([\"', domain[1], sep = '')\nfor (i in 2:length(domain)){\n  colourScale &lt;- paste(colourScale, '\", \"', domain[i], sep = '')\n}\ncolourScale &lt;- paste(colourScale, '\"]) .range([\"', sep = '')\ncolourScale &lt;- paste(colourScale, range[1], sep = '')\nfor (i in 2:length(range)){\n  colourScale &lt;- paste(colourScale,'\", \"', range[i], sep = '')\n}\ncolourScale &lt;- paste(colourScale,'\"])', sep = '')\n\nlinks &lt;- merge(\n  links, \n  data.frame(\n    target=c(\"P10_Im_L6_IT\",\"Adult_L2/3_IT\",\"Adult_L4/5_IT\",\"Adult_L5_IT\",\"Adult_L6_IT\"),\n    source=c(\"P4_Im_L6_IT\",\"P10_Im_L2/3_IT\",\"P10_Im_L4/5_IT\",\"P10_Im_L5_IT\",\"P10_Im_L6_IT\"),\n    Value=c(0,0,0,0,0), Prob=c(0,0,0,0,0), \n    IDsource=c(15,25,26,27,28), IDtarget=c(28,40,41,42,43), \n             group=c(\"links_a\",\"links_a\",\"links_a\",\"links_a\",\"links_a\")),\n  all=T)\n\nFigure_2B &lt;- sankeyNetwork(\n  Links = links, Nodes = nodes, Source = \"IDsource\", Target = \"IDtarget\", \n  Value = \"Value\", NodeID = \"name\", colourScale = colourScale, LinkGroup=\"group\",\n  NodeGroup=\"group\", iterations= 0, width = 600, height = 400, fontSize=0)\nFigure_2B\n\n\n\n\nCode\nknitr::include_graphics(\"./images/Figure_2B.png\", dpi = 300)\n\n\n\n\n\n\n\n\n\n\n\nCode\nsaveNetwork(p,\"../../Figure/Figure2/Figure_2B/Figure_2B.html\")",
+    "crumbs": [
+      "Main Figure",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Figure2</span>"
+    ]
+  },
+  {
+    "objectID": "Figure2.html#figure_2c",
+    "href": "Figure2.html#figure_2c",
+    "title": "2  Figure2",
+    "section": "2.3 Figure_2C",
+    "text": "2.3 Figure_2C\n\n\nCode\nRI &lt;- read.csv(\"../data/Figure2/RI.csv\", header = T, row.names = 1)\nRI$SubType &lt;- rownames(RI)\ndf &lt;- pivot_longer(RI, !SubType, names_to = \"Time\", values_to = \"Value\")\ndf$Value &lt;- 1-df$Value\n\ncolors &lt;- c(\"IT\"=\"#0a6ddd\",\"PT\"=\"#a1bc6a\", \"NP\"=\"#f7bc3e\", \"CT\"=\"#f7fa10\",\n            \"Lamp5\"=\"#0e0786\", \"Pvalb\"=\"#6902a4\", \"Sst\"=\"#df6361\", \"Vip\"=\"#f8a635\")\ndf$SubType &lt;- factor(df$SubType, levels = names(colors))\n\nebtop&lt;-function(x){\n  return(mean(x)+sd(x)/sqrt(length(x)))\n}\nebbottom&lt;-function(x){\n  return(mean(x)-sd(x)/sqrt(length(x)))\n}\n\nFigure_2C &lt;- \n  ggplot(df, aes(x=SubType, y=Value)) +\n  stat_summary(geom=\"bar\", fun=mean, fill = colors, width=0.7) +\n  stat_summary(geom=\"errorbar\", linewidth=1.0,\n               fun.min=ebbottom, fun.max=ebtop,\n               width=0.3) +\n  geom_jitter(width=0.3, shape = 1, size = 2, stroke=1) +\n  geom_signif(comparisons=list(c(\"IT\",\"PT\")),\n              test=t.test, test.args=list(var.equal=T, alternative=\"greater\"),\n              y_position=c(0.6),\n              size = 1.5, textsize = 6, parse=T) +\n  scale_y_continuous(breaks=seq(0,0.7,0.2), limits=c(0,0.7), \n                     expand=expansion(mult=c(0, 0.05))) +\n  theme_classic(base_size = 15) +\n  labs(x=\"\", y=\"transcriptomic diversity (1 - Rand index)\")\nFigure_2C\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave(\"../../Figure/Figure2/Figure_2C.pdf\", plot = Figure_2C,\n       height = 5, width = 6, units = \"in\")",
+    "crumbs": [
+      "Main Figure",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Figure2</span>"
+    ]
+  },
+  {
+    "objectID": "Figure2.html#figure_2d",
+    "href": "Figure2.html#figure_2d",
+    "title": "2  Figure2",
+    "section": "2.4 Figure_2D",
+    "text": "2.4 Figure_2D\n\n\nCode\nseu &lt;- seu.neuron\nseu$SubType_merge &lt;- seu$SubType\nseu$SubType_merge[seu$SubType_merge %in% names(col_SubType)[1:8]] &lt;- \"IT\"\nseu$SubType_merge[seu$SubType_merge %in% c(\"L5 PT\")] &lt;- \"PT\"\nseu$SubType_merge[seu$SubType_merge %in% c(\"L6 CT\")] &lt;- \"CT\"\nseu$SubType_merge[seu$SubType_merge %in% c(\"L5 NP\")] &lt;- \"NP\"\n\nTime &lt;- c(\"P1\", \"P4\", \"P10\", \"Adult\")\nSubType &lt;- c(\"IT\", \"PT\", \"NP\", \"CT\", \"Lamp5\", \"Pvalb\", \"Sst\", \"Vip\")\n\nDEGs_all &lt;- data.frame()\nfor (i in 1:3){\n  for (j in 1:8){\n    ident.1 &lt;- colnames(seu)[seu$orig.ident==Time[i+1] & seu$SubType_merge==SubType[j]]\n    ident.2 &lt;- colnames(seu)[seu$orig.ident==Time[i] & seu$SubType_merge==SubType[j]]\n    DEGs_ij &lt;- FindMarkers(seu, ident.1 = ident.1, ident.2 = ident.2, \n                           logfc.threshold = 0.25)\n    DEGs_ij$ident.1 &lt;- paste(Time[i+1], SubType[j], sep = \"_\")\n    DEGs_ij$ident.2 &lt;- paste(Time[i], SubType[j], sep = \"_\")\n    DEGs_ij$SubType_merge &lt;- SubType[j]\n    DEGs_ij$gene &lt;- rownames(DEGs_ij)\n    DEGs_all &lt;- rbind(DEGs_all, DEGs_ij)\n  }\n}\n#write.csv(DEGs_all, \"../../data/rds/Figure3/DEGs_Time_Neuron.csv\")\n\n\n\n\nCode\nDEGs_all &lt;- read.csv(\"../data/Figure2/DEGs_Time_Neuron.csv\")\nDEGs_all &lt;- DEGs_all[,-1]\ncolnames(DEGs_all)[6] &lt;- \"cluster\"\n\nP4_cluster &lt;- c(\"P4_IT\",\"P4_PT\",\"P4_NP\",\"P4_CT\",\"P4_Lamp5\",\"P4_Pvalb\",\"P4_Sst\",\"P4_Vip\")\nP10_cluster &lt;- c(\"P10_IT\",\"P10_PT\",\"P10_NP\",\"P10_CT\",\"P10_Lamp5\",\"P10_Pvalb\",\"P10_Sst\",\"P10_Vip\")\nAdult_cluster &lt;- c(\"Adult_IT\",\"Adult_PT\",\"Adult_NP\",\"Adult_CT\",\"Adult_Lamp5\",\"Adult_Pvalb\",\"Adult_Sst\",\"Adult_Vip\")\nP4_vs_P0_DEGs &lt;- DEGs_all[DEGs_all$cluster %in% P4_cluster,]\nP10_vs_P4_DEGs &lt;- DEGs_all[DEGs_all$cluster %in% P10_cluster,]\nAdult_vs_P10_DEGs &lt;- DEGs_all[DEGs_all$cluster %in% Adult_cluster,]\n\ntile.col &lt;- c(\"IT\"=\"#0a6ddd\",\"PT\"=\"#a1bc6a\",\"NP\"=\"#f7bc3e\",\"CT\"=\"#f7fa10\",\n              \"Lamp5\"=\"#0e0786\",\"Pvalb\"=\"#6902a4\",\"Sst\"=\"#df6361\",\"Vip\"=\"#31b69e\")\nP4_vs_P0_DEGs$cluster &lt;- gsub(\"P4_\",\"\",P4_vs_P0_DEGs$cluster)\nP4_vs_P0_DEGs_filter &lt;- P4_vs_P0_DEGs[-grep(\"Gm\", P4_vs_P0_DEGs$gene),]\nP4_vs_P0_DEGs_filter$cluster &lt;- factor(P4_vs_P0_DEGs_filter$cluster,\n                                       levels = names(tile.col))\nFigure_2D_1 &lt;- \n  jjVolcano(diffData = P4_vs_P0_DEGs_filter, \n          aesCol = c('purple','orange'),\n          topGeneN = 3,\n          tile.col = tile.col,\n          size = 2, segment.size = 0.1,\n          fontface = 'italic',\n          seed = 20230727)+\n  ylim(-5,5) +\n  labs(title = 'P4_vs_P0') +\n  theme(plot.title = element_text(hjust = 0.5))\nFigure_2D_1\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave(\"../../Figure/Figure2/Figure_2D_1.pdf\", plot = Figure_2D_1,\n       height = 6, width = 6, units = \"in\")",
+    "crumbs": [
+      "Main Figure",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Figure2</span>"
+    ]
+  },
+  {
+    "objectID": "Figure2.html#figure_2e",
+    "href": "Figure2.html#figure_2e",
+    "title": "2  Figure2",
+    "section": "2.5 Figure_2E",
+    "text": "2.5 Figure_2E\n\n\nCode\nP4_vs_P0_up &lt;- P4_vs_P0_DEGs[P4_vs_P0_DEGs$avg_log2FC&gt;1,]\nP4_vs_P0_up &lt;- data.frame('gene'=unique(P4_vs_P0_up[,10]))\n#write.csv(P4_vs_P0_up, \"../../data/rds/Figure2/GO/P4_vs_P0_up.csv\")\n\nP4_vs_P0_down &lt;- P4_vs_P0_DEGs[P4_vs_P0_DEGs$avg_log2FC &lt; -1,]\nP4_vs_P0_down &lt;- data.frame('gene'=unique(P4_vs_P0_down[,10]))\n#write.csv(P4_vs_P0_down, \"../../data/rds/Figure2/GO/P4_vs_P0_down.csv\")\n\nP10_vs_P4_up &lt;- P10_vs_P4_DEGs[P10_vs_P4_DEGs$avg_log2FC&gt;1,]\nP10_vs_P4_up &lt;- data.frame('gene'=unique(P10_vs_P4_up[,10]))\n#write.csv(P10_vs_P4_up, \"../../data/rds/Figure2/GO/P10_vs_P4_ups.csv\")\n\nP10_vs_P4_down &lt;- P10_vs_P4_DEGs[P10_vs_P4_DEGs$avg_log2FC &lt; -1,]\nP10_vs_P4_down &lt;- data.frame('gene'=unique(P10_vs_P4_down[,10]))\n#write.csv(P10_vs_P4_down, \"../../data/rds/Figure2/GO/P10_vs_P4_down.csv\")\n\nAdult_vs_P10_up &lt;- Adult_vs_P10_DEGs[Adult_vs_P10_DEGs$avg_log2FC&gt;1,]\nAdult_vs_P10_up &lt;- data.frame('gene'=unique(Adult_vs_P10_up[,10]))\n#write.csv(Adult_vs_P10_up, \"../../data/rds/Figure2/GO/Adult_vs_P10_up.csv\")\n\nAdult_vs_P10_down &lt;- Adult_vs_P10_DEGs[Adult_vs_P10_DEGs$avg_log2FC &lt; -1,]\nAdult_vs_P10_down &lt;- data.frame('gene'=unique(Adult_vs_P10_down[,10]))\n#write.csv(Adult_vs_P10_down, \"../../data/rds/Figure2/GO/Adult_vs_P10_down.csv\")\n\n\n\n\nCode\nknitr::include_graphics(\"./images/Figure_2E.png\", dpi = 300)",
+    "crumbs": [
+      "Main Figure",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Figure2</span>"
+    ]
+  },
+  {
+    "objectID": "Figure2.html#figure_2f",
+    "href": "Figure2.html#figure_2f",
+    "title": "2  Figure2",
+    "section": "2.6 Figure_2F",
+    "text": "2.6 Figure_2F\n\n\nCode\nseu &lt;- seu.neuron\nIdents(seu) &lt;- \"SubType\"\nL23_DEGs &lt;- FindMarkers(seu, ident.1 = \"L2/3 IT\", ident.2 = \"Im L2/3 IT\")\nL45_DEGs &lt;- FindMarkers(seu, ident.1 = \"L4/5 IT\", ident.2 = \"Im L4/5 IT\")\nL5_DEGs &lt;- FindMarkers(seu, ident.1 = \"L5 IT\", ident.2 = \"Im L5 IT\")\nL6_DEGs &lt;- FindMarkers(seu, ident.1 = \"L6 IT\", ident.2 = \"Im L6 IT\")\n#saveRDS(L23_DEGs, \"../../data/rds/Figure2/L23_DEGs.rds\")\n#saveRDS(L45_DEGs, \"../../data/rds/Figure2/L45_DEGs.rds\")\n#saveRDS(L5_DEGs, \"../../data/rds/Figure2/L5_DEGs.rds\")\n#saveRDS(L6_DEGs, \"../../data/rds/Figure2/L6_DEGs.rds\")\n\n\n\n\nCode\nL23_DEGs &lt;- readRDS(\"../data/Figure2/IT_DEGs/L23_DEGs.rds\")\n  \nDEGs &lt;- L23_DEGs\nDEGs &lt;- DEGs %&gt;% filter(p_val_adj != 0)\ntop &lt;- DEGs[order(DEGs$avg_log2FC, decreasing = T),][1:5,]\ntop$label &lt;- rownames(top)\ndown &lt;- DEGs[order(DEGs$avg_log2FC),][1:5,]\ndown$label &lt;- rownames(down)\n\nlogFC_threshold = 1.5\npval_threshold = 0.05\nFigure_2F &lt;- \n  ggplot(DEGs, aes(x = avg_log2FC, y = -log10(p_val_adj))) +\n  geom_point(aes(color = avg_log2FC, size = -log10(p_val_adj)), alpha = 0.7) +\n  geom_point(data = bind_rows(top, down), \n             aes(fill = avg_log2FC, size = -log10(p_val_adj)),\n             shape = 21, color = \"black\", show.legend = FALSE) +\n  geom_text_repel(data = top, aes(label = label), box.padding = 0.5,\n                  nudge_x = 0.5, nudge_y = 0.2, segment.curvature = -0.1,\n                  segment.ncp = 3, direction = \"y\", hjust = \"left\") +\n  geom_text_repel(data = down, aes(label = label), box.padding = 0.5,\n                  nudge_x = -0.2, nudge_y = 0.2, segment.curvature = -0.1,\n                  segment.ncp = 3, segment.angle = 20, direction = \"y\",\n                  hjust = \"right\") +\n  scale_color_gradientn(\n      colours = c(\"#3288bd\", \"#66c2a5\", \"#ffffbf\", \"#f46d43\", \"#9e0142\"),\n      values = scales::rescale(c(min(DEGs$avg_log2FC), -1, 0, 1, max(DEGs$avg_log2FC)))) +\n  scale_fill_gradientn(\n      colours = c(\"#3288bd\", \"#66c2a5\", \"#ffffbf\", \"#f46d43\", \"#9e0142\"),\n      values = scales::rescale(c(min(DEGs$avg_log2FC), -1, 0, 1, max(DEGs$avg_log2FC)))) +\n  scale_size(range = c(1, 5)) +\n  geom_vline(xintercept = 0, linetype = \"dashed\") +\n  xlim(-2,2.2) +\n  ylim(c(0, max(-log10(DEGs$p_val_adj)) + 50)) +\n  labs(x = \"log2 (fold change)\", y = \"-log10 (P Value)\", title = \"\") +\n  theme_bw() +\n  theme(\n    panel.grid = element_blank(),\n    axis.text = element_text(size = 13, color = \"black\"),\n    axis.title = element_text(size = 15),\n    plot.title = element_text(hjust = 0.5),\n    plot.subtitle = element_text(hjust = 0.5)\n    ) \nFigure_2F\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave(\"../../Figure/Figure2/Figure_2F/L23_DEGs.pdf\", plot = Figure_2F,\n       height = 5, width = 6.5, units = \"in\")",
+    "crumbs": [
+      "Main Figure",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Figure2</span>"
+    ]
+  },
+  {
+    "objectID": "Figure2.html#figure_2g-j",
+    "href": "Figure2.html#figure_2g-j",
+    "title": "2  Figure2",
+    "section": "2.7 Figure_2G-J",
+    "text": "2.7 Figure_2G-J\n\n\nCode\nFigure_2G &lt;- \n  FeaturePlot(subset(seu.neuron, cells = colnames(seu.neuron)[which(\n    seu.neuron$SubType %in% names(col_SubType)[1:8])]), features = \"Clstn2\", \n    order = T, pt.size = 0.1) +\n  scale_color_gradientn(colours = c(\"lightblue3\", \"lightblue\", \"white\", \"red\", \"red4\"), limits=c(0,3), na.value = \"red4\") +\n  coord_fixed() +\n  theme_void() +\n  theme(legend.position = \"none\") +\n  labs(title = \"\")\nFigure_2G\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave(\"../../Figure/Figure2/Figure_2G/Clstn2_UMAP.png\", plot = Figure_2G,\n       height = 5, width = 5, units = \"in\")",
+    "crumbs": [
+      "Main Figure",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Figure2</span>"
+    ]
+  },
+  {
+    "objectID": "Figure3.html",
+    "href": "Figure3.html",
+    "title": "3  Figure3",
+    "section": "",
+    "text": "3.1 Figure_3A\nCode\nseu &lt;- seu.IT\nseu$Pseudotime &lt;- cds$Pseudotime\nseu$SubType &lt;- factor(seu$SubType, levels = names(col_SubType))\nseu$orig.ident &lt;- factor(seu$orig.ident, levels = c(\"P1\",\"P4\",\"P10\",\"Adult\"))\nFigure_3A &lt;- \n  FeaturePlot(seu, features = \"Pseudotime\", split.by = 'orig.ident', ncol = 4) &\n  scale_color_gradientn(colours = sciRcolor::pal_scircolor(96)) &\n  theme(axis.line = element_blank(), axis.ticks = element_blank(), \n        axis.text = element_blank(), plot.title = element_text(size = 30)) &\n  labs(x='', y='', title = \"\") &\n  coord_fixed()\nFigure_3A\nCode\nggsave(\"../../Figure/Figure4/Figure_3A.pdf\", plot = Figure_3A,\n       height = 6, width = 18, units = \"in\")",
+    "crumbs": [
+      "Main Figure",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Figure3</span>"
+    ]
+  },
+  {
+    "objectID": "Figure3.html#figure_3b",
+    "href": "Figure3.html#figure_3b",
+    "title": "3  Figure3",
+    "section": "3.2 Figure_3B",
+    "text": "3.2 Figure_3B\n\n\nCode\nFigure_3B &lt;- \n  plot_cell_trajectory(cds, color_by = \"orig.ident\",cell_size=1) +\n  scale_color_manual(values = col_Time)\nFigure_3B$data &lt;- Figure_3B$data[sample(nrow(Figure_3B$data)), ]\nFigure_3B\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave(\"../../Figure/Figure3/Figure_3B.pdf\", plot = Figure_3B,\n       height = 4, width = 5, units = \"in\")",
+    "crumbs": [
+      "Main Figure",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Figure3</span>"
+    ]
+  },
+  {
+    "objectID": "Figure3.html#figure_3c",
+    "href": "Figure3.html#figure_3c",
+    "title": "3  Figure3",
+    "section": "3.3 Figure_3C",
+    "text": "3.3 Figure_3C\n\n\nCode\ncds$orig.ident &lt;- factor(\n  cds$SubType, \n  levels = c(\"Im L2/3 IT\",\"Im L4/5 IT\",\"Im L5 IT\",\"Im L6 IT\",\n             \"L2/3 IT\",\"L4/5 IT\",\"L5 IT\",\"L6 IT\"))\nFigure_3C &lt;- \n  plot_cell_trajectory(cds, color_by = \"SubType\") +\n  scale_color_manual(values = col_SubType) +\n  facet_wrap(~SubType_v4, nrow=2) +\n  theme_void()\nFigure_3C\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave(\"../../Figure/Figure3/Figure_3C.pdf\", plot = Figure_3C,\n       height = 4, width = 12, units = \"in\")",
+    "crumbs": [
+      "Main Figure",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Figure3</span>"
+    ]
+  },
+  {
+    "objectID": "Figure3.html#figure_3d",
+    "href": "Figure3.html#figure_3d",
+    "title": "3  Figure3",
+    "section": "3.4 Figure_3D",
+    "text": "3.4 Figure_3D\n\n\nCode\nordergene &lt;- cds@featureData@data$gene_short_name[cds@featureData@data$use_for_ordering==TRUE]\n#BEAM_res &lt;- BEAM(cds[ordergene,], branch_point = 1, cores = 2)\n#BEAM_res &lt;- BEAM_res[order(BEAM_res$qval),]\n#write.csv(BEAM_res, \"../../data/rds/Figure3/BEAM_res_all.csv\")\nBEAM_res &lt;- read.csv(\"../data/Figure3/BEAM_res_all.csv\", row.names = 1)\nBEAM_res &lt;- BEAM_res[order(BEAM_res$qval),]\nsig_gene_names &lt;- row.names(subset(BEAM_res, qval &lt; 1e-10))\nBEAM_res &lt;- BEAM_res[sig_gene_names,]\n\nFigure_3D &lt;- plot_pseudotime_heatmap(\n  cds[sig_gene_names[1:1000],],\n  num_clusters = 5,\n  cores = 4,\n  show_rownames = F,\n  hmcols = colorRampPalette(rev(sciRcolor::pal_scircolor(85)))(100),\n  return_heatmap = T)\n\n#Go Gene\n#clusters &lt;- data.frame(cutree(Figure_3D$tree_row, k=5))\n#clusters[,1] &lt;- as.character(clusters[,1])\n#colnames(clusters) &lt;- \"Gene_clusters\"\n#write.csv(clusters, \"../../data/rds/Figure3/Time_cluster_all.csv\")\n\n\n\n\nCode\nknitr::include_graphics(\"./images/Figure_3D.png\", dpi = 300)",
+    "crumbs": [
+      "Main Figure",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Figure3</span>"
+    ]
+  },
+  {
+    "objectID": "Figure3.html#figure_3e",
+    "href": "Figure3.html#figure_3e",
+    "title": "3  Figure3",
+    "section": "3.5 Figure_3E",
+    "text": "3.5 Figure_3E\n\n\nCode\nknitr::include_graphics(\"./images/Figure_3E.png\", dpi = 300)",
+    "crumbs": [
+      "Main Figure",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Figure3</span>"
+    ]
+  },
+  {
+    "objectID": "Figure3.html#figure_3f",
+    "href": "Figure3.html#figure_3f",
+    "title": "3  Figure3",
+    "section": "3.6 Figure_3F",
+    "text": "3.6 Figure_3F\n\n\nCode\nloom &lt;- open_loom('../data/Figure3/SCENIC/aucell.loom')\nregulons_incidMat &lt;- SCopeLoomR::get_regulons(loom, column.attr.name=\"Regulons\")\nregulonAUC &lt;- assay(SCopeLoomR::get_regulons_AUC(loom,column.attr.name='RegulonsAUC'))\n\n\nWarning: package 'AUCell' was built under R version 4.2.2\n\n\n\n\nCode\nseu &lt;- seu.IT\nregulonsToPlot &lt;- c(\n  'Cux1(+)','Sox11(+)','Sox12(+)','Myc(+)','Myf6(+)','Atf4(+)','Tbr1(+)',\n  'Nr1d1(+)','Bhlhe41(+)','Hes1(+)','Erg(+)','Rxrg(+)','Jun(+)')\nregulonsToPlot_mat &lt;- scale(t(regulonAUC[regulonsToPlot,]))\nseu@meta.data &lt;- cbind(seu@meta.data, regulonsToPlot_mat)\nseu$Time_subtype &lt;- factor(seu$SubType, levels = names(col_SubType)[1:8])\n\nFigure_3F &lt;- \n  DotPlot(\n  seu,\n  features = regulonsToPlot,\n  group.by = 'SubType',\n  col.min=0, col.max=2, dot.scale = 5) +\n  coord_flip() +\n  scale_x_discrete(limits=rev) +\n  scale_color_gradientn(colours = c(\"lightblue3\", \"lightblue\", \"white\", \"red\", \"red4\")) +\n  theme_bw() +\n  theme(axis.text.x = element_text(angle = 25, hjust = 1)) +\n  geom_hline(yintercept = c(4.5), linetype=\"dashed\") +\n  labs(x=\"\",y=\"\")\nFigure_3F\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave(\"../../Figure/Figure3/Figure_3F.pdf\", plot = Figure_3F, \n       height = 3, width = 8, units = \"in\")",
+    "crumbs": [
+      "Main Figure",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Figure3</span>"
+    ]
+  },
+  {
+    "objectID": "Figure3.html#figure_3g",
+    "href": "Figure3.html#figure_3g",
+    "title": "3  Figure3",
+    "section": "3.7 Figure_3G",
+    "text": "3.7 Figure_3G\n\n\nCode\ngrn &lt;- read_tsv(\"../data/Figure3/SCENIC/grn.tsv\")\nselected_tf &lt;- c(\"Sox11\",\"Sox12\",\"Atf4\",\"Tbr1\")[1]\n\nsub_grn &lt;- grn %&gt;%\n  filter(TF == selected_tf) %&gt;%\n  group_by(TF) %&gt;%\n  top_n(20, importance) %&gt;%\n  ungroup()\n\nnodes &lt;- data.frame(\n  node = unique(c(sub_grn$TF, sub_grn$target))\n)\nnodes$node.size &lt;- ifelse(nodes$node %in% selected_tf, 10, 10)\nnodes$node.colour &lt;- ifelse(nodes$node %in% selected_tf, \"#6468c5\", \"#e56967\")\n\nedges &lt;- data.frame(\n  from = sub_grn$TF,\n  to = sub_grn$target,\n  edge.width = sub_grn$importance,\n  edge.colour = sub_grn$importance\n)\n\ngraph_data &lt;- tidygraph::tbl_graph(nodes = nodes, edges = edges, directed = TRUE)\n\n# TF network\nggraph(graph_data, layout = \"stress\", circular = TRUE) +\n  geom_edge_arc(aes(edge_colour = edge.colour, edge_width = edge.width)) +\n  geom_node_point(aes(colour = node.colour, size = node.size)) +\n  geom_node_label(aes(label = node), size = 5, repel = TRUE) +\n  theme_void() +\n  scale_edge_color_gradientn(colors = rev(sciRcolor::pal_scircolor(85))) +\n  scale_edge_width_continuous(range = c(0.2, 3)) +\n  scale_size_continuous(guide = \"none\") +\n  theme(\n    legend.position = \"right\",\n    legend.title = element_text(size = 10),\n    legend.text = element_text(size = 8)\n  ) +\n  labs(edge_width = \"Importance\", edge_colour = \"Importance\")\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave('../../Figure/Figure3/Figure_3G/Sox11_netplot.pdf', width = 6, height = 5)",
+    "crumbs": [
+      "Main Figure",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Figure3</span>"
+    ]
+  },
+  {
+    "objectID": "Figure3.html#figure_3h-k",
+    "href": "Figure3.html#figure_3h-k",
+    "title": "3  Figure3",
+    "section": "3.8 Figure_3H-K",
+    "text": "3.8 Figure_3H-K\n\n\nCode\ndata &lt;- as.data.frame(regulonsToPlot_mat)\ndata$UMAP_1 &lt;- as.numeric(seu.IT@reductions$umap@cell.embeddings[,\"UMAP_1\"])\ndata$UMAP_2 &lt;- as.numeric(seu.IT@reductions$umap@cell.embeddings[,\"UMAP_2\"])\ndata$Time &lt;- seu.IT$orig.ident\ndata$SubType &lt;- seu.IT$SubType\ndata$Pseudotime &lt;- cds$Pseudotime\n\ngene &lt;- \"Sox11(+)\"\ndf &lt;- data.frame(\n  UMAP_1 = data$UMAP_1,\n  UMAP_2 = data$UMAP_2,\n  value = data[,gene]\n)\ndf$value[df$value&gt;3] &lt;- 3\ndf$value[df$value&lt;0] &lt;- 0\ndf &lt;- df[order(df$value),]\ndf &lt;- df[df$UMAP_1&lt;0 & df$UMAP_1 &gt; -12 & df$UMAP_2&lt;8,]\n\nFigure_3H &lt;- \n  ggplot(df, mapping=aes(x=UMAP_1, y=UMAP_2, color=value)) +\n  geom_point() +\n  theme_void() +\n  theme(legend.position = \"none\") +\n  coord_fixed() +\n  scale_color_gradientn(colours = c(\"lightblue3\", \"lightblue\", \"white\", \"red\", \"red4\"), limits = c(0,3))\nFigure_3H\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave(\"../../Figure/Figure3/Figure_3H/Sox11(+)_UMAP.png\", plot = Figure_3H, \n       height = 6, width = 6, units = \"in\")",
+    "crumbs": [
+      "Main Figure",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Figure3</span>"
+    ]
+  },
+  {
+    "objectID": "Figure4.html",
+    "href": "Figure4.html",
+    "title": "4  Figure4",
+    "section": "",
+    "text": "4.1 Figure_4A\nCode\nDEGs_all &lt;- read.csv(\"../data/Figure2/DEGs_Time_Neuron.csv\")\nDEGs_all &lt;- DEGs_all[DEGs_all$gene %in% all_gene,]\ncolnames(DEGs_all)[1] &lt;- \"gene\"\ncolnames(DEGs_all)[7] &lt;- \"cluster\"\n\nP4_cluster &lt;- c(\"P4_IT\",\"P4_PT\",\"P4_NP\",\"P4_CT\",\"P4_Lamp5\",\"P4_Pvalb\",\"P4_Sst\",\"P4_Vip\")\nP10_cluster &lt;- c(\"P10_IT\",\"P10_PT\",\"P10_NP\",\"P10_CT\",\"P10_Lamp5\",\"P10_Pvalb\",\"P10_Sst\",\"P10_Vip\")\nAdult_cluster &lt;- c(\"Adult_IT\",\"Adult_PT\",\"Adult_NP\",\"Adult_CT\",\"Adult_Lamp5\",\"Adult_Pvalb\",\"Adult_Sst\",\"Adult_Vip\")\nP4_vs_P0_DEGs &lt;- DEGs_all[DEGs_all$cluster %in% P4_cluster,]\nP10_vs_P4_DEGs &lt;- DEGs_all[DEGs_all$cluster %in% P10_cluster,]\nAdult_vs_P10_DEGs &lt;- DEGs_all[DEGs_all$cluster %in% Adult_cluster,]\nCode\ntile.col &lt;- c(\"IT\"=\"#0a6ddd\",\"PT\"=\"#a1bc6a\",\"NP\"=\"#f7bc3e\",\"CT\"=\"#f7fa10\",\n              \"Lamp5\"=\"#0e0786\",\"Pvalb\"=\"#6902a4\",\"Sst\"=\"#df6361\",\"Vip\"=\"#31b69e\")\nP4_vs_P0_DEGs$cluster &lt;- gsub(\"P4_\",\"\",P4_vs_P0_DEGs$cluster)\nP4_vs_P0_DEGs$cluster &lt;- factor(P4_vs_P0_DEGs$cluster,\n                                levels = names(tile.col))\nP4_vs_P0_DEGs &lt;- P4_vs_P0_DEGs[,-1]\nFigure_4A &lt;- \n  jjVolcano(diffData = P4_vs_P0_DEGs, \n          aesCol = c('purple','orange'),\n          topGeneN = 3,\n          tile.col = tile.col,\n          size = 2, segment.size = 0.1,\n          fontface = 'italic',\n          polar = F,\n          seed = 20230727)+\n  ylim(-3,3) +\n  labs(title = '',x='',y='') +\n  theme(plot.title = element_text(hjust = 0.5),\n        legend.position = \"nine\", axis.text.y = element_blank(),\n        axis.title.x = element_blank())\nFigure_4A\nCode\nggsave(\"../../Figure/Figure4/Figure_4A_P4_vs_P0.png\", plot = Figure_4A,\n       height = 6, width = 6, units = \"in\")",
+    "crumbs": [
+      "Main Figure",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Figure4</span>"
+    ]
+  },
+  {
+    "objectID": "Figure4.html#figure_4b",
+    "href": "Figure4.html#figure_4b",
+    "title": "4  Figure4",
+    "section": "4.2 Figure_4B",
+    "text": "4.2 Figure_4B\n\n\nCode\nknitr::include_graphics(\"./images/Figure_4B.png\", dpi = 300)",
+    "crumbs": [
+      "Main Figure",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Figure4</span>"
+    ]
+  },
+  {
+    "objectID": "Figure4.html#figure_4c",
+    "href": "Figure4.html#figure_4c",
+    "title": "4  Figure4",
+    "section": "4.3 Figure_4C",
+    "text": "4.3 Figure_4C\n\n\nCode\nseurat_obj &lt;- readRDS(\"../data/Figure4/seu.Ex.hdwgcna.rds\")\n\n\n\n\nCode\nset.seed(20241220)\nmodules &lt;- GetModules(seurat_obj)\nmods &lt;- levels(modules$module)\nmods &lt;- mods[mods != 'grey']\n\nFigure_4B &lt;- \n  HubGeneNetworkPlot(\n  seurat_obj,\n  n_hubs = 5, n_other=50,\n  edge_prop = 0.8,\n  edge.alpha = 0.8,\n  mods = mods,  \n  return_graph=FALSE\n)\nFigure_4B\n\n\n\n\nCode\nknitr::include_graphics(\"./images/Figure_4C.png\", dpi = 300)",
+    "crumbs": [
+      "Main Figure",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Figure4</span>"
+    ]
+  },
+  {
+    "objectID": "Figure4.html#figure_4d",
+    "href": "Figure4.html#figure_4d",
+    "title": "4  Figure4",
+    "section": "4.4 Figure_4D",
+    "text": "4.4 Figure_4D\n\n4.4.1 Figure_4D_1\n\n\nCode\nplot_list &lt;- ModuleFeaturePlot(\n  seurat_obj,\n  features='hMEs',\n  order=TRUE,\n  title = FALSE\n)\n\n\n[1] \"M1\"\n[1] \"M2\"\n[1] \"M3\"\n[1] \"M4\"\n[1] \"M5\"\n\n\nCode\nwrap_plots(plot_list, ncol=5)\n\n\n\n\n\n\n\n\n\n\n\nCode\nfor (i in 1:5){\n  ggsave(filename=paste(\"../../Figure/Figure4/Figure_4D_1/M\",i,\".png\",sep=\"\"),\n         plot_list[[i]], \n         width=4, height = 4, units = \"in\")\n}\n\n\n\n\n4.4.2 Figure_4D_2\n\n\nCode\nseurat_obj$Time &lt;- seurat_obj$orig.ident\nexp_mean &lt;- AverageExpression(\n  seurat_obj, \n  features = seurat_obj@misc$CAM_AG$wgcna_genes,\n  assays = \"RNA\",\n  slot = \"data\",\n  group.by = \"Time\")\nexp_mean_zscore &lt;- as.data.frame(t(scale(t(exp_mean$RNA))))\nexp_mean_zscore$module &lt;- seurat_obj@misc$CAM_AG$wgcna_modules$module\nexp_mean_zscore$gene &lt;- rownames(exp_mean_zscore)\nexp_mean_zscore &lt;- exp_mean_zscore[which(exp_mean_zscore$module != \"grey\"),]\nexp_mean_long &lt;- pivot_longer(exp_mean_zscore, !c(module,gene), names_to = \"Time\",\n                              values_to = \"Exp\")\n\nplist &lt;- list()\nM_color &lt;- c(\"M1\"=\"turquoise\",\"M2\"=\"yellow\",\"M3\"=\"green\",\"M4\"=\"brown\",\"M5\"=\"blue\")\nfor (i in 1:5){\n  module &lt;- paste(\"M\",i,sep=\"\")\n  df &lt;- exp_mean_long[which(exp_mean_long$module==module),]\n  df$Time &lt;- factor(df$Time, levels = c(\"P0\",\"P4\",\"P10\",\"Adult\"))\n  df_mean &lt;- \n    df |&gt;\n    group_by(Time) |&gt;\n    dplyr::summarize(across(Exp, ~ mean(.x, na.rm = TRUE)))\n  df_mean$Time &lt;- factor(df_mean$Time, levels = c(\"P0\",\"P4\",\"P10\",\"Adult\"))\n  \n  plist[[i]] &lt;- \n    ggplot(df, aes(x=Time, y=Exp)) +\n    geom_line(aes(group=gene), color=M_color[i], alpha=0.3) +\n    stat_xspline(df_mean, mapping=aes(x=Time, y=Exp, group=1), \n               spline_shape=-0.4, color=\"black\", linewidth=1) +\n    theme_void(base_size = 10) +\n    theme(plot.title = element_text(hjust = 0.5),\n          panel.grid = element_blank()) +\n    scale_y_continuous(limits = c(-1.5,1.5)) +\n    coord_fixed()\n  #ggsave(filename=paste(\"../../Figure/Figure4/Figure_4D_2/M\",i,\".png\",sep=\"\"),\n  #       plist[[i]], \n  #       width=4, height = 4, units = \"in\")\n}\n\ncowplot::plot_grid(plotlist = plist, ncol = 5)\n\n\n\n\n\n\n\n\n\n\n\n4.4.3 Figure_4D_3\n\n\nCode\nSubType_order &lt;- names(col_SubType)[1:11]\nM_order &lt;- c(\"M4\",\"M5\",\"M3\",\"M1\",\"M2\")\nM_color &lt;- c(\"M1\"=\"turquoise\",\"M2\"=\"yellow\",\"M3\"=\"green\",\"M4\"=\"brown\",\"M5\"=\"blue\")\n\nhub_df &lt;- GetHubGenes(seurat_obj, n_hubs = 20)\nhub_df$module &lt;- factor(hub_df$module, levels = M_order)\nhub_df &lt;- hub_df[order(hub_df$module),]\n\nseurat_obj$Cluster &lt;- seurat_obj$SubType_v4\n\nexp_mean &lt;- AverageExpression(\n  seurat_obj, \n  features = hub_df$gene_name,\n  assays = \"RNA\",\n  slot = \"data\",\n  group.by = \"Cluster\")\nexp_mean_zscore &lt;- as.data.frame(t(scale(t(exp_mean$RNA))))\n\nannotation_row = data.frame(\n  Module = rep(M_order,each=20)\n)\nrownames(annotation_row) &lt;- rownames(exp_mean_zscore)\nann_colors = list(\n  Module = M_color\n)\n\nbreaks &lt;- seq(-2,2,0.01)\ncol &lt;- colorRampPalette(c(\"lightblue3\", \"lightblue\", \"white\", \"red\", \"red4\"))(length(breaks))\n\nmat &lt;- exp_mean_zscore[,SubType_order]\nmat[mat&gt;2] &lt;- 2\nmat[mat&lt; -2] &lt;- -2\nFigure_4D_3 &lt;- \n  pheatmap::pheatmap(mat,\n         cluster_rows = F, cluster_cols = F,\n         breaks = breaks,\n         color = col,\n         fontsize_col = 10,\n         annotation_row = annotation_row,\n         annotation_colors = ann_colors,\n         annotation_names_row=F, annotation_names_col=F, annotation_legend=F,\n         show_colnames = T, show_rownames = F, angle_col=45, border_color=NA\n         )",
+    "crumbs": [
+      "Main Figure",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Figure4</span>"
+    ]
+  },
+  {
+    "objectID": "Figure4.html#figure_4e",
+    "href": "Figure4.html#figure_4e",
+    "title": "4  Figure4",
+    "section": "4.5 Figure_4E",
+    "text": "4.5 Figure_4E\n\n\nCode\nModuleNetworkPlot(\n  seurat_obj,\n  outdir = '../../Figure/Figure4/ModuleNetwork'\n)\n\n\n\n\nCode\nknitr::include_graphics(\"./images/Figure_4E.png\", dpi = 300)",
+    "crumbs": [
+      "Main Figure",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Figure4</span>"
+    ]
+  },
+  {
+    "objectID": "Figure4.html#figure_4f",
+    "href": "Figure4.html#figure_4f",
+    "title": "4  Figure4",
+    "section": "4.6 Figure_4F",
+    "text": "4.6 Figure_4F\n\n\nCode\nseu &lt;- seu.IT\nseu$orig.ident &lt;- factor(seu$orig.ident, levels = c(\"P1\",\"P4\",\"P10\",\"Adult\"))\ngene_list &lt;- c(\"Unc5d\",\"Plxna4\",\"Robo2\",\"Clstn2\",\"Cntn2\")\n\nFigure_4F &lt;- \n  VlnPlot(seu, features = rev(gene_list), group.by = \"orig.ident\", cols=col_Time,\n        split.by = \"orig.ident\",\n        stack = TRUE, flip = TRUE) +\n  theme(legend.position = \"none\", axis.text.x = element_text(angle = 0, hjust = 0.5)) +\n  labs(x=\"\")\nFigure_4F\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave(\"../../Figure/Figure4/Figure_4F.pdf\", plot = Figure_4F,\n       height = 6, width = 6, units = \"in\")",
+    "crumbs": [
+      "Main Figure",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Figure4</span>"
+    ]
+  },
+  {
+    "objectID": "Figure4.html#figure_4g",
+    "href": "Figure4.html#figure_4g",
+    "title": "4  Figure4",
+    "section": "4.7 Figure_4G",
+    "text": "4.7 Figure_4G\n\n\nCode\nknitr::include_graphics(\"./images/Figure_4G.png\", dpi = 300)",
+    "crumbs": [
+      "Main Figure",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Figure4</span>"
+    ]
+  },
+  {
     "objectID": "Figure5.html",
     "href": "Figure5.html",
     "title": "5  Figure5",
@@ -59,7 +461,7 @@
     "href": "Figure5.html#figure_5f",
     "title": "5  Figure5",
     "section": "5.6 Figure_5F",
-    "text": "5.6 Figure_5F\n\n\nCode\ngroup &lt;- c(rep(\"IT\",8), rep(\"Non-Neuronal\",4))\nnames(group) &lt;- names(col_SubType)[c(1:8,17,19:21)]\nNeuron &lt;- names(group)[c(1:8)]\nNon_neuron &lt;- names(group)[c(9:12)]\n#P1\ndf.P1 &lt;- rankNet(P1.CellChat, slot.name = \"net\", measure = c(\"weight\"),\n                 sources.use = Non_neuron[-3], targets.use = Neuron[-c(5:7)],\n                 mode='single', return.data = T)\ndf.P1 &lt;- df.P1$signaling.contribution\ndf.P1$Time &lt;- \"P1\"\nP1.top10 &lt;- as.character(df.P1$name[df.P1$contribution&gt;0.1])\n#df.P0 &lt;- df.P0[df.P0$contribution &gt; 0.5,]\n\n#P4\ndf.P4 &lt;- rankNet(P4.CellChat, slot.name = \"net\", measure = c(\"weight\"),\n                 sources.use = Non_neuron, targets.use = Neuron[-c(5:6)],\n                 mode='single', return.data = T)\ndf.P4 &lt;- df.P4$signaling.contribution\ndf.P4$Time &lt;- \"P4\"\nP4.top10 &lt;- as.character(df.P4$name[df.P4$contribution&gt;0.1])\n#df.P4 &lt;- df.P4[df.P4$contribution &gt; 0.5,]\n\n#P10\ndf.P10 &lt;- rankNet(P10.CellChat, slot.name = \"net\", measure = c(\"weight\"),\n                  sources.use = Non_neuron, targets.use = Neuron,\n                  mode='single', return.data = T)\ndf.P10 &lt;- df.P10$signaling.contribution\ndf.P10$Time &lt;- \"P10\"\nP10.top10 &lt;- as.character(df.P10$name[df.P10$contribution&gt;0.1])\n#df.P10 &lt;- df.P10[df.P10$contribution &gt; 0.5,]\n\n#Adult\ndf.Adult &lt;- rankNet(Adult.CellChat, slot.name = \"net\", measure = c(\"weight\"),\n                    sources.use = Non_neuron[-1], targets.use = Neuron[-c(1:4)],\n                    mode='single', return.data = T)\ndf.Adult &lt;- df.Adult$signaling.contribution\ndf.Adult$Time &lt;- \"Adult\"\nAdult.top10 &lt;- as.character(df.Adult$name[df.Adult$contribution&gt;0.1])\n#df.Adult &lt;- df.Adult[df.Adult$contribution &gt; 0.5,]\n\n#name &lt;- unique(c(df.P0$name, df.P4$name, df.P10$name, df.Adult$name))\nname &lt;- unique(c(P1.top10, P4.top10, P10.top10, Adult.top10))\nmat &lt;- matrix(nrow = length(name), ncol = 4)\nrownames(mat) &lt;- name\ncolnames(mat) &lt;- c(\"P1\",\"P4\",\"P10\",\"Adult\")\nmat[,\"P1\"] &lt;- df.P1$contribution[match(name, df.P1$name)]\nmat[,\"P4\"] &lt;- df.P4$contribution[match(name, df.P4$name)]\nmat[,\"P10\"] &lt;- df.P10$contribution[match(name, df.P10$name)]\nmat[,\"Adult\"] &lt;- df.Adult$contribution[match(name, df.Adult$name)]\nmat[is.na(mat)] &lt;- 0\nmat &lt;- mat/rowSums(mat)\ndf &lt;- arrange(as.data.frame(mat), desc(P1), desc(P4), desc(P10), desc(Adult))\ndf$name &lt;- rownames(df)\ndf_long &lt;- pivot_longer(df, !name, names_to=\"Time\", values_to=\"Value\")\ndf_long$Time &lt;- factor(df_long$Time, levels = rev(c(\"P1\",\"P4\",\"P10\",\"Adult\")))\ndf_long$name &lt;- factor(df_long$name, levels = rev(df$name))\n\nFigure_5F &lt;- \n  ggplot(df_long, aes(x = name, y = Value, fill = Time)) + \n  geom_bar(stat = \"identity\", width = 0.9) +\n  scale_fill_manual(values = col_Time) +\n  labs(x='', y='', title='') +\n  theme_minimal(base_size = 8) +\n  theme(panel.grid = element_blank(), plot.title = element_text(hjust = 0.5),\n        legend.position = \"none\",\n        legend.title = element_blank()) +\n  coord_flip()\nFigure_5F\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave(\"../../Figure/Figure5/Figure_5F.pdf\", plot = Figure_5F, \n       height = 5.5, width = 3, units = \"in\")",
+    "text": "5.6 Figure_5F\n\n\nCode\ngroup &lt;- c(rep(\"IT\",8), rep(\"Non-Neuronal\",4))\nnames(group) &lt;- names(col_SubType)[c(1:8,17,19:21)]\nNeuron &lt;- names(group)[c(1:8)]\nNon_neuron &lt;- names(group)[c(9:12)]\n# P1\ndf.P1 &lt;- rankNet(P1.CellChat, slot.name = \"net\", measure = c(\"weight\"),\n                 sources.use = Non_neuron[-3], targets.use = Neuron[-c(5:7)],\n                 mode='single', return.data = T)\ndf.P1 &lt;- df.P1$signaling.contribution\ndf.P1$Time &lt;- \"P1\"\nP1.top10 &lt;- as.character(df.P1$name[df.P1$contribution&gt;0.1])\n\n#P4\ndf.P4 &lt;- rankNet(P4.CellChat, slot.name = \"net\", measure = c(\"weight\"),\n                 sources.use = Non_neuron, targets.use = Neuron[-c(5:6)],\n                 mode='single', return.data = T)\ndf.P4 &lt;- df.P4$signaling.contribution\ndf.P4$Time &lt;- \"P4\"\nP4.top10 &lt;- as.character(df.P4$name[df.P4$contribution&gt;0.1])\n\n# P10\ndf.P10 &lt;- rankNet(P10.CellChat, slot.name = \"net\", measure = c(\"weight\"),\n                  sources.use = Non_neuron, targets.use = Neuron,\n                  mode='single', return.data = T)\ndf.P10 &lt;- df.P10$signaling.contribution\ndf.P10$Time &lt;- \"P10\"\nP10.top10 &lt;- as.character(df.P10$name[df.P10$contribution&gt;0.1])\n\n# Adult\ndf.Adult &lt;- rankNet(Adult.CellChat, slot.name = \"net\", measure = c(\"weight\"),\n                    sources.use = Non_neuron[-1], targets.use = Neuron[-c(1:4)],\n                    mode='single', return.data = T)\ndf.Adult &lt;- df.Adult$signaling.contribution\ndf.Adult$Time &lt;- \"Adult\"\nAdult.top10 &lt;- as.character(df.Adult$name[df.Adult$contribution&gt;0.1])\n\nname &lt;- unique(c(P1.top10, P4.top10, P10.top10, Adult.top10))\nmat &lt;- matrix(nrow = length(name), ncol = 4)\nrownames(mat) &lt;- name\ncolnames(mat) &lt;- c(\"P1\",\"P4\",\"P10\",\"Adult\")\nmat[,\"P1\"] &lt;- df.P1$contribution[match(name, df.P1$name)]\nmat[,\"P4\"] &lt;- df.P4$contribution[match(name, df.P4$name)]\nmat[,\"P10\"] &lt;- df.P10$contribution[match(name, df.P10$name)]\nmat[,\"Adult\"] &lt;- df.Adult$contribution[match(name, df.Adult$name)]\nmat[is.na(mat)] &lt;- 0\nmat &lt;- mat/rowSums(mat)\ndf &lt;- arrange(as.data.frame(mat), desc(P1), desc(P4), desc(P10), desc(Adult))\ndf$name &lt;- rownames(df)\ndf_long &lt;- pivot_longer(df, !name, names_to=\"Time\", values_to=\"Value\")\ndf_long$Time &lt;- factor(df_long$Time, levels = rev(c(\"P1\",\"P4\",\"P10\",\"Adult\")))\ndf_long$name &lt;- factor(df_long$name, levels = rev(df$name))\n\nFigure_5F &lt;- \n  ggplot(df_long, aes(x = name, y = Value, fill = Time)) + \n  geom_bar(stat = \"identity\", width = 0.9) +\n  scale_fill_manual(values = col_Time) +\n  labs(x='', y='', title='') +\n  theme_minimal(base_size = 8) +\n  theme(panel.grid = element_blank(), plot.title = element_text(hjust = 0.5),\n        legend.position = \"none\",\n        legend.title = element_blank()) +\n  coord_flip()\nFigure_5F\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave(\"../../Figure/Figure5/Figure_5F.pdf\", plot = Figure_5F, \n       height = 5.5, width = 3, units = \"in\")",
     "crumbs": [
       "Main Figure",
       "<span class='chapter-number'>5</span>  <span class='chapter-title'>Figure5</span>"
@@ -77,80 +479,476 @@
     ]
   },
   {
-    "objectID": "Figure5.html#figure_5i-j",
-    "href": "Figure5.html#figure_5i-j",
+    "objectID": "Figure5.html#figure_5i",
+    "href": "Figure5.html#figure_5i",
     "title": "5  Figure5",
-    "section": "5.8 Figure_5I-J",
-    "text": "5.8 Figure_5I-J\n\n\nCode\nseu &lt;- seu.NOneuron[,seu.NOneuron$SubType==\"Astro\"]\nseu$orig.ident &lt;- factor(seu$orig.ident, levels = c(\"P1\",\"P4\",\"P10\",\"Adult\"))\ngene_list &lt;- c(\"Slit2\")\n\nFigure_5I &lt;- \n  VlnPlot_scCustom(seurat_object = seu, features = gene_list, group.by = \"orig.ident\",\n                 pt.size = 0) & NoLegend() &\n  geom_boxplot(width=0.1, outlier.size=0, fill=\"lightgray\") &\n  scale_fill_manual(values = col_Time) &\n  labs(x=\"\")\nFigure_5I\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave(\"../../Figure/Figure5/Figure_5H/Figure_5H_Sema3d.pdf\", plot = Figure_5H, \n       height = 4, width = 4.5, units = \"in\")\n\n\n\n\nCode\nseu &lt;- seu.harmony[,seu.harmony$SubType %in% names(col_SubType)[1:8]]\n\nseu$orig.ident &lt;- factor(seu$orig.ident, levels = c(\"P1\",\"P4\",\"P10\",\"Adult\"))\ngene_list &lt;- c(\"Robo1\")\n\nFigure_5I &lt;- \n  VlnPlot_scCustom(seurat_object = seu, features = gene_list, group.by = \"orig.ident\",\n                 pt.size = 0) & NoLegend() &\n  geom_boxplot(width=0.1, outlier.size=0, fill=\"lightgray\") &\n  scale_fill_manual(values = col_Time) &\n  labs(x=\"\")\nFigure_5I\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave(\"../../Figure/Figure5/Figure_5H/Figure_5J_Robo1.pdf\", plot = Figure_5H, \n       height = 4, width = 6, units = \"in\")",
+    "section": "5.8 Figure_5I",
+    "text": "5.8 Figure_5I\n\n\nCode\nseu &lt;- seu.NOneuron[,seu.NOneuron$SubType==\"Oligo\"]\nseu$orig.ident &lt;- factor(seu$orig.ident, levels = c(\"P1\",\"P4\",\"P10\",\"Adult\"))\ngene_list &lt;- c(\"Sema3d\")\n\nFigure_5I_1 &lt;- \n  VlnPlot_scCustom(seurat_object = seu, features = gene_list, group.by = \"orig.ident\",\n                 pt.size = 0) & NoLegend() &\n  geom_boxplot(width=0.1, outlier.size=0, fill=\"lightgray\") &\n  scale_fill_manual(values = col_Time) &\n  labs(x=\"\")\nFigure_5I_1\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave(\"../../Figure/Figure5/Figure_5I/Figure_5I_Sema3d.pdf\", plot = Figure_5I_1, \n       height = 4, width = 4.5, units = \"in\")\n\n\n\n\nCode\nseu &lt;- seu.harmony[,seu.harmony$SubType %in% names(col_SubType)[1:8]]\n\nseu$orig.ident &lt;- factor(seu$orig.ident, levels = c(\"P1\",\"P4\",\"P10\",\"Adult\"))\ngene_list &lt;- c(\"Plxna1\")\n\nFigure_5I_2 &lt;- \n  VlnPlot_scCustom(seurat_object = seu, features = gene_list, group.by = \"orig.ident\",\n                 pt.size = 0) & NoLegend() &\n  geom_boxplot(width=0.1, outlier.size=0, fill=\"lightgray\") &\n  scale_fill_manual(values = col_Time) &\n  labs(x=\"\")\nFigure_5I_2\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave(\"../../Figure/Figure5/Figure_5I/Figure_5I_Plxna1.pdf\", plot = Figure_5I_2, \n       height = 4, width = 6, units = \"in\")",
     "crumbs": [
       "Main Figure",
       "<span class='chapter-number'>5</span>  <span class='chapter-title'>Figure5</span>"
     ]
   },
   {
-    "objectID": "Figure-S5.html",
-    "href": "Figure-S5.html",
-    "title": "10  FigureS5",
+    "objectID": "Figure5.html#figure_5j",
+    "href": "Figure5.html#figure_5j",
+    "title": "5  Figure5",
+    "section": "5.9 Figure_5J",
+    "text": "5.9 Figure_5J\n\n\nCode\n# SpaGene function\nLR_score &lt;- function(data, k){\n  expr &lt;- t(data[,c(\"Sema3d\", \"Plxna1\")])\n  location &lt;- data[,c(\"x\", \"y\")]\n  LRpair &lt;- c(\"Sema3d\",\"Plxna1\")\n  nnmatrix &lt;- RANN::nn2(location, k=k)$nn.idx\n  ligand &lt;- expr[LRpair[1],]\n  receptor &lt;- expr[LRpair[2],]\n  LRexp &lt;- rbind(ligand,receptor)\n  neighexp &lt;- apply(nnmatrix,1,function(x){apply(LRexp[,x[2:k]],1,max)})\n  LRadd &lt;- pmax(LRexp[1,]*neighexp[2,], LRexp[2,]*neighexp[1,])\n  LRadd_max &lt;- quantile(LRadd, probs=0.95)\n  LRadd[LRadd&gt;LRadd_max] &lt;- LRadd_max\n  tmpLRadd &lt;- data.frame(x=location[,1], y=location[,2], LR=LRadd)\n  tmpLRadd$LR &lt;- log1p(tmpLRadd$LR)\n  return(tmpLRadd$LR)\n}\n\nP10 &lt;- read.csv(\"../../Figure/基因表达比较/基因表达比较/cellpose_csv/P10.csv\")\nAdult &lt;- read.csv(\"../../Figure/基因表达比较/基因表达比较/cellpose_csv/Adult.csv\")\nP10$Sema3d_Plxna1 &lt;- LR_score(P10, 5)\nAdult$Sema3d_Plxna1 &lt;- LR_score(Adult, 5)\n\n\n\n\nCode\nmask &lt;- load.image(\"../../Figure/基因表达比较/基因表达比较/cellpose_csv/P10_mask.png\")\nexpr &lt;- P10\n  \nmask_df &lt;- as.data.frame(mask, wide = \"c\")\ncolnames(mask_df)[3] &lt;- \"cell_id\"\nmask_df &lt;- mask_df[mask_df$cell_id !=0,]\ncell_id &lt;- unique(mask_df$cell_id)\nmask_df$exp &lt;- expr$Sema3d_Plxna1[match(mask_df$cell_id, cell_id)]\nmask_df$y &lt;- -mask_df$y\n\nFigure_5J_P10 &lt;- ggplot(mask_df, aes(x=x,y=y,color=exp)) +\n  geom_point(size=0.5) +\n  scale_colour_gradientn(colours = rev(sciRcolor::pal_scircolor(85)),\n                         limit=c(0,6)) +\n  labs(x=\"\", y=\"\") +\n  theme_void() +\n  theme(panel.grid = element_blank(),\n        legend.position = \"none\") +\n  coord_fixed()\n  \nFigure_5J_P10\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave(\"../../Figure/Figure5/Figure_5J_P10.png\", plot = Figure_5J_P10, \n       height = 6, width = 6, units = \"in\")\n\n\n\n\nCode\nmask &lt;- load.image(\"../../Figure/基因表达比较/基因表达比较/cellpose_csv/Adult_mask.png\")\nexpr &lt;- Adult\n  \nmask_df &lt;- as.data.frame(mask, wide = \"c\")\ncolnames(mask_df)[3] &lt;- \"cell_id\"\nmask_df &lt;- mask_df[mask_df$cell_id !=0,]\ncell_id &lt;- unique(mask_df$cell_id)\nmask_df$exp &lt;- expr$Sema3d_Plxna1[match(mask_df$cell_id, cell_id)]\nmask_df$y &lt;- -mask_df$y\n\nFigure_5J_Adult &lt;- ggplot(mask_df, aes(x=x,y=y,color=exp)) +\n  geom_point(size=0.5) +\n  scale_colour_gradientn(colours = rev(sciRcolor::pal_scircolor(85)),\n                         limit=c(0,6)) +\n  labs(x=\"\", y=\"\") +\n  theme_void() +\n  theme(panel.grid = element_blank(),\n        legend.position = \"none\") +\n  coord_fixed()\n  \nFigure_5J_Adult\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave(\"../../Figure/Figure5/Figure_5J_Adult.png\", plot = Figure_5J_Adult, \n       height = 6, width = 6, units = \"in\")",
+    "crumbs": [
+      "Main Figure",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Figure5</span>"
+    ]
+  },
+  {
+    "objectID": "Figure5.html#figure_5k",
+    "href": "Figure5.html#figure_5k",
+    "title": "5  Figure5",
+    "section": "5.10 Figure_5K",
+    "text": "5.10 Figure_5K\n\n\nCode\ndf &lt;- data.frame(\n  x=c(rep(\"P10\",nrow(P10)), rep(\"Adult\",nrow(Adult))),\n  y=c(P10$Sema3d_Plxna1, Adult$Sema3d_Plxna1)\n)\ndf$x &lt;- factor(df$x, levels = c(\"P10\",\"Adult\"))\n\nFigure_5K &lt;- ggplot(df, aes(x=x, y=y, fill=x)) +\n  geom_boxplot() +\n  theme_classic(base_size = 15) +\n  theme(legend.position = \"none\") +\n  scale_fill_manual(values = col_Time) +\n  scale_y_continuous(limits = c(0,6)) +\n  labs(x=\"\", y=\"Sema3d_Plxna1 expression\")\nFigure_5K\n\n\n\n\n\n\n\n\n\n\n\nCode\np &lt;- t.test(P10$Sema3d_Plxna1, Adult$Sema3d_Plxna1, alternative = \"two.sided\",\n       paired = FALSE)\np$p.value\n\n\n[1] 6.096074e-47\n\n\n\n\nCode\nggsave(\"../../Figure/Figure5/Figure_5K.pdf\", plot = p, \n       height = 5, width = 5, units = \"in\")",
+    "crumbs": [
+      "Main Figure",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Figure5</span>"
+    ]
+  },
+  {
+    "objectID": "Figure6.html",
+    "href": "Figure6.html",
+    "title": "6  Figure6",
     "section": "",
-    "text": "10.1 Figure_S5A\nCode\nseu &lt;- seu.NOneuron\nseu$SubType &lt;- factor(seu$SubType, levels = names(col_SubType))\nseu$orig.ident &lt;- factor(seu$orig.ident, levels = c(\"P1\",\"P4\",\"P10\",\"Adult\"))\nFigure_S5A &lt;- \n  DimPlot(seu,\n        reduction = 'umap', group.by = \"orig.ident\", label = F,\n        cols = col_Time) +\n  theme(axis.line = element_blank(), axis.ticks = element_blank(), \n        axis.text = element_blank(), plot.title = element_text(size = 30)) +\n  labs(x='', y='', title = \"\") +\n  coord_fixed()\nFigure_S5A\nCode\nggsave(\"../../Figure/FigureS5/Figure_S5A.pdf\", plot = Figure_S5A,\n       height = 5, width = 6, units = \"in\")",
+    "text": "6.1 Figure_6A\nCode\nAll_Disease_separate &lt;- read.csv(\"../../data/Revision/All_Disease_separate.csv\")\ndisease_result &lt;- All_Disease_separate\n\norder &lt;- paste(rep(c(\"P1\",\"P4\",\"P10\",\"Adult\"), each=21),\n               rep(names(col_SubType),4))\norder &lt;- order[order %in% disease_result$group]\ndisease_result$group &lt;- factor(disease_result$group, levels = order)\ndisease_result$Time &lt;- factor(disease_result$Time, levels = c(\"P1\",\"P4\",\"P10\",\"Adult\"))\n\nFigure_6A &lt;- \n  ggplot(data = disease_result, mapping = aes(x = group, y = assoc_mcz, fill = Time)) +\n  geom_bar(stat = 'identity') + \n  facet_grid(Disease ~ .) + \n  scale_fill_manual(values = col_Time) +\n  theme_bw() +\n  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 7),\n        panel.grid = element_blank(), panel.border = element_blank(),\n        legend.position = \"top\")\nFigure_6A\nCode\nggsave(\"../../Figure/Figure6/Figure_6A.pdf\", plot = Figure_6A,\n       height = 6, width = 10, units = \"in\")",
+    "crumbs": [
+      "Main Figure",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Figure6</span>"
+    ]
+  },
+  {
+    "objectID": "Figure6.html#figure_6b",
+    "href": "Figure6.html#figure_6b",
+    "title": "6  Figure6",
+    "section": "6.2 Figure_6B",
+    "text": "6.2 Figure_6B\n\n\nCode\nADHD_subtype &lt;- c(\"P10 L2/3 IT\",\"P10 L4/5 IT\",\"Adult L4/5 IT\",\"Adult L5 IT\",\n                  \"Adult L6 IT\")\nANO_subtype &lt;- c(\"P1 Microglia\",\"P4 Microglia\",\"P10 NPC\",\"Adult Microglia\")\nASD_subtype &lt;- c(\"P1 Im L5 IT\",\"P4 Im L5 IT\",\"P10 L4/5 IT\")\nBP_subtype &lt;- c(\"P1 Im L2/3 IT\",\"P1 Im L4/5 IT\",\"P4 Im L4/5 IT\",\"P4 Im L5 IT\",\n                \"P4 Pvalb\",\"P4 Sst\",\"P10 Im L2/3 IT\",\"P10 L2/3 IT\",\"P10 L4/5 IT\",\n                \"P10 L6 IT\",\"Adult L2/3 IT\",\"Adult L4/5 IT\",\"Adult L6 IT\",\n                \"Adult L5 PT\")\nMDD_subtype &lt;- c(\"P1 Im L6 IT\",\"P1 Lamp5\",\"P1 Pvalb\",\"P1 Vip\",\"P4 L6 IT\",\n                 \"P4 Pvalb\",\"P4 Vip\",\"P10 Im L6 IT\",\"P10 L2/3 IT\",\"P10 L4/5 IT\",\n                 \"P10 L5 IT\",\"P10 L6 IT\",\"P10 Lamp5\",\"P10 Pvalb\",\"P10 Vip\",\n                 \"Adult L2/3 IT\",\"Adult L4/5 IT\",\"Adult L5 IT\",\"Adult L6 IT\",\n                 \"Adult L5 NP\",\"Adult L6 CT\",\"Adult Pvalb\",\"Adult Vip\")\nOCD_subtype &lt;- c(\"P10 Pvalb\",\"Adult Lamp5\",\"Adult Pvalb\",\"Adult Vip\")\nSCZ_subtype &lt;- c(\"P1 Im L5 IT\",\"P1 L6 CT\",\"P1 Vip\",\"P4 L6 CT\",\"P4 Pvalb\",\n                 \"P10 L4/5 IT\",\"P10 L6 IT\",\"P10 L6 CT\",\"P10 Vip\",\"Adult L4/5 IT\",\n                 \"Adult L6 IT\",\"Adult L6 CT\")\nTS_subtype &lt;- c(\"P1 Im L5 IT\",\"P1 L5 NP\",\"P4 L6 CT\",\"P10 L4/5 IT\",\"P10 L5 IT\",\n                \"P10 L6 IT\",\"P10 L6 CT\",\"Adult L4/5 IT\",\"Adult L5 IT\",\n                \"Adult L6 IT\",\"Adult L6 CT\",\"Adult Astro\")\nGene_weight &lt;- read.csv(\"../../data/Revision/Gene_weight.csv\")\n\n\n\n\nCode\ndisease_subtype &lt;- MDD_subtype\ngene &lt;- Gene_weight$MDD_Gene\nseu_disease &lt;- seu[,seu$Time_Subtype %in% disease_subtype]\ngene &lt;- gene[gene %in% rownames(seu)]\nseu_disease$Time_Subtype &lt;- factor(seu_disease$Time_Subtype, \n                                   levels = disease_subtype)\nIdents(seu_disease) &lt;- \"Time_Subtype\"\nDEG &lt;- FindAllMarkers(seu_disease, features = gene, logfc.threshold = 0.25,\n                      only.pos = T)\n\nFigure_6B &lt;- jjVolcano(\n  diffData = DEG,\n  topGeneN = 0,\n  log2FC.cutoff = 0.1,\n  col.type = \"updown\",\n  tile.col = rep(\"lightgray\",34),\n  aesCol = c('#0099CC','#CC3333'),\n  size  = 5,\n  fontface = 'italic'\n  )\nFigure_6B\n\n\n\n\nCode\nknitr::include_graphics(\"./images/Figure_6B.png\", dpi = 300)\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave(\"../../Figure/Figure6/Figure_6B_MDD.pdf\", plot = Figure_6B,\n       height = 3, width = 10, units = \"in\")",
+    "crumbs": [
+      "Main Figure",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Figure6</span>"
+    ]
+  },
+  {
+    "objectID": "Figure6.html#figure_6c",
+    "href": "Figure6.html#figure_6c",
+    "title": "6  Figure6",
+    "section": "6.3 Figure_6C",
+    "text": "6.3 Figure_6C\n\n\nCode\nP1_score &lt;- read.csv(\"../../data/Revision/P1/P1_score.csv\", row.names = 1)\nP4_score &lt;- read.csv(\"../../data/Revision/P4/P4_score.csv\", row.names = 1)\nP10_score &lt;- read.csv(\"../../data/Revision/P10/P10_score.csv\", row.names = 1)\nAdult_score &lt;- read.csv(\"../../data/Revision/Adult/Adult_score.csv\", row.names = 1)\nAll_score &lt;- rbind(P1_score, P4_score, P10_score, Adult_score)\n\n\n\n\nCode\ndisease &lt;- names(col_Disease)[5]\n\ndf &lt;- data.frame(\n  UMAP_1 = All_score$UMAP_1,\n  UMAP_2 = All_score$UMAP_2,\n  value = All_score[,disease]\n)\ndf$value[df$value &gt; 4] &lt;- 4\ndf$value[df$value &lt; 0] &lt;- 0\ndf &lt;- df[order(df$value),]\nFigure_6C &lt;- \n  ggplot() +\n  geom_point(df, mapping=aes(x=UMAP_1, y=UMAP_2, color=value), size=0.5) +\n  theme_void() +\n  theme(legend.position = \"none\") +\n  coord_fixed() +\n  scale_color_gradientn(colours = c(\"lightgray\", \"white\", col_Disease[5]), \n                        limits = c(0,4))\nFigure_6C\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave(filename=paste(\"../../Figure/Figure6/Figure_6C/\",disease,\".png\",sep=\"\"),\n        Figure_6C, width=4, height = 4, units = \"in\")",
+    "crumbs": [
+      "Main Figure",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Figure6</span>"
+    ]
+  },
+  {
+    "objectID": "Figure6.html#figure_6d",
+    "href": "Figure6.html#figure_6d",
+    "title": "6  Figure6",
+    "section": "6.4 Figure_6D",
+    "text": "6.4 Figure_6D\n\n\nCode\nuse_subtype &lt;- c(order[order %in% MDD_subtype], order[order %in% ANO_subtype])\nseu_heatmap &lt;- seu[,seu$Time_Subtype %in% use_subtype]\nseu_heatmap$Time_Subtype &lt;- factor(seu_heatmap$Time_Subtype, levels = use_subtype)\n\nMDD_gene &lt;- c(\"Tcf4\",\"Auts2\",\"Sox5\",\"Ttc28\",\"Rbfox1\",\"Ctnna2\",\n              \"Prox1\",\"Erbb4\",\"Stmn1\",\"Klf7\",\"Lrfn5\",\"Mef2c\",\n              \"Gabrb1\",\"Bsn\",\"Gfra2\",\"Slc12a5\",\"Grin2a\",\"Egr1\")\n\nANO_gene &lt;- c(\"Cdk2\",\"Mgmt\",\"Pabpc1\",\"Actb\",\"Lims1\",\"Dazap2\",\n              \"Gna13\",\"Whrn\",\"Rgs10\")\nuse_gene &lt;- c(MDD_gene,ANO_gene)\n     \navg_exp &lt;- AverageExpression(seu_heatmap, group.by = \"Time_Subtype\", features = use_gene)$RNA\navg_exp_scale &lt;- t(scale(t(avg_exp)))\navg_exp_scale[avg_exp_scale&lt;0] &lt;- 0\navg_exp_scale[avg_exp_scale&gt;2] &lt;- 2\n\nFigure_6D &lt;- \n  pheatmap(avg_exp_scale, \n         color = colorRampPalette(c(\"white\",\"#d62728\"))(200), \n         breaks = seq(0,2,0.01), show_colnames = T, treeheight_row=10,\n         cluster_rows = F, cluster_cols = F,\n         annotation_legend=F, fontsize = 6, angle_col=45,\n         gaps_col = 23, gaps_row = 18, border_color=\"white\"\n         )",
+    "crumbs": [
+      "Main Figure",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Figure6</span>"
+    ]
+  },
+  {
+    "objectID": "Figure6.html#figure_6e",
+    "href": "Figure6.html#figure_6e",
+    "title": "6  Figure6",
+    "section": "6.5 Figure_6E",
+    "text": "6.5 Figure_6E\n\n\nCode\nMDD_subtype &lt;- c(\"P1 Im L6 IT\",\"P1 Lamp5\",\"P1 Pvalb\",\"P1 Vip\",\"P4 L6 IT\",\n                 \"P4 Pvalb\",\"P4 Vip\",\"P10 Im L6 IT\",\"P10 L2/3 IT\",\"P10 L4/5 IT\",\n                 \"P10 L5 IT\",\"P10 L6 IT\",\"P10 Lamp5\",\"P10 Pvalb\",\"P10 Vip\",\n                 \"Adult L2/3 IT\",\"Adult L4/5 IT\",\"Adult L5 IT\",\"Adult L6 IT\",\n                 \"Adult L5 NP\",\"Adult L6 CT\",\"Adult Pvalb\",\"Adult Vip\")\nseu &lt;- seu.harmony[,seu.harmony$SubType %in% names(col_SubType)[1:8]]\nseu$Time_Subtype &lt;- paste(seu$orig.ident, seu$SubType)\nseu &lt;- seu[,seu$Time_Subtype %in% MDD_subtype]\n\nseu$orig.ident &lt;- factor(seu$orig.ident, levels = c(\"P1\",\"P4\",\"P10\",\"Adult\"))\ngene_list &lt;- c(\"Tcf4\")\n\nFigure_6E &lt;- \n  VlnPlot_scCustom(seurat_object = seu, features = gene_list, group.by = \"orig.ident\",\n                 pt.size = 0) & NoLegend() &\n  geom_boxplot(width=0.1, outlier.size=0, fill=\"lightgray\") &\n  scale_fill_manual(values = col_Time) &\n  theme(axis.text.x = element_text(angle = 0, hjust = 0.5)) &\n  labs(x=\"\")\nFigure_6E\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave(\"../../Figure/Figure6/Figure_6E_Tcf4.pdf\", plot = Figure_6E, \n       height = 6, width = 5, units = \"in\")",
+    "crumbs": [
+      "Main Figure",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Figure6</span>"
+    ]
+  },
+  {
+    "objectID": "Figure6.html#figure_6f",
+    "href": "Figure6.html#figure_6f",
+    "title": "6  Figure6",
+    "section": "6.6 Figure_6F",
+    "text": "6.6 Figure_6F\n\n\nCode\nknitr::include_graphics(\"./images/Figure_6F.png\", dpi = 300)",
+    "crumbs": [
+      "Main Figure",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Figure6</span>"
+    ]
+  },
+  {
+    "objectID": "Figure-S1.html",
+    "href": "Figure-S1.html",
+    "title": "7  FigureS1",
+    "section": "",
+    "text": "7.1 Figure_S1A\nCode\nseu &lt;- seu.harmony\nseu$SubType &lt;- factor(seu$SubType, levels = names(col_SubType))\nseu$orig.ident &lt;- factor(seu$orig.ident, levels = c(\"P1\",\"P4\",\"P10\",\"Adult\"))\nFigure_S1A &lt;- \n  DimPlot(seu,\n          reduction = 'umap', group.by = \"SubType\", label = F, split.by = 'orig.ident',\n          ncol = 4, cols = col_SubType) +\n  theme(axis.line = element_blank(), axis.ticks = element_blank(), \n        axis.text = element_blank(), plot.title = element_text(size = 30)) +\n  labs(x='', y='', title = \"\") +\n  coord_fixed()\nFigure_S1A\nCode\nggsave(\"../../Figure/FigureS1/Figure_S1A.pdf\", plot = Figure_S1A,\n       height = 6, width = 18, units = \"in\")",
     "crumbs": [
       "Supplemental Figure",
-      "<span class='chapter-number'>10</span>  <span class='chapter-title'>FigureS5</span>"
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>FigureS1</span>"
+    ]
+  },
+  {
+    "objectID": "Figure-S1.html#figure_s1b",
+    "href": "Figure-S1.html#figure_s1b",
+    "title": "7  FigureS1",
+    "section": "7.2 Figure_S1B",
+    "text": "7.2 Figure_S1B\n\n\nCode\n# cell type\ndf_type &lt;- data.frame(\n  'SubType' = names(col_SubType),\n  'Color' = as.character(col_SubType)\n)\ndf_type$SubType &lt;- factor(df_type$SubType, levels=names(col_SubType))\np1 &lt;- ggplot(df_type, aes(x=SubType, y=1, fill=SubType)) + \n  geom_tile() +\n  scale_fill_manual(values = col_SubType, name=\"Cell Type\") +\n  theme_void() +\n  NoLegend()\n\n# dot plot\nseu &lt;- seu.harmony\nseu$SubType &lt;- factor(seu$SubType, levels = names(col_SubType))\nIdents(seu) &lt;- 'SubType'\np2 &lt;- DotPlot(\n  seu,\n  features = c('Sox11','Cd24a','Cux2','Calb1','Rorb','Deptor','Oprk1','Pou3f1',\n               'Npr3','Tshz2','Syt6',\n               'Lamp5','Pvalb','Sst','Vip',\n               'Top2a','Gja1','Flt1','C1qc','Ptgds','Pdgfra'),\n  group.by = 'SubType',\n  col.min=0, col.max=2, dot.scale = 8) +\n  coord_flip() +\n  scale_x_discrete(limits=rev) +\n  scale_color_gradientn(colours = c(\"lightblue3\", \"lightblue\", \"white\", \"red\", \"red4\")) +\n  theme_minimal() +\n  theme(axis.text.x = element_blank(),\n        axis.title.x = element_blank(), axis.title.y = element_blank())\n\n# cell prob\ndf &lt;- seu.harmony@meta.data[,c(\"orig.ident\",\"SubType\")]\ndf &lt;- as.data.frame.array(table(df$orig.ident, df$SubType))\ndf_long &lt;- as.data.frame(apply(df, 2, function(x){x/sum(x)}))\ndf_long$Time &lt;- rownames(df_long)\ndf_long &lt;- pivot_longer(df_long, !Time, names_to = \"Subtype\", values_to = \"Prob\")\ndf_long$Time &lt;- factor(df_long$Time, levels = rev(c(\"P1\",\"P4\",\"P10\",\"Adult\")))\n\np3 &lt;- \n  ggplot(df_long, aes(x = Subtype, y = Prob, fill = Time)) + \n  geom_bar(stat = \"identity\", width = 1) +\n  scale_fill_manual(values = col_Time) +\n  labs(x='', y='', title='') +\n  theme_minimal(base_size = 15) +\n  theme(panel.grid = element_blank(), plot.title = element_text(hjust = 0.5),\n        legend.position = \"none\",\n        legend.title = element_blank(),\n        axis.text.x = element_text(angle = 90, hjust = 1))\n\nFigure_S1B &lt;- \n  p2 %&gt;%\n  insert_top(p1, height = 0.02) %&gt;%\n  insert_bottom(p3, height = 0.3)\n\nFigure_S1B\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave(\"../../Figure/FigureS1/Figure_S1B.pdf\", plot = Figure_S1B,\n       height = 8, width = 14, units = \"in\")",
+    "crumbs": [
+      "Supplemental Figure",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>FigureS1</span>"
+    ]
+  },
+  {
+    "objectID": "Figure-S1.html#figure_s1c",
+    "href": "Figure-S1.html#figure_s1c",
+    "title": "7  FigureS1",
+    "section": "7.3 Figure_S1C",
+    "text": "7.3 Figure_S1C\n\n\nCode\nseu &lt;- subset(\n  seu.harmony, \n  cells = colnames(seu.harmony)[seu.harmony$SubType %in% names(col_SubType)[1:8]])\nseu$SubType &lt;- factor(seu$SubType, levels = names(col_SubType)[1:8])\ngene_list &lt;- c(\"Cd24a\",\"Slc17a7\",\"Cux2\",\"Rorb\",\"Etv1\",\"Npy\")\n\nFigure_S1C &lt;- \n  VlnPlot(seu, features = gene_list, group.by = \"SubType\", fill.by =\"ident\",\n          cols = as.character(col_SubType[1:8]),\n          stack = TRUE, flip = TRUE) +\n  theme(legend.position = \"none\", axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +\n  labs(x=\"\")\nFigure_S1C\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave(\"../../Figure/FigureS1/Figure_S1C.pdf\", plot = Figure_S1C,\n       height = 6.5, width = 10, units = \"in\")",
+    "crumbs": [
+      "Supplemental Figure",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>FigureS1</span>"
+    ]
+  },
+  {
+    "objectID": "Figure-S1.html#figure_s1d",
+    "href": "Figure-S1.html#figure_s1d",
+    "title": "7  FigureS1",
+    "section": "7.4 Figure_S1D",
+    "text": "7.4 Figure_S1D\n\n\nCode\nknitr::include_graphics(\"./images/Figure_S1D.jpg\", dpi = 300)",
+    "crumbs": [
+      "Supplemental Figure",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>FigureS1</span>"
+    ]
+  },
+  {
+    "objectID": "Figure-S1.html#figure_s1e",
+    "href": "Figure-S1.html#figure_s1e",
+    "title": "7  FigureS1",
+    "section": "7.5 Figure_S1E",
+    "text": "7.5 Figure_S1E\n\n\nCode\ndf &lt;- seu.harmony@meta.data[,c(\"orig.ident\",\"SubType\")]\ndf &lt;- table(df$orig.ident, df$SubType)\ndf &lt;- as.data.frame.array(df/rowSums(df))\nCV &lt;- apply(df, 2, function(x){(sd(x)/mean(x))})\nCV &lt;- as.data.frame(CV)\nCV$Type &lt;- rownames(CV)\nCV &lt;- CV[CV$Type %in% names(col_SubType)[1:15],]\nCV &lt;- CV[order(CV$CV),]\n\nFigure_S1E &lt;- ggplot(CV, aes(x=Type, y=CV, fill=Type)) +\n  geom_col() +\n  scale_fill_manual(values = col_SubType) +\n  theme_classic(base_size = 15) +\n  theme(axis.text.x = element_text(angle = 45, hjust = 1),\n        axis.text = element_text(color = \"black\")) +\n  labs(x=\"\", y=\"Coefficient of variation\")\nFigure_S1E\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave(\"../../Figure/FigureS1/Figure_S1E.pdf\", plot = p,\n       height = 5, width = 10, units = \"in\")",
+    "crumbs": [
+      "Supplemental Figure",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>FigureS1</span>"
+    ]
+  },
+  {
+    "objectID": "Figure-S1.html#figure_s1f",
+    "href": "Figure-S1.html#figure_s1f",
+    "title": "7  FigureS1",
+    "section": "7.6 Figure_S1F",
+    "text": "7.6 Figure_S1F\n\n\nCode\nknitr::include_graphics(\"./images/Figure_S1F.png\", dpi = 300)",
+    "crumbs": [
+      "Supplemental Figure",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>FigureS1</span>"
+    ]
+  },
+  {
+    "objectID": "Figure-S1.html#figure_s1g",
+    "href": "Figure-S1.html#figure_s1g",
+    "title": "7  FigureS1",
+    "section": "7.7 Figure_S1G",
+    "text": "7.7 Figure_S1G\n\n\nCode\ncolumn &lt;- c(\"x_rotated\",\"y_rotated\",\"Im.L2.3.IT\",\"Im.L4.5.IT\",\"Im.L5.IT\",\"Im.L6.IT\",\"L2.3.IT\",\"L4.5.IT\",\"L5.IT\",\"L6.IT\",\"L5.PT\",\"L5.NP\",\"L6.CT\",\"Lamp5\",\"Pvalb\",\"Sst\",\"Vip\",\"NPC\",\"Astro\",\"Endo\",\"Microglia\",\"Oligo\",\"OPC\")\nP1_cell2loc &lt;- read.csv(\"../data/Figure1/P1_cell2location.csv\", row.names = 1)\nP1_cell2loc &lt;- P1_cell2loc[,column]\ncolnames(P1_cell2loc) &lt;- c(\"x_rotated\",\"y_rotated\",names(col_SubType))\nP1_cell2loc$SubType &lt;- as.character(apply(P1_cell2loc[,names(col_SubType)], 1, function(x){\n  names(which.max(x))\n}))\ndata &lt;- P1_cell2loc\n\nplist &lt;- list()\nfor (i in 1:length(col_SubType)){\n  subtype_i &lt;- names(col_SubType)[i]\n  df_i &lt;- data.frame(\n    x = data$x_rotated,\n    y = data$y_rotated,\n    col = data[,subtype_i]\n  )\n  #df_i$col[!data$SubType==subtype_i] &lt;- 0\n  df_i$col[df_i$col&gt;1] &lt;- 1\n  df_i$col[df_i$col&lt;0.05] &lt;- 0\n  \n  plist[[i]] &lt;- \n    ggplot(df_i, aes(x=x, y=y, color=col)) +\n    geom_point(size=2) +\n    scale_color_gradient(low = \"#f7f7f7\", high=col_SubType[i],\n                          na.value = \"#f7f7f7\",\n                          limits = c(0,max(df_i$col)),\n                         #limits = c(0,1),\n                          breaks = c(0,max(df_i$col))) +\n    coord_fixed() +\n    theme_void() +\n    theme(legend.position = \"none\")\n  subtype_i &lt;- gsub(\"/\",\"\",subtype_i)\n  #ggsave(paste(\"../../Figure/Figure1/Figure_1G/\",i,\".P1_\",subtype_i,\".png\",sep=\"\"), \n  #       plot = plist[[i]], height = 5, width = 5, units = \"in\")\n}\n\nplist[[10]]",
+    "crumbs": [
+      "Supplemental Figure",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>FigureS1</span>"
+    ]
+  },
+  {
+    "objectID": "Figure-S1.html#figure_s1h",
+    "href": "Figure-S1.html#figure_s1h",
+    "title": "7  FigureS1",
+    "section": "7.8 Figure_S1H",
+    "text": "7.8 Figure_S1H\n\n\nCode\ncolumn &lt;- c(\"x_rotated\",\"y_rotated\",\"Im.L2.3.IT\",\"Im.L4.5.IT\",\"Im.L5.IT\",\"Im.L6.IT\",\"L2.3.IT\",\"L4.5.IT\",\"L5.IT\",\"L6.IT\",\"L5.PT\",\"L5.NP\",\"L6.CT\",\"Lamp5\",\"Pvalb\",\"Sst\",\"Vip\",\"NPC\",\"Astro\",\"Endo\",\"Microglia\",\"Oligo\",\"OPC\")\nP77_cell2loc &lt;- read.csv(\"../data/Figure1/P77_cell2location.csv\", row.names = 1)\nP77_cell2loc &lt;- P77_cell2loc[,column]\ncolnames(P77_cell2loc) &lt;- c(\"x_rotated\",\"y_rotated\",names(col_SubType))\nP77_cell2loc$SubType &lt;- as.character(apply(P77_cell2loc[,names(col_SubType)], 1, function(x){\n  names(which.max(x))\n}))\ndata &lt;- P77_cell2loc\n\nplist &lt;- list()\nfor (i in 1:length(col_SubType)){\n  subtype_i &lt;- names(col_SubType)[i]\n  df_i &lt;- data.frame(\n    x = data$x_rotated,\n    y = data$y_rotated,\n    col = data[,subtype_i]\n  )\n  #df_i$col[!data$SubType==subtype_i] &lt;- 0\n  df_i$col[df_i$col&gt;1] &lt;- 1\n  df_i$col[df_i$col&lt;0.05] &lt;- 0\n  plist[[i]] &lt;- \n    ggplot(df_i, aes(x=x, y=y, color=col)) +\n    geom_point(size=0.8) +\n    scale_color_gradient(low = \"#f7f7f7\", high=col_SubType[i],\n                          na.value = \"#f7f7f7\",\n                          limits = c(0,max(df_i$col)), \n                          breaks = c(0,max(df_i$col))) +\n    coord_fixed() +\n    theme_void() +\n    theme(legend.position = \"none\")\n  subtype_i &lt;- gsub(\"/\",\"\",subtype_i)\n  #ggsave(paste(\"../../Figure/Figure1/Figure_1H/\",i,\".P77_\",subtype_i,\".png\",sep=\"\"), \n  #       plot = plist[[i]], height = 5, width = 5, units = \"in\")\n}\nplist[[10]]",
+    "crumbs": [
+      "Supplemental Figure",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>FigureS1</span>"
+    ]
+  },
+  {
+    "objectID": "Figure-S2.html",
+    "href": "Figure-S2.html",
+    "title": "8  FigureS2",
+    "section": "",
+    "text": "8.1 Figure_S2A\nCode\nseu &lt;- seu.neuron\nseu$orig.ident &lt;- factor(seu$orig.ident, levels = c(\"P1\",\"P4\",\"P10\",\"Adult\"))\n\nFigure_S2A &lt;- \n  DimPlot(seu,\n        reduction = 'umap', group.by = \"orig.ident\", label = F, shuffle=T, seed=123,\n        cols = col_Time) +\n  theme_void() +\n  labs(x='', y='', title = \"\") +\n  coord_fixed()\nFigure_S2A\nCode\nggsave(\"../../Figure/FigureS2/Figure_S2A.pdf\", plot = Figure_S2A,\n       height = 6, width = 8, units = \"in\")",
+    "crumbs": [
+      "Supplemental Figure",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>FigureS2</span>"
+    ]
+  },
+  {
+    "objectID": "Figure-S2.html#figure_s2b",
+    "href": "Figure-S2.html#figure_s2b",
+    "title": "8  FigureS2",
+    "section": "8.2 Figure_S2B",
+    "text": "8.2 Figure_S2B\n\n\nCode\nseu &lt;- seu.neuron\nseu$Group &lt;- seu$SubType\nseu$Group[seu$Group %in% names(col_SubType)[1:8]] &lt;- \"IT\"\nseu$Group[seu$Group == \"L5 PT\"] &lt;- \"PT\"\nseu$Group[seu$Group == \"L5 NP\"] &lt;- \"NP\"\nseu$Group[seu$Group == \"L6 CT\"] &lt;- \"CT\"\ndata &lt;- table(seu$orig.ident, seu$Group)\ndata &lt;- as.data.frame(data/rowSums(data))\ncolnames(data) &lt;- c(\"Time\", \"SubType\", \"Prob\")\ndata$Time &lt;- factor(data$Time, levels = c(\"P1\",\"P4\",\"P10\",\"Adult\"))\ndata$SubType &lt;- factor(data$SubType, \n                       levels = c(\"IT\",\"PT\",\"NP\",\"CT\",\"Lamp5\",\"Pvalb\",\"Sst\",\"Vip\"))\ncolors &lt;- c(\"IT\"=\"#0a6ddd\",\"PT\"=\"#a1bc6a\", \"NP\"=\"#f7bc3e\", \"CT\"=\"#f7fa10\",\n            \"Lamp5\"=\"#0e0786\", \"Pvalb\"=\"#6902a4\", \"Sst\"=\"#df6361\", \"Vip\"=\"#f8a635\")\n\nFigure_S2B &lt;- \n  ggplot(data, aes(x=Time, y=Prob, color=SubType, fill=SubType, group=SubType)) +\n  geom_line(linewidth=1.5) +\n  geom_point(shape=21, color=\"black\", size=3) +\n  labs(x=\"\", y=\"Propotion (%)\") +\n  scale_y_continuous(breaks=seq(0,0.6,0.2), limits = c(0,0.6),\n                     expand = expansion(mult = c(0, 0.05))) +\n  theme_classic(base_size = 15) +\n  theme(legend.position = \"none\") +\n  scale_fill_manual(values=colors) +\n  scale_color_manual(values=colors)\nFigure_S2B\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave(\"../../Figure/FigureS2/Figure_S2B.pdf\", plot = Figure_S2B,\n       height = 4, width = 6, units = \"in\")",
+    "crumbs": [
+      "Supplemental Figure",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>FigureS2</span>"
+    ]
+  },
+  {
+    "objectID": "Figure-S2.html#figure_s2c",
+    "href": "Figure-S2.html#figure_s2c",
+    "title": "8  FigureS2",
+    "section": "8.3 Figure_S2C",
+    "text": "8.3 Figure_S2C\n\n\nCode\nseu &lt;- subset(seu.neuron, cells=colnames(seu.neuron)[seu.neuron$SubType %in% names(col_SubType)[1:8]])\nseu$Group &lt;- seu$SubType\ndata &lt;- table(seu$orig.ident, seu$Group)\ndata &lt;- as.data.frame(data/rowSums(data))\ncolnames(data) &lt;- c(\"Time\", \"SubType\", \"Prob\")\ndata$Time &lt;- factor(data$Time, levels = c(\"P1\",\"P4\",\"P10\",\"Adult\"))\ndata$SubType &lt;- factor(data$SubType, \n                       levels = names(col_SubType)[1:8])\n\nFigure_S2C &lt;- \n  ggplot(data, aes(x=Time, y=Prob, color=SubType, fill=SubType, group=SubType)) +\n  geom_line(linewidth=1.5) +\n  geom_point(shape=21, color=\"black\", size=3) +\n  labs(x=\"\", y=\"Propotion (%)\") +\n  scale_y_continuous(breaks=seq(0,0.66,0.2), limits = c(0,0.66),\n                     expand = expansion(mult = c(0, 0.05))) +\n  theme_classic(base_size = 15) +\n  theme(legend.position = \"none\") +\n  scale_fill_manual(values=col_SubType) +\n  scale_color_manual(values=col_SubType)\nFigure_S2C\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave(\"../../Figure/FigureS2/Figure_S2C.pdf\", plot = Figure_S2C,\n       height = 4, width = 6, units = \"in\")",
+    "crumbs": [
+      "Supplemental Figure",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>FigureS2</span>"
+    ]
+  },
+  {
+    "objectID": "Figure-S2.html#figure_s2d",
+    "href": "Figure-S2.html#figure_s2d",
+    "title": "8  FigureS2",
+    "section": "8.4 Figure_S2D",
+    "text": "8.4 Figure_S2D\n\n\nCode\nDEGs_all &lt;- read.csv(\"../data/Figure2/DEGs_Time_Neuron.csv\")\n\n# P1 - P4\nsubtype &lt;- c(\"P4_IT\",\"P4_PT\",\"P4_NP\",\"P4_CT\",\"P4_Lamp5\",\"P4_Pvalb\",\"P4_Sst\",\"P4_Vip\")\nDEGs &lt;- DEGs_all[abs(DEGs_all$avg_log2FC)&gt;1 & DEGs_all$ident.1 %in% subtype,]\nDEGs$ident.1 &lt;- gsub(\"P4_\",\"\",DEGs$ident.1)\nDEGs$type &lt;- \"Up\"\nDEGs$type[DEGs$avg_log2FC&lt;0] &lt;- \"Down\"\n\ndata &lt;- as.data.frame(table(DEGs$ident.1, DEGs$type))\ncolnames(data) &lt;- c(\"Subtype\", \"Type\", \"Num\")\ndata$Subtype &lt;- factor(data$Subtype, levels = gsub(\"P4_\",\"\",subtype))\n\np1 &lt;- \n  ggplot(data, aes(x=Subtype, y=ifelse(Type==\"Up\", Num, -Num), fill=Type)) +\n  geom_bar(stat = \"identity\", width = 0.8) +\n  labs(y=\"Number of DEGs\", x=\"\") +\n  scale_y_continuous(breaks=c(-100,-75,-50,-25,0,25,50,75,100), limits = c(-110,110),\n                     expand = expansion(mult = c(0, 0.05))) +\n  theme_bw(base_size = 15) +\n  theme(legend.position = \"none\", panel.grid.minor.y = element_blank(),\n        axis.text.x = element_text(angle = 45, hjust = 1),\n        panel.grid.major.x = element_blank()) +\n  scale_fill_manual(values = c(\"Up\"=\"orange\", \"Down\"=\"purple\")) +\n  scale_color_manual(values = c(\"Up\"=\"orange\", \"Down\"=\"purple\"))\n\n# P4 - P10\nsubtype &lt;- c(\"P10_IT\",\"P10_PT\",\"P10_NP\",\"P10_CT\",\"P10_Lamp5\",\"P10_Pvalb\",\"P10_Sst\",\"P10_Vip\")\nDEGs &lt;- DEGs_all[abs(DEGs_all$avg_log2FC)&gt;1 & DEGs_all$ident.1 %in% subtype,]\nDEGs$ident.1 &lt;- gsub(\"P10_\",\"\",DEGs$ident.1)\nDEGs$type &lt;- \"Up\"\nDEGs$type[DEGs$avg_log2FC&lt;0] &lt;- \"Down\"\n\ndata &lt;- as.data.frame(table(DEGs$ident.1, DEGs$type))\ncolnames(data) &lt;- c(\"Subtype\", \"Type\", \"Num\")\ndata$Subtype &lt;- factor(data$Subtype, levels = gsub(\"P10_\",\"\",subtype))\n\np2 &lt;- \n  ggplot(data, aes(x=Subtype, y=ifelse(Type==\"Up\", Num, -Num), fill=Type)) +\n  geom_bar(stat = \"identity\", width = 0.8) +\n  labs(y=\"Number of DEGs\", x=\"\") +\n  scale_y_continuous(breaks=c(-100,-75,-50,-25,0,25,50,75,100), limits = c(-110,110),\n                     expand = expansion(mult = c(0, 0.05))) +\n  theme_bw(base_size = 15) +\n  theme(legend.position = \"none\", panel.grid.minor.y = element_blank(),\n        axis.text.x = element_text(angle = 45, hjust = 1),\n        panel.grid.major.x = element_blank()) +\n  scale_fill_manual(values = c(\"Up\"=\"orange\", \"Down\"=\"purple\")) +\n  scale_color_manual(values = c(\"Up\"=\"orange\", \"Down\"=\"purple\"))\n\n# P10 - Adult\nsubtype &lt;- c(\"Adult_IT\",\"Adult_PT\",\"Adult_NP\",\"Adult_CT\",\"Adult_Lamp5\",\"Adult_Pvalb\",\"Adult_Sst\",\"Adult_Vip\")\nDEGs &lt;- DEGs_all[abs(DEGs_all$avg_log2FC)&gt;1 & DEGs_all$ident.1 %in% subtype,]\nDEGs$ident.1 &lt;- gsub(\"Adult_\",\"\",DEGs$ident.1)\nDEGs$type &lt;- \"Up\"\nDEGs$type[DEGs$avg_log2FC&lt;0] &lt;- \"Down\"\n\ndata &lt;- as.data.frame(table(DEGs$ident.1, DEGs$type))\ncolnames(data) &lt;- c(\"Subtype\", \"Type\", \"Num\")\ndata$Subtype &lt;- factor(data$Subtype, levels = gsub(\"Adult_\",\"\",subtype))\n\np3 &lt;- \n  ggplot(data, aes(x=Subtype, y=ifelse(Type==\"Up\", Num, -Num), fill=Type)) +\n  geom_bar(stat = \"identity\", width = 0.8) +\n  labs(y=\"Number of DEGs\", x=\"\") +\n  scale_y_continuous(breaks=c(-100,-75,-50,-25,0,25,50,75,100), limits = c(-110,110),\n                     expand = expansion(mult = c(0, 0.05))) +\n  theme_bw(base_size = 15) +\n  theme(legend.position = \"none\", panel.grid.minor.y = element_blank(),\n        axis.text.x = element_text(angle = 45, hjust = 1),\n        panel.grid.major.x = element_blank()) +\n  scale_fill_manual(values = c(\"Up\"=\"orange\", \"Down\"=\"purple\")) +\n  scale_color_manual(values = c(\"Up\"=\"orange\", \"Down\"=\"purple\"))\n\np1+p2+p3\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave(\"../../Figure/FigureS2/Figure_S2D_1.pdf\", plot = p1,\n       height = 5, width = 6, units = \"in\")\nggsave(\"../../Figure/FigureS2/Figure_S2D_2.pdf\", plot = p2,\n       height = 5, width = 6, units = \"in\")\nggsave(\"../../Figure/FigureS2/Figure_S2D_3.pdf\", plot = p3,\n       height = 5, width = 6, units = \"in\")",
+    "crumbs": [
+      "Supplemental Figure",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>FigureS2</span>"
+    ]
+  },
+  {
+    "objectID": "Figure-S2.html#figure_s2e-h",
+    "href": "Figure-S2.html#figure_s2e-h",
+    "title": "8  FigureS2",
+    "section": "8.5 Figure_S2E-H",
+    "text": "8.5 Figure_S2E-H\n\n\nCode\nseu.IT &lt;- subset(seu.neuron, cells = colnames(seu.neuron)[which(seu.neuron$SubType %in% names(col_SubType)[1:8])])\nseu.IT$orig.ident &lt;- factor(seu.IT$orig.ident, levels = c(\"P1\",\"P4\",\"P10\",\"Adult\"))\n\nFigure_S2E &lt;- \n  VlnPlot_scCustom(seurat_object = seu.IT, features = \"Clstn2\", group.by = \"orig.ident\", pt.size = 0) & NoLegend() &\n  geom_boxplot(width=0.1, outlier.size=0, fill=\"lightgray\") &\n  scale_fill_manual(values = col_Time) &\n  labs(x=\"\")\nFigure_S2E\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave(\"../../Figure/FigureS2/Figure_S2E_Clstn2.pdf\", plot = Figure_S2E,\n       height = 3, width = 8, units = \"in\")",
+    "crumbs": [
+      "Supplemental Figure",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>FigureS2</span>"
+    ]
+  },
+  {
+    "objectID": "Figure-S3.html",
+    "href": "Figure-S3.html",
+    "title": "9  FigureS3",
+    "section": "",
+    "text": "9.1 Figure_S3A\nCode\nseu &lt;- seu.IT\nseu$orig.ident &lt;- factor(seu$orig.ident, levels = c(\"P1\",\"P4\",\"P10\",\"Adult\"))\nFigure_S3A &lt;- \n  DimPlot(seu,\n        reduction = 'umap', group.by = \"orig.ident\", label = F,\n        cols = col_Time) +\n  theme(axis.line = element_blank(), axis.ticks = element_blank(), \n        axis.text = element_blank(), plot.title = element_text(size = 30)) +\n  labs(x='', y='', title = \"\") +\n  coord_fixed()\nFigure_S3A\nCode\nggsave(\"../../Figure/FigureS3/Figure_S3A.pdf\", plot = Figure_S3A,\n       height = 5, width = 6, units = \"in\")",
+    "crumbs": [
+      "Supplemental Figure",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>FigureS3</span>"
+    ]
+  },
+  {
+    "objectID": "Figure-S3.html#figure_s3b",
+    "href": "Figure-S3.html#figure_s3b",
+    "title": "9  FigureS3",
+    "section": "9.2 Figure_S3B",
+    "text": "9.2 Figure_S3B\n\n\nCode\nFigure_S3B &lt;- \n  plot_cell_trajectory(cds, color_by = \"Pseudotime\") +\n  scale_color_gradientn(colours = sciRcolor::pal_scircolor(96))\nFigure_S3B\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave(\"../../Figure/FigureS3/Figure_S3B.pdf\", plot = Figure_S3B,\n       height = 4, width = 5, units = \"in\")",
+    "crumbs": [
+      "Supplemental Figure",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>FigureS3</span>"
+    ]
+  },
+  {
+    "objectID": "Figure-S3.html#figure_s3c",
+    "href": "Figure-S3.html#figure_s3c",
+    "title": "9  FigureS3",
+    "section": "9.3 Figure_S3C",
+    "text": "9.3 Figure_S3C\n\n\nCode\ncds$orig.ident &lt;- factor(cds$orig.ident, levels = c(\"P1\",\"P4\",\"P10\",\"Adult\"))\nFigure_S3C &lt;- \n  plot_cell_trajectory(cds, color_by = \"State\")\nFigure_S3C\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave(\"../../Figure/FigureS3/Figure_S3C.pdf\", plot = Figure_S3C,\n       height = 4, width = 5, units = \"in\")",
+    "crumbs": [
+      "Supplemental Figure",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>FigureS3</span>"
+    ]
+  },
+  {
+    "objectID": "Figure-S3.html#figure_s3d",
+    "href": "Figure-S3.html#figure_s3d",
+    "title": "9  FigureS3",
+    "section": "9.4 Figure_S3D",
+    "text": "9.4 Figure_S3D\n\n\nCode\ndata &lt;- data.frame(\n  Pseudotime = cds$Pseudotime,\n  Time = as.character(cds$orig.ident)\n)\n\ndata$Time &lt;- factor(data$Time, levels = c(\"P1\",\"P4\",\"P10\",\"Adult\"))\nFigure_S3D &lt;- \n  ggplot(data, aes(x=Time, y=Pseudotime, fill=Time)) +\n  geom_boxplot() +\n  labs(x=\"Time point\", y=\"Pseudotime\") +\n  scale_y_continuous(breaks=seq(0,65,10), limits = c(0,65),\n                     expand = expansion(mult = c(0, 0.05))) +\n  theme_classic(base_size = 15) +\n  theme(legend.position = \"top\") +\n  scale_fill_manual(values = col_Time)\nFigure_S3D\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave(\"../../Figure/FigureS3/Figure_S3D.pdf\", plot = Figure_S3D,\n       height = 4, width = 5, units = \"in\")",
+    "crumbs": [
+      "Supplemental Figure",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>FigureS3</span>"
+    ]
+  },
+  {
+    "objectID": "Figure-S3.html#figure_s3e",
+    "href": "Figure-S3.html#figure_s3e",
+    "title": "9  FigureS3",
+    "section": "9.5 Figure_S3E",
+    "text": "9.5 Figure_S3E\n\n\nCode\nloom &lt;- open_loom('../data/Figure3/SCENIC/aucell.loom')\nregulons_incidMat &lt;- SCopeLoomR::get_regulons(loom, column.attr.name=\"Regulons\")\nregulonAUC &lt;- SCopeLoomR::get_regulons_AUC(loom,column.attr.name='RegulonsAUC')\n\n\n\n\nCode\nseu &lt;- seu.IT\nseu$Time_subtype &lt;- seu$SubType\nTime_subtype &lt;- names(col_SubType)[1:8]\n#rss &lt;- calcRSS(AUC = getAUC(regulonAUC)[,seu$Time_subtype %in% Time_subtype], \n#               cellAnnotation = as.character(seu$Time_subtype[seu$Time_subtype %in% Time_subtype]))\n#rss &lt;- as.data.frame(rss)\n#saveRDS(rss, \"../../data/rds/Figure3/rss.rds\")\nrss &lt;- readRDS(\"../data/Figure3/SCENIC/rss.rds\")\n\nTime_all &lt;- Time_subtype\nplist &lt;- list()\nfor (i in 1:length(Time_subtype)){\n  Time &lt;- Time_all[i]\n  data &lt;- rss\n  data$label &lt;- rownames(data)\n  data$label[!rownames(data) %in% rownames(data[order(data[,Time], \n                                                      decreasing = T),])[1:5]] &lt;- \"\"\n  data &lt;- data[order(data[,Time], decreasing = T),c(Time, \"label\")]\n  colnames(data) &lt;- c(\"Rss\", \"label\")\n  data$Type &lt;- \"highlight\"\n  data$Type[data$label==\"\"] &lt;- \"other\"\n  \n  plist[[i]] &lt;- \n    ggplot() +\n    geom_point(data[data$Type==\"other\",], mapping=aes(x=6:nrow(data), y=Rss), size=3, color=\"#92c6df\") +\n    geom_point(data[data$Type==\"highlight\",], mapping=aes(x=1:5, y=Rss), size=3, color=\"#d6604d\") +\n    geom_text_repel(data, mapping=aes(x=1:nrow(data), y=Rss, label = label),\n                  max.overlaps = getOption(\"ggrepel.max.overlaps\", default = 20),\n                  size = 4, \n                  color = 'black') +\n    theme_bw(base_size = 15) +\n    theme(panel.grid = element_blank(), legend.position = \"none\",\n          plot.title = element_text(hjust = 0.5)) +\n    labs(x=\"Relguons\", y=\"Regulon specificity score (RSS)\", title=Time)\n}\n\nFigure_S3E &lt;- cowplot::plot_grid(plotlist = plist, ncol = 4)\nFigure_S3E\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave(\"../../Figure/FigureS3/Figure_S3E.pdf\", plot = Figure_S3E,\n       height = 8.5, width = 16, units = \"in\")",
+    "crumbs": [
+      "Supplemental Figure",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>FigureS3</span>"
+    ]
+  },
+  {
+    "objectID": "Figure-S4.html",
+    "href": "Figure-S4.html",
+    "title": "10  FigureS4",
+    "section": "",
+    "text": "10.1 Figure_S4A\nCode\nseu &lt;- seu.IT\nseu$Time_SubType &lt;- paste(seu$orig.ident, seu$SubType)\nTime_SubType &lt;- c(\n  \"P1 Im L2/3 IT\",\"P1 Im L4/5 IT\",\"P1 Im L5 IT\",\"P1 Im L6 IT\",\"P1 L6 IT\",\n  \"P4 Im L2/3 IT\",\"P4 Im L4/5 IT\",\"P4 Im L5 IT\",\"P4 L5 IT\",\"P4 Im L6 IT\",\"P4 L6 IT\",\n  \"P10 Im L2/3 IT\",\"P10 L2/3 IT\",\"P10 Im L4/5 IT\",\"P10 L4/5 IT\",\"P10 Im L5 IT\",\n  \"P10 L5 IT\",\"P10 Im L6 IT\",\"P10 L6 IT\",\n  \"Adult L2/3 IT\",\"Adult L4/5 IT\",\"Adult L5 IT\",\"Adult L6 IT\"\n)\nseu &lt;- seu[,seu$Time_SubType %in% Time_SubType]\nseu$Time_SubType &lt;- factor(seu$Time_SubType, levels = Time_SubType)\nIdents(seu) &lt;- \"Time_SubType\"\n#DEGs &lt;- FindAllMarkers(seu, features = all_gene)\n#write.csv(DEGs, \"../data/Figure4/DEGs_IT_Time_SubType.csv\")\nDEGs &lt;- read.csv(\"../data/Figure4/DEGs_IT_Time_SubType.csv\", row.names = 1)",
+    "crumbs": [
+      "Supplemental Figure",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>FigureS4</span>"
+    ]
+  },
+  {
+    "objectID": "Figure-S4.html#figure_s4a",
+    "href": "Figure-S4.html#figure_s4a",
+    "title": "10  FigureS4",
+    "section": "",
+    "text": "10.1.1 Figure_S4A_1\n\n\nCode\nP1_cluster &lt;- Time_SubType[1:5]\nP1_DEGs &lt;- DEGs[DEGs$cluster %in% P1_cluster,]\ntile.col &lt;- c(\"P1 Im L2/3 IT\"=\"#062e60\",\"P1 Im L4/5 IT\"=\"#4393c3\",\"P1 Im L5 IT\"=\"#a6cee3\",\"P1 Im L6 IT\"=\"#66bd63\",\"P1 L6 IT\"=\"#31b69e\")\n\nFigure_S4A_1 &lt;- jjVolcano(\n  diffData = P1_DEGs,\n  aesCol = c('purple','orange'),\n  topGeneN = 3,\n  tile.col = tile.col,\n  size  = 3.5, segment.size = 0.1,\n  fontface = 'italic'\n  ) + NoLegend()\n\nFigure_S4A_1\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave(\"../../Figure/FigureS4/Figure_S4A_1.pdf\", plot = Figure_S4A_1,\n       height = 3, width = 8, units = \"in\")\n\n\n\n\n10.1.2 Figure_S4A_2\n\n\nCode\nP4_cluster &lt;- Time_SubType[6:11]\nP4_DEGs &lt;- DEGs[DEGs$cluster %in% P4_cluster,]\ntile.col &lt;- c(\"P4 Im L2/3 IT\"=\"#062e60\",\"P4 Im L4/5 IT\"=\"#4393c3\",\"P4 Im L5 IT\"=\"#a6cee3\",\"P4 L5 IT\"=\"#009acd\",\"P4 Im L6 IT\"=\"#66bd63\",\"P4 L6 IT\"=\"#31b69e\")\n\nFigure_S4A_2 &lt;- jjVolcano(\n  diffData = P4_DEGs,\n  aesCol = c('purple','orange'),\n  topGeneN = 3,\n  tile.col = tile.col, cluster.order = names(tile.col),\n  size  = 3.5, segment.size = 0.1,\n  fontface = 'italic'\n  ) + NoLegend()\n\nFigure_S4A_2\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave(\"../../Figure/FigureS4/Figure_S4A_2.pdf\", plot = Figure_S4A_2,\n       height = 3, width = 8, units = \"in\")\n\n\n\n\n10.1.3 Figure_S4A_3\n\n\nCode\nP10_cluster &lt;- Time_SubType[12:19]\nP10_DEGs &lt;- DEGs[DEGs$cluster %in% P10_cluster,]\ntile.col &lt;- c(\"P10 Im L2/3 IT\"=\"#062e60\",\"P10 L2/3 IT\"=\"#342a85\",\"P10 Im L4/5 IT\"=\"#4393c3\",\"P10 L4/5 IT\"=\"#0a6ddd\",\"P10 Im L5 IT\"=\"#a6cee3\",\"P10 L5 IT\"=\"#009acd\",\"P10 Im L6 IT\"=\"#66bd63\",\"P10 L6 IT\"=\"#31b69e\")\n\nFigure_S4A_3 &lt;- jjVolcano(\n  diffData = P10_DEGs,\n  aesCol = c('purple','orange'),\n  topGeneN = 3,\n  tile.col = tile.col, cluster.order = names(tile.col),\n  size  = 3.5, segment.size = 0.1,\n  fontface = 'italic'\n  ) + NoLegend()\n\nFigure_S4A_3\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave(\"../../Figure/FigureS4/Figure_S4A_3.pdf\", plot = Figure_S4A_3,\n       height = 3, width = 8, units = \"in\")\n\n\n\n\n10.1.4 Figure_S4A_4\n\n\nCode\nAdult_cluster &lt;- Time_SubType[20:23]\nAdult_DEGs &lt;- DEGs[DEGs$cluster %in% Adult_cluster,]\ntile.col &lt;- c(\"Adult L2/3 IT\"=\"#342a85\",\"Adult L4/5 IT\"=\"#0a6ddd\",\"Adult L5 IT\"=\"#009acd\",\"Adult L6 IT\"=\"#31b69e\")\n\nFigure_S4A_4 &lt;- jjVolcano(\n  diffData = Adult_DEGs,\n  aesCol = c('purple','orange'),\n  topGeneN = 3,\n  tile.col = tile.col, cluster.order = names(tile.col),\n  size  = 3.5, segment.size = 0.1,\n  fontface = 'italic'\n  ) + NoLegend()\n\nFigure_S4A_4\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave(\"../../Figure/FigureS4/Figure_S4A_4.pdf\", plot = Figure_S4A_4,\n       height = 3, width = 8, units = \"in\")",
+    "crumbs": [
+      "Supplemental Figure",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>FigureS4</span>"
+    ]
+  },
+  {
+    "objectID": "Figure-S4.html#figure_s4b",
+    "href": "Figure-S4.html#figure_s4b",
+    "title": "10  FigureS4",
+    "section": "10.2 Figure_S4B",
+    "text": "10.2 Figure_S4B\n\n\nCode\nFigure_S4B &lt;- PlotDendrogram(seurat_obj, main='hdWGCNA Dendrogram')\n\n\n\n\n\n\n\n\n\nCode\nFigure_S4B\n\n\n$mar\n[1] 1 5 0 1\n\n\n\n\nCode\nggsave(\"../../Figure/FigureS4/Figure_S4B.pdf\", plot = Figure_S4B,\n       height = 4, width = 8, units = \"in\")",
+    "crumbs": [
+      "Supplemental Figure",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>FigureS4</span>"
+    ]
+  },
+  {
+    "objectID": "Figure-S4.html#figure_s4c",
+    "href": "Figure-S4.html#figure_s4c",
+    "title": "10  FigureS4",
+    "section": "10.3 Figure_S4C",
+    "text": "10.3 Figure_S4C\n\n\nCode\nModuleNetworkPlot(\n  seurat_obj,\n  outdir = '../../Figure/Figure4/ModuleNetwork'\n)\n\n\n\n\nCode\nknitr::include_graphics(\"./images/Figure_S4C.jpg\", dpi = 300)",
+    "crumbs": [
+      "Supplemental Figure",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>FigureS4</span>"
+    ]
+  },
+  {
+    "objectID": "Figure-S4.html#figure_s4d",
+    "href": "Figure-S4.html#figure_s4d",
+    "title": "10  FigureS4",
+    "section": "10.4 Figure_S4D",
+    "text": "10.4 Figure_S4D\n\n\nCode\n#seu &lt;- seu.IT\nseu &lt;- seu.Ex[,seu.Ex$SubType==\"L6 CT\"]\nseu$orig.ident &lt;- factor(seu$orig.ident, levels = c(\"P1\",\"P4\",\"P10\",\"Adult\"))\n#M2 \n#gene_list &lt;- c(\"Cdh2\",\"Ncam1\",\"Sema4g\",\"Igsf3\",\"Lrp8\")\n#M3\n#gene_list &lt;- c(\"Efnb3\",\"Cdh13\",\"Sdc3\",\"Cd200\",\"L1cam\")\n#M4\n#gene_list &lt;- c(\"App\",\"Nptn\",\"Clstn1\",\"Clstn3\",\"Camk2a\")\n#M5\n\ngene_list &lt;- c(\"Islr2\",\"Ephb1\",\"Rgma\",\"Cdh11\",\"Lrrtm2\")\n\nFigure_S4D &lt;- \n  VlnPlot(seu, features = rev(gene_list), group.by = \"orig.ident\", cols=col_Time,\n        split.by = \"orig.ident\",\n        stack = TRUE, flip = TRUE) +\n  theme(legend.position = \"none\", axis.text.x = element_text(angle = 0, hjust = 0.5)) +\n  labs(x=\"\")\nFigure_S4D\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave(\"../../Figure/FigureS4/Figure_S4D_M5.pdf\", plot = Figure_S4D,\n       height = 6, width = 6, units = \"in\")",
+    "crumbs": [
+      "Supplemental Figure",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>FigureS4</span>"
+    ]
+  },
+  {
+    "objectID": "Figure-S4.html#figure_s4e-h",
+    "href": "Figure-S4.html#figure_s4e-h",
+    "title": "10  FigureS4",
+    "section": "10.5 Figure_S4E-H",
+    "text": "10.5 Figure_S4E-H\n\n\nCode\nknitr::include_graphics(\"./images/Figure_S4E-H.png\", dpi = 300)",
+    "crumbs": [
+      "Supplemental Figure",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>FigureS4</span>"
+    ]
+  },
+  {
+    "objectID": "Figure-S5.html",
+    "href": "Figure-S5.html",
+    "title": "11  FigureS5",
+    "section": "",
+    "text": "11.1 Figure_S5A\nCode\nseu &lt;- seu.NOneuron\nseu$SubType &lt;- factor(seu$SubType, levels = names(col_SubType))\nseu$orig.ident &lt;- factor(seu$orig.ident, levels = c(\"P1\",\"P4\",\"P10\",\"Adult\"))\nFigure_S5A &lt;- \n  DimPlot(seu,\n        reduction = 'umap', group.by = \"orig.ident\", label = F,\n        cols = col_Time) +\n  theme(axis.line = element_blank(), axis.ticks = element_blank(), \n        axis.text = element_blank(), plot.title = element_text(size = 30)) +\n  labs(x='', y='', title = \"\") +\n  coord_fixed()\nFigure_S5A\nCode\nggsave(\"../../Figure/FigureS5/Figure_S5A.pdf\", plot = Figure_S5A,\n       height = 5, width = 6, units = \"in\")",
+    "crumbs": [
+      "Supplemental Figure",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>FigureS5</span>"
     ]
   },
   {
     "objectID": "Figure-S5.html#figure_s5b",
     "href": "Figure-S5.html#figure_s5b",
-    "title": "10  FigureS5",
-    "section": "10.2 Figure_S5B",
-    "text": "10.2 Figure_S5B\n\n\nCode\ncds$orig.ident &lt;- factor(cds$orig.ident, levels = c(\"P1\",\"P4\",\"P10\",\"Adult\"))\nFigure_S5B &lt;- \n  plot_cell_trajectory(cds, color_by = \"orig.ident\") +\n  scale_color_manual(values = col_Time)\nFigure_S5B\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave(\"../../Figure/FigureS5/Figure_S5B.pdf\", plot = Figure_S5B,\n       height = 4, width = 5, units = \"in\")",
+    "title": "11  FigureS5",
+    "section": "11.2 Figure_S5B",
+    "text": "11.2 Figure_S5B\n\n\nCode\ncds$orig.ident &lt;- factor(cds$orig.ident, levels = c(\"P1\",\"P4\",\"P10\",\"Adult\"))\nFigure_S5B &lt;- \n  plot_cell_trajectory(cds, color_by = \"orig.ident\") +\n  scale_color_manual(values = col_Time)\nFigure_S5B\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave(\"../../Figure/FigureS5/Figure_S5B.pdf\", plot = Figure_S5B,\n       height = 4, width = 5, units = \"in\")",
     "crumbs": [
       "Supplemental Figure",
-      "<span class='chapter-number'>10</span>  <span class='chapter-title'>FigureS5</span>"
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>FigureS5</span>"
     ]
   },
   {
     "objectID": "Figure-S5.html#figure_s5c",
     "href": "Figure-S5.html#figure_s5c",
-    "title": "10  FigureS5",
-    "section": "10.3 Figure_S5C",
-    "text": "10.3 Figure_S5C\n\n\nCode\ncds$orig.ident &lt;- factor(cds$orig.ident, levels = c(\"P1\",\"P4\",\"P10\",\"Adult\"))\nFigure_S5C &lt;- \n  plot_cell_trajectory(cds, color_by = \"State\")\nFigure_S5C\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave(\"../../Figure/FigureS5/Figure_S5C.pdf\", plot = Figure_S5C,\n       height = 4, width = 5, units = \"in\")",
+    "title": "11  FigureS5",
+    "section": "11.3 Figure_S5C",
+    "text": "11.3 Figure_S5C\n\n\nCode\ncds$orig.ident &lt;- factor(cds$orig.ident, levels = c(\"P1\",\"P4\",\"P10\",\"Adult\"))\nFigure_S5C &lt;- \n  plot_cell_trajectory(cds, color_by = \"State\")\nFigure_S5C\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave(\"../../Figure/FigureS5/Figure_S5C.pdf\", plot = Figure_S5C,\n       height = 4, width = 5, units = \"in\")",
     "crumbs": [
       "Supplemental Figure",
-      "<span class='chapter-number'>10</span>  <span class='chapter-title'>FigureS5</span>"
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>FigureS5</span>"
     ]
   },
   {
     "objectID": "Figure-S5.html#figure_s5d",
     "href": "Figure-S5.html#figure_s5d",
-    "title": "10  FigureS5",
-    "section": "10.4 Figure_S5D",
-    "text": "10.4 Figure_S5D\n\n\nCode\ndata &lt;- data.frame(\n  Pseudotime = cds$Pseudotime,\n  Time = as.character(cds$orig.ident)\n)\n\ndata$Time &lt;- factor(data$Time, levels = c(\"P1\",\"P4\",\"P10\",\"Adult\"))\nFigure_S5D &lt;- \n  ggplot(data, aes(x=Time, y=Pseudotime, fill=Time)) +\n  geom_boxplot() +\n  labs(x=\"Time point\", y=\"Pseudotime\") +\n  scale_y_continuous(breaks=seq(0,45,10), limits = c(0,45),\n                     expand = expansion(mult = c(0, 0.05))) +\n  theme_classic(base_size = 15) +\n  theme(legend.position = \"top\") +\n  scale_fill_manual(values = col_Time)\nFigure_S5D\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave(\"../../Figure/FigureS5/Figure_S5D.pdf\", plot = Figure_S5D,\n       height = 4, width = 5, units = \"in\")",
+    "title": "11  FigureS5",
+    "section": "11.4 Figure_S5D",
+    "text": "11.4 Figure_S5D\n\n\nCode\ndata &lt;- data.frame(\n  Pseudotime = cds$Pseudotime,\n  Time = as.character(cds$orig.ident)\n)\n\ndata$Time &lt;- factor(data$Time, levels = c(\"P1\",\"P4\",\"P10\",\"Adult\"))\nFigure_S5D &lt;- \n  ggplot(data, aes(x=Time, y=Pseudotime, fill=Time)) +\n  geom_boxplot() +\n  labs(x=\"Time point\", y=\"Pseudotime\") +\n  scale_y_continuous(breaks=seq(0,45,10), limits = c(0,45),\n                     expand = expansion(mult = c(0, 0.05))) +\n  theme_classic(base_size = 15) +\n  theme(legend.position = \"top\") +\n  scale_fill_manual(values = col_Time)\nFigure_S5D\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave(\"../../Figure/FigureS5/Figure_S5D.pdf\", plot = Figure_S5D,\n       height = 4, width = 5, units = \"in\")",
     "crumbs": [
       "Supplemental Figure",
-      "<span class='chapter-number'>10</span>  <span class='chapter-title'>FigureS5</span>"
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>FigureS5</span>"
     ]
   },
   {
-    "objectID": "Figure-S5.html#figure_s5e-f",
-    "href": "Figure-S5.html#figure_s5e-f",
-    "title": "10  FigureS5",
-    "section": "10.5 Figure_S5E-F",
-    "text": "10.5 Figure_S5E-F\n\n\nCode\ngroup &lt;- c(rep(\"IT\",8), rep(\"Non-Neuronal\",4))\nnames(group) &lt;- names(col_SubType)[c(1:8,17,19:21)]\nNeuron &lt;- names(group)[c(1:8)]\nNon_neuron &lt;- names(group)[c(9:12)]\n#P1\ndf.P1 &lt;- rankNet(P1.CellChat, slot.name = \"net\", measure = c(\"weight\"),\n                 sources.use = Non_neuron[-3], targets.use = Neuron[-c(5:7)],\n                 mode='single', return.data = T)\ndf.P1 &lt;- df.P1$signaling.contribution\ndf.P1$Time &lt;- \"P1\"\nP1.top10 &lt;- as.character(df.P1$name[df.P1$contribution&gt;0.1])\n#df.P0 &lt;- df.P0[df.P0$contribution &gt; 0.5,]\n\n#P4\ndf.P4 &lt;- rankNet(P4.CellChat, slot.name = \"net\", measure = c(\"weight\"),\n                 sources.use = Non_neuron, targets.use = Neuron[-c(5:6)],\n                 mode='single', return.data = T)\ndf.P4 &lt;- df.P4$signaling.contribution\ndf.P4$Time &lt;- \"P4\"\nP4.top10 &lt;- as.character(df.P4$name[df.P4$contribution&gt;0.1])\n#df.P4 &lt;- df.P4[df.P4$contribution &gt; 0.5,]\n\n#P10\ndf.P10 &lt;- rankNet(P10.CellChat, slot.name = \"net\", measure = c(\"weight\"),\n                  sources.use = Non_neuron, targets.use = Neuron,\n                  mode='single', return.data = T)\ndf.P10 &lt;- df.P10$signaling.contribution\ndf.P10$Time &lt;- \"P10\"\nP10.top10 &lt;- as.character(df.P10$name[df.P10$contribution&gt;0.1])\n#df.P10 &lt;- df.P10[df.P10$contribution &gt; 0.5,]\n\n#Adult\ndf.Adult &lt;- rankNet(Adult.CellChat, slot.name = \"net\", measure = c(\"weight\"),\n                    sources.use = Non_neuron, targets.use = Neuron[-c(1:4)],\n                    mode='single', return.data = T)\ndf.Adult &lt;- df.Adult$signaling.contribution\ndf.Adult$Time &lt;- \"Adult\"\nAdult.top10 &lt;- as.character(df.Adult$name[df.Adult$contribution&gt;0.1])\n#df.Adult &lt;- df.Adult[df.Adult$contribution &gt; 0.5,]\n\n\n#name &lt;- unique(c(df.P0$name, df.P4$name, df.P10$name, df.Adult$name))\nname &lt;- unique(c(P1.top10, P4.top10, P10.top10, Adult.top10))\nmat &lt;- matrix(nrow = length(name), ncol = 4)\nrownames(mat) &lt;- name\ncolnames(mat) &lt;- c(\"P1\",\"P4\",\"P10\",\"Adult\")\nmat[,\"P1\"] &lt;- df.P1$contribution[match(name, df.P1$name)]\nmat[,\"P4\"] &lt;- df.P4$contribution[match(name, df.P4$name)]\nmat[,\"P10\"] &lt;- df.P10$contribution[match(name, df.P10$name)]\nmat[,\"Adult\"] &lt;- df.Adult$contribution[match(name, df.Adult$name)]\nmat[is.na(mat)] &lt;- 0\nmat &lt;- mat/rowSums(mat)\ndf &lt;- arrange(as.data.frame(mat), desc(P1), desc(P4), desc(P10), desc(Adult))\ndf$name &lt;- rownames(df)\ndf_long &lt;- pivot_longer(df, !name, names_to=\"Time\", values_to=\"Value\")\ndf_long$Time &lt;- factor(df_long$Time, levels = rev(c(\"P1\",\"P4\",\"P10\",\"Adult\")))\ndf_long$name &lt;- factor(df_long$name, levels = rev(df$name))\n\n\n\n\nCode\nall.name &lt;- levels(df_long$name)\n\n#P1\ndf.P1 &lt;- netVisual_bubble(\n  P1.CellChat, sources.use = Non_neuron, targets.use = Neuron, \n  pairLR.use = data.frame(\"interaction_name\" = all.name), \n  remove.isolate = FALSE, return.data = T)\ndf.P1 &lt;- df.P1$communication\ndf.P1 &lt;- df.P1[!(is.na(df.P1$source)),]\ndf.P1 &lt;- df.P1[!(is.na(df.P1$target)),]\ndf.P1$source.target &lt;- paste(\"P1\", df.P1$source.target)\n\n#P4\ndf.P4 &lt;- netVisual_bubble(\n  P4.CellChat, sources.use = Non_neuron, targets.use = Neuron, \n  pairLR.use = data.frame(\"interaction_name\" = all.name), \n  remove.isolate = FALSE, return.data = T)\ndf.P4 &lt;- df.P4$communication\ndf.P4 &lt;- df.P4[!(is.na(df.P4$source)),]\ndf.P4 &lt;- df.P4[!(is.na(df.P4$target)),]\ndf.P4$source.target &lt;- paste(\"P4\", df.P4$source.target)\n\n#P4\ndf.P10 &lt;- netVisual_bubble(\n  P10.CellChat, sources.use = Non_neuron, targets.use = Neuron, \n  pairLR.use = data.frame(\"interaction_name\" = all.name), \n  remove.isolate = FALSE, return.data = T)\ndf.P10 &lt;- df.P10$communication\ndf.P10 &lt;- df.P10[!(is.na(df.P10$source)),]\ndf.P10 &lt;- df.P10[!(is.na(df.P10$target)),]\ndf.P10$source.target &lt;- paste(\"P10\", df.P10$source.target)\n\n#P4\ndf.Adult &lt;- netVisual_bubble(\n  Adult.CellChat, sources.use = Non_neuron, targets.use = Neuron, \n  pairLR.use = data.frame(\"interaction_name\" = all.name), \n  remove.isolate = FALSE, return.data = T)\ndf.Adult &lt;- df.Adult$communication\ndf.Adult &lt;- df.Adult[!(is.na(df.Adult$source)),]\ndf.Adult &lt;- df.Adult[!(is.na(df.Adult$target)),]\ndf.Adult$source.target &lt;- paste(\"Adult\", df.Adult$source.target)\n\ndf.merge &lt;- as.data.frame(rbind(df.P1, df.P4, df.P10, df.Adult))\n\ndf &lt;- df.merge[df.merge$source==\"OPC\",]\ndf$interaction_name &lt;- factor(df$interaction_name, levels = all.name)\ndf$interaction_name_2 &lt;- factor(\n  df$interaction_name_2, \n  levels = unique(df$interaction_name_2[order(df$interaction_name)]))\ndf$target &lt;- factor(df$target, levels = Neuron)\ndf$source.target &lt;- factor(\n  df$source.target,\n  levels = unique(df$source.target[order(df$target)]))\nvalues &lt;- c(1,2,3); names(values) &lt;- c(\"p &gt; 0.05\", \"0.01 &lt; p &lt; 0.05\",\"p &lt; 0.01\")\ncol &lt;- rev(colorRampPalette(RColorBrewer::brewer.pal(11,\"Spectral\"))(99))\n\nFigure_S5E &lt;- \n  ggplot(df, aes(x = source.target, y = interaction_name_2, color = prob, size = pval)) + \n  geom_point(pch = 16) +\n  geom_vline(xintercept=seq(1.5, length(unique(df$source.target))-0.5, 1),lwd=0.1,colour=\"grey90\") +\n  geom_hline(yintercept=seq(1.5, length(unique(df$interaction_name_2))-0.5, 1),lwd=0.1,colour=\"grey90\") +\n  theme_linedraw() +\n  theme(panel.grid.major = element_blank(),\n        axis.text.x = element_text(angle = 45, hjust= 1),\n        axis.title.x = element_blank(),\n        axis.title.y = element_blank()) +\n  scale_x_discrete(position = \"bottom\") + \n  scale_radius(\n    range = c(min(df$pval), max(df$pval)),\n    breaks = sort(unique(df$pval)),\n    labels = names(values)[values %in% sort(unique(df$pval))], name = \"p-value\") + \n  scale_colour_gradientn(colors = col, na.value = \"white\", \n                         limits=c(quantile(df$prob, 0,na.rm= T), \n                                  quantile(df$prob, 1,na.rm= T)),\n                         breaks = c(quantile(df$prob, 0,na.rm= T), \n                                    quantile(df$prob, 1,na.rm= T)), \n                         labels = c(\"min\",\"max\")) +\n  guides(color = guide_colourbar(barwidth = 0.5, title = \"Commun. Prob.\"))\nFigure_S5E\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave(\"../../Figure/FigureS5/Figure_S5E/Figure_S5E_OPC.pdf\", plot = Figure_S5E,\n       height = 6.0, width = 10, units = \"in\")",
+    "objectID": "Figure-S5.html#figure_s5e-h",
+    "href": "Figure-S5.html#figure_s5e-h",
+    "title": "11  FigureS5",
+    "section": "11.5 Figure_S5E-H",
+    "text": "11.5 Figure_S5E-H\n\n\nCode\ngroup &lt;- c(rep(\"IT\",8), rep(\"Non-Neuronal\",4))\nnames(group) &lt;- names(col_SubType)[c(1:8,17,19:21)]\nNeuron &lt;- names(group)[c(1:8)]\nNon_neuron &lt;- names(group)[c(9:12)]\n# P1\ndf.P1 &lt;- rankNet(P1.CellChat, slot.name = \"net\", measure = c(\"weight\"),\n                 sources.use = Non_neuron[-3], targets.use = Neuron[-c(5:7)],\n                 mode='single', return.data = T)\ndf.P1 &lt;- df.P1$signaling.contribution\ndf.P1$Time &lt;- \"P1\"\nP1.top10 &lt;- as.character(df.P1$name[df.P1$contribution&gt;0.1])\n\n# P4\ndf.P4 &lt;- rankNet(P4.CellChat, slot.name = \"net\", measure = c(\"weight\"),\n                 sources.use = Non_neuron, targets.use = Neuron[-c(5:6)],\n                 mode='single', return.data = T)\ndf.P4 &lt;- df.P4$signaling.contribution\ndf.P4$Time &lt;- \"P4\"\nP4.top10 &lt;- as.character(df.P4$name[df.P4$contribution&gt;0.1])\n\n# P10\ndf.P10 &lt;- rankNet(P10.CellChat, slot.name = \"net\", measure = c(\"weight\"),\n                  sources.use = Non_neuron, targets.use = Neuron,\n                  mode='single', return.data = T)\ndf.P10 &lt;- df.P10$signaling.contribution\ndf.P10$Time &lt;- \"P10\"\nP10.top10 &lt;- as.character(df.P10$name[df.P10$contribution&gt;0.1])\n\n# Adult\ndf.Adult &lt;- rankNet(Adult.CellChat, slot.name = \"net\", measure = c(\"weight\"),\n                    sources.use = Non_neuron, targets.use = Neuron[-c(1:4)],\n                    mode='single', return.data = T)\ndf.Adult &lt;- df.Adult$signaling.contribution\ndf.Adult$Time &lt;- \"Adult\"\nAdult.top10 &lt;- as.character(df.Adult$name[df.Adult$contribution&gt;0.1])\n\n\nname &lt;- unique(c(P1.top10, P4.top10, P10.top10, Adult.top10))\nmat &lt;- matrix(nrow = length(name), ncol = 4)\nrownames(mat) &lt;- name\ncolnames(mat) &lt;- c(\"P1\",\"P4\",\"P10\",\"Adult\")\nmat[,\"P1\"] &lt;- df.P1$contribution[match(name, df.P1$name)]\nmat[,\"P4\"] &lt;- df.P4$contribution[match(name, df.P4$name)]\nmat[,\"P10\"] &lt;- df.P10$contribution[match(name, df.P10$name)]\nmat[,\"Adult\"] &lt;- df.Adult$contribution[match(name, df.Adult$name)]\nmat[is.na(mat)] &lt;- 0\nmat &lt;- mat/rowSums(mat)\ndf &lt;- arrange(as.data.frame(mat), desc(P1), desc(P4), desc(P10), desc(Adult))\ndf$name &lt;- rownames(df)\ndf_long &lt;- pivot_longer(df, !name, names_to=\"Time\", values_to=\"Value\")\ndf_long$Time &lt;- factor(df_long$Time, levels = rev(c(\"P1\",\"P4\",\"P10\",\"Adult\")))\ndf_long$name &lt;- factor(df_long$name, levels = rev(df$name))\n\n\n\n\nCode\nall.name &lt;- levels(df_long$name)\n\n# P1\ndf.P1 &lt;- netVisual_bubble(\n  P1.CellChat, sources.use = Non_neuron, targets.use = Neuron, \n  pairLR.use = data.frame(\"interaction_name\" = all.name), \n  remove.isolate = FALSE, return.data = T)\ndf.P1 &lt;- df.P1$communication\ndf.P1 &lt;- df.P1[!(is.na(df.P1$source)),]\ndf.P1 &lt;- df.P1[!(is.na(df.P1$target)),]\ndf.P1$source.target &lt;- paste(\"P1\", df.P1$source.target)\n\n# P4\ndf.P4 &lt;- netVisual_bubble(\n  P4.CellChat, sources.use = Non_neuron, targets.use = Neuron, \n  pairLR.use = data.frame(\"interaction_name\" = all.name), \n  remove.isolate = FALSE, return.data = T)\ndf.P4 &lt;- df.P4$communication\ndf.P4 &lt;- df.P4[!(is.na(df.P4$source)),]\ndf.P4 &lt;- df.P4[!(is.na(df.P4$target)),]\ndf.P4$source.target &lt;- paste(\"P4\", df.P4$source.target)\n\n# P10\ndf.P10 &lt;- netVisual_bubble(\n  P10.CellChat, sources.use = Non_neuron, targets.use = Neuron, \n  pairLR.use = data.frame(\"interaction_name\" = all.name), \n  remove.isolate = FALSE, return.data = T)\ndf.P10 &lt;- df.P10$communication\ndf.P10 &lt;- df.P10[!(is.na(df.P10$source)),]\ndf.P10 &lt;- df.P10[!(is.na(df.P10$target)),]\ndf.P10$source.target &lt;- paste(\"P10\", df.P10$source.target)\n\n# Adult\ndf.Adult &lt;- netVisual_bubble(\n  Adult.CellChat, sources.use = Non_neuron, targets.use = Neuron, \n  pairLR.use = data.frame(\"interaction_name\" = all.name), \n  remove.isolate = FALSE, return.data = T)\ndf.Adult &lt;- df.Adult$communication\ndf.Adult &lt;- df.Adult[!(is.na(df.Adult$source)),]\ndf.Adult &lt;- df.Adult[!(is.na(df.Adult$target)),]\ndf.Adult$source.target &lt;- paste(\"Adult\", df.Adult$source.target)\n\ndf.merge &lt;- as.data.frame(rbind(df.P1, df.P4, df.P10, df.Adult))\n\ndf &lt;- df.merge[df.merge$source==\"OPC\",]\ndf$interaction_name &lt;- factor(df$interaction_name, levels = all.name)\ndf$interaction_name_2 &lt;- factor(\n  df$interaction_name_2, \n  levels = unique(df$interaction_name_2[order(df$interaction_name)]))\ndf$target &lt;- factor(df$target, levels = Neuron)\ndf$source.target &lt;- factor(\n  df$source.target,\n  levels = unique(df$source.target[order(df$target)]))\nvalues &lt;- c(1,2,3); names(values) &lt;- c(\"p &gt; 0.05\", \"0.01 &lt; p &lt; 0.05\",\"p &lt; 0.01\")\ncol &lt;- rev(colorRampPalette(RColorBrewer::brewer.pal(11,\"Spectral\"))(99))\n\nFigure_S5E &lt;- \n  ggplot(df, aes(x = source.target, y = interaction_name_2, color = prob, size = pval)) + \n  geom_point(pch = 16) +\n  geom_vline(xintercept=seq(1.5, length(unique(df$source.target))-0.5, 1),lwd=0.1,colour=\"grey90\") +\n  geom_hline(yintercept=seq(1.5, length(unique(df$interaction_name_2))-0.5, 1),lwd=0.1,colour=\"grey90\") +\n  theme_linedraw() +\n  theme(panel.grid.major = element_blank(),\n        axis.text.x = element_text(angle = 45, hjust= 1),\n        axis.title.x = element_blank(),\n        axis.title.y = element_blank()) +\n  scale_x_discrete(position = \"bottom\") + \n  scale_radius(\n    range = c(min(df$pval), max(df$pval)),\n    breaks = sort(unique(df$pval)),\n    labels = names(values)[values %in% sort(unique(df$pval))], name = \"p-value\") + \n  scale_colour_gradientn(colors = col, na.value = \"white\", \n                         limits=c(quantile(df$prob, 0,na.rm= T), \n                                  quantile(df$prob, 1,na.rm= T)),\n                         breaks = c(quantile(df$prob, 0,na.rm= T), \n                                    quantile(df$prob, 1,na.rm= T)), \n                         labels = c(\"min\",\"max\")) +\n  guides(color = guide_colourbar(barwidth = 0.5, title = \"Commun. Prob.\"))\nFigure_S5E\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave(\"../../Figure/FigureS5/Figure_S5E/Figure_S5E_OPC.pdf\", plot = Figure_S5E,\n       height = 6.0, width = 10, units = \"in\")",
     "crumbs": [
       "Supplemental Figure",
-      "<span class='chapter-number'>10</span>  <span class='chapter-title'>FigureS5</span>"
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>FigureS5</span>"
+    ]
+  },
+  {
+    "objectID": "Figure-S5.html#figure_s5i",
+    "href": "Figure-S5.html#figure_s5i",
+    "title": "11  FigureS5",
+    "section": "11.6 Figure_S5I",
+    "text": "11.6 Figure_S5I\n\n\nCode\nseu &lt;- seu.NOneuron[,seu.NOneuron$SubType==\"Astro\"]\nseu$orig.ident &lt;- factor(seu$orig.ident, levels = c(\"P1\",\"P4\",\"P10\",\"Adult\"))\ngene_list &lt;- c(\"Slit2\")\n\nFigure_S5I_1 &lt;- \n  VlnPlot_scCustom(seurat_object = seu, features = gene_list, group.by = \"orig.ident\",\n                 pt.size = 0) & NoLegend() &\n  geom_boxplot(width=0.1, outlier.size=0, fill=\"lightgray\") &\n  scale_fill_manual(values = col_Time) &\n  labs(x=\"\")\nFigure_S5I_1\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave(\"../../Figure/Figure5/Figure_S5I/Figure_S5I_Slit2.pdf\", plot = Figure_S5I_1, \n       height = 4, width = 4.5, units = \"in\")\n\n\n\n\nCode\nseu &lt;- seu.harmony[,seu.harmony$SubType %in% names(col_SubType)[1:8]]\n\nseu$orig.ident &lt;- factor(seu$orig.ident, levels = c(\"P1\",\"P4\",\"P10\",\"Adult\"))\ngene_list &lt;- c(\"Robo1\")\n\nFigure_S5I_2 &lt;- \n  VlnPlot_scCustom(seurat_object = seu, features = gene_list, group.by = \"orig.ident\",\n                 pt.size = 0) & NoLegend() &\n  geom_boxplot(width=0.1, outlier.size=0, fill=\"lightgray\") &\n  scale_fill_manual(values = col_Time) &\n  labs(x=\"\")\nFigure_S5I_2\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave(\"../../Figure/Figure5/Figure_S5I/Figure_S5I_Robo1.pdf\", plot = Figure_S5I_2, \n       height = 4, width = 6, units = \"in\")",
+    "crumbs": [
+      "Supplemental Figure",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>FigureS5</span>"
+    ]
+  },
+  {
+    "objectID": "Figure-S5.html#figure_s5j",
+    "href": "Figure-S5.html#figure_s5j",
+    "title": "11  FigureS5",
+    "section": "11.7 Figure_S5J",
+    "text": "11.7 Figure_S5J\n\n\nCode\nknitr::include_graphics(\"./images/Figure_S5J.png\", dpi = 300)",
+    "crumbs": [
+      "Supplemental Figure",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>FigureS5</span>"
     ]
   },
   {
     "objectID": "Figure-S6.html",
     "href": "Figure-S6.html",
-    "title": "11  FigureS6",
+    "title": "12  FigureS6",
     "section": "",
-    "text": "Code\nknitr::include_graphics(\"./images/FigureS6.jpg\", dpi = 300)",
+    "text": "12.1 Figure_S6A-G\nCode\nADHD_subtype &lt;- c(\"P10 L2/3 IT\",\"P10 L4/5 IT\",\"Adult L4/5 IT\",\"Adult L5 IT\",\n                  \"Adult L6 IT\")\nANO_subtype &lt;- c(\"P1 Microglia\",\"P4 Microglia\",\"P10 NPC\",\"Adult Microglia\")\nASD_subtype &lt;- c(\"P1 Im L5 IT\",\"P4 Im L5 IT\",\"P10 L4/5 IT\")\nBP_subtype &lt;- c(\"P1 Im L2/3 IT\",\"P1 Im L4/5 IT\",\"P4 Im L4/5 IT\",\"P4 Im L5 IT\",\n                \"P4 Pvalb\",\"P4 Sst\",\"P10 Im L2/3 IT\",\"P10 L2/3 IT\",\"P10 L4/5 IT\",\n                \"P10 L6 IT\",\"Adult L2/3 IT\",\"Adult L4/5 IT\",\"Adult L6 IT\",\n                \"Adult L5 PT\")\nMDD_subtype &lt;- c(\"P1 Im L6 IT\",\"P1 Lamp5\",\"P1 Pvalb\",\"P1 Vip\",\"P4 L6 IT\",\n                 \"P4 Pvalb\",\"P4 Vip\",\"P10 Im L6 IT\",\"P10 L2/3 IT\",\"P10 L4/5 IT\",\n                 \"P10 L5 IT\",\"P10 L6 IT\",\"P10 Lamp5\",\"P10 Pvalb\",\"P10 Vip\",\n                 \"Adult L2/3 IT\",\"Adult L4/5 IT\",\"Adult L5 IT\",\"Adult L6 IT\",\n                 \"Adult L5 NP\",\"Adult L6 CT\",\"Adult Pvalb\",\"Adult Vip\")\nOCD_subtype &lt;- c(\"P10 Pvalb\",\"Adult Lamp5\",\"Adult Pvalb\",\"Adult Vip\")\nSCZ_subtype &lt;- c(\"P1 Im L5 IT\",\"P1 L6 CT\",\"P1 Vip\",\"P4 L6 CT\",\"P4 Pvalb\",\n                 \"P10 L4/5 IT\",\"P10 L6 IT\",\"P10 L6 CT\",\"P10 Vip\",\"Adult L4/5 IT\",\n                 \"Adult L6 IT\",\"Adult L6 CT\")\nTS_subtype &lt;- c(\"P1 Im L5 IT\",\"P1 L5 NP\",\"P4 L6 CT\",\"P10 L4/5 IT\",\"P10 L5 IT\",\n                \"P10 L6 IT\",\"P10 L6 CT\",\"Adult L4/5 IT\",\"Adult L5 IT\",\n                \"Adult L6 IT\",\"Adult L6 CT\",\"Adult Astro\")\nGene_weight &lt;- read.csv(\"../../data/Revision/Gene_weight.csv\")\nCode\ndisease_subtype &lt;- BP_subtype\ngene &lt;- Gene_weight$BP_Gene\nseu_disease &lt;- seu[,seu$Time_Subtype %in% disease_subtype]\ngene &lt;- gene[gene %in% rownames(seu)]\nseu_disease$Time_Subtype &lt;- factor(seu_disease$Time_Subtype, \n                                   levels = disease_subtype)\nIdents(seu_disease) &lt;- \"Time_Subtype\"\nDEG &lt;- FindAllMarkers(seu_disease, features = gene, logfc.threshold = 0.25,\n                      only.pos = T)\n\nFigure_S6A &lt;- jjVolcano(\n  diffData = DEG,\n  topGeneN = 0,\n  log2FC.cutoff = 0.1,\n  col.type = \"updown\",\n  tile.col = rep(\"lightgray\",34),\n  aesCol = c('#0099CC','#CC3333'),\n  size  = 5,\n  fontface = 'italic'\n  )\nFigure_S6A\nCode\nknitr::include_graphics(\"./images/Figure_S6A-G.png\", dpi = 300)\nCode\nggsave(\"../../Figure/FigureS6/Figure_S6A_BP.pdf\", plot = Figure_6B,\n       height = 3, width = 10, units = \"in\")",
     "crumbs": [
       "Supplemental Figure",
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>FigureS6</span>"
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>FigureS6</span>"
+    ]
+  },
+  {
+    "objectID": "Figure-S6.html#figure_s6h",
+    "href": "Figure-S6.html#figure_s6h",
+    "title": "12  FigureS6",
+    "section": "12.2 Figure_S6H",
+    "text": "12.2 Figure_S6H\n\n\nCode\nP1_score &lt;- read.csv(\"../../data/Revision/P1/P1_score.csv\", row.names = 1)\nP4_score &lt;- read.csv(\"../../data/Revision/P4/P4_score.csv\", row.names = 1)\nP10_score &lt;- read.csv(\"../../data/Revision/P10/P10_score.csv\", row.names = 1)\nAdult_score &lt;- read.csv(\"../../data/Revision/Adult/Adult_score.csv\", row.names = 1)\nAll_score &lt;- rbind(P1_score, P4_score, P10_score, Adult_score)\n\n\n\n\nCode\ndisease &lt;- names(col_Disease)[1]\n\ndf &lt;- data.frame(\n  UMAP_1 = All_score$UMAP_1,\n  UMAP_2 = All_score$UMAP_2,\n  value = All_score[,disease]\n)\ndf$value[df$value &gt; 4] &lt;- 4\ndf$value[df$value &lt; 0] &lt;- 0\ndf &lt;- df[order(df$value),]\nFigure_S6H &lt;- \n  ggplot() +\n  geom_point(df, mapping=aes(x=UMAP_1, y=UMAP_2, color=value), size=0.5) +\n  theme_void() +\n  theme(legend.position = \"none\") +\n  coord_fixed() +\n  scale_color_gradientn(colours = c(\"lightgray\", \"white\", col_Disease[1]), \n                        limits = c(0,4))\nFigure_S6H\n\n\n\n\n\n\n\n\n\n\n\nCode\nggsave(filename=paste(\"../../Figure/FigureS6/Figure_S6H/\",disease,\".png\",sep=\"\"),\n        Figure_6C, width=4, height = 4, units = \"in\")",
+    "crumbs": [
+      "Supplemental Figure",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>FigureS6</span>"
+    ]
+  },
+  {
+    "objectID": "Figure-S7.html",
+    "href": "Figure-S7.html",
+    "title": "13  FigureS7",
+    "section": "",
+    "text": "Code\nknitr::include_graphics(\"./images/FigureS7.jpg\", dpi = 300)",
+    "crumbs": [
+      "Supplemental Figure",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>FigureS7</span>"
     ]
   }
 ]

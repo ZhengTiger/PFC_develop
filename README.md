@@ -1,10 +1,10 @@
 # PFC develop
 
-Spatiotemporal molecular and cellular dynamics of intratelencephalic neurons in mouse prefrontal cortex during postnatal development
+A single-cell spatiotemporal transcriptomic atlas of mouse prefrontal cortex maps dynamics of intratelencephalic neurons during postnatal development
 
 <img src="https://github.com/ZhengTiger/picx-images-hosting/raw/master/PFCdev/Figure1A.3yer620cdm.webp" width="100%" />
 
-## Summary
+## Abstract
 
 In early postnatal brain, the prefrontal cortex (PFC) remains immature and highly plastic, particularly for the intratelencephalic (IT) neurons. However, the spatiotemporal molecular and cellular dynamics of PFC during this period remain poorly characterized. Here, we performed spatiotemporal single-cell RNA analysis on mouse PFC during different postnatal time points and systematically delineated the molecular and cellular dynamics of mouse PFC during early postnatal development, among which IT neurons exhibit most dramatic alterations. Based on these comprehensive spatiotemporal atlases of PFC, we deciphered the time-specific molecular and cellular characteristics during the maturation process of IT neurons in PFC, particularly the dynamic expression programs of genes regulating axon development and synaptic formation, and the risk genes of neurological developmental diseases. Furthermore, we revealed the dynamic neuron-glia interaction patterns and the underlying signaling pathways during early postnatal period. Our study provided a comprehensive resource and important insights for PFC development and PFC-associated neurological diseases.
 
@@ -32,4 +32,8 @@ We compiled the code for this study using Quarto documentation, which contains t
 ## Citation
 
 Our project has been released in the following publication:
+
+```
+Zheng H, Yan K, et al. A single-cell spatiotemporal transcriptomic atlas of mouse prefrontal cortex maps dynamics of intratelencephalic neurons during postnatal development. PLOS Biology.
+```
 

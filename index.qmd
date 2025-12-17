@@ -1,12 +1,12 @@
 # PFC develop {.unnumbered}
 
-Single-cell spatiotemporal transcriptome dynamics of mouse prefrontal cortex intratelencephalic neurons during postnatal development.
+A single-cell spatiotemporal transcriptomic atlas of mouse prefrontal cortex maps dynamics of intratelencephalic neurons during postnatal development
 
-<img src="https://zhengtiger.github.io/picx-images-hosting/PFCdev/Figure_1A.2h8jm97w9c.webp" width="100%" />
+<img src="https://github.com/ZhengTiger/picx-images-hosting/raw/master/PFCdev/Figure1A.3yer620cdm.webp" width="100%" />
 
-## Summary
+## Abstract
 
-The prefrontal cortex (PFC) is a core regulatory center for higher cognitive functions in the mammalian brain. In early postnatal mice, the PFC remains incompletely mature, particularly the intratelencephalic (IT) neurons located in superficial layers. However, the molecular developmental trajectories and regulatory mechanisms of IT neurons during the critical postnatal period (1-2 weeks) for circuit establishment, remain poorly characterized at single-cell resolution. Here, we performed single-cell RNA sequencing analysis on mouse PFC isolated at different developmental time points, and integrated with spatial transcriptomic data. Our study systematically deciphered the spatiotemporal transcriptome dynamics of mouse PFC during postnatal development, with particular emphasis on the heterogeneity of IT neurons. We identified dynamically expressed genes during postnatal development, including cadherin and axon guidance molecule genes, as well as specific transcriptional regulators that control the maturation of IT neurons in different layers. Furthermore, we also revealed that glial cells play crucial regulatory roles in IT neuron development through specific signaling pathways. Our study provides a comprehensive single-cell atlas of postnatal mouse PFC development, offering important insights into the mechanisms of neural development and circuit assembly in PFC.
+In early postnatal brain, the prefrontal cortex (PFC) remains immature and highly plastic, particularly for the intratelencephalic (IT) neurons. However, the spatiotemporal molecular and cellular dynamics of PFC during this period remain poorly characterized. Here, we performed spatiotemporal single-cell RNA analysis on mouse PFC during different postnatal time points and systematically delineated the molecular and cellular dynamics of mouse PFC during early postnatal development, among which IT neurons exhibit most dramatic alterations. Based on these comprehensive spatiotemporal atlases of PFC, we deciphered the time-specific molecular and cellular characteristics during the maturation process of IT neurons in PFC, particularly the dynamic expression programs of genes regulating axon development and synaptic formation, and the risk genes of neurological developmental diseases. Furthermore, we revealed the dynamic neuron-glia interaction patterns and the underlying signaling pathways during early postnatal period. Our study provided a comprehensive resource and important insights for PFC development and PFC-associated neurological diseases.
 
 
 
@@ -14,17 +14,29 @@ The prefrontal cortex (PFC) is a core regulatory center for higher cognitive fun
 
 We developed is a shiny application **PFCdev-web** that allows users to interactively access our data. You can access our online website at <https://huggingface.co/spaces/TigerZheng/PFCdev-web>
 
+<img src="https://github.com/ZhengTiger/PFC_develop/blob/main/images/PFCdev-demo.gif" width="100%" />
 
+Users can browse the following content through the scRNAseq page:
+
+- Select dataset: Select datasets containing different cell types
+- Select celltype: Select different resolutions to view cell clusters on UMAP
+- Select gene: Select different genes to view their expression
+
+Users can browse the following content through the spatial page:
+
+- Spatial Clustering: Select different cell subtypes to view their spatial distribution
+- Spatial Gene Expression: Select different genes to view their spatial expression
 
 ## Code View
 
-The code of this project can be viewed at <https://zhengtiger.github.io/PFC_develop>
-
-
+We compiled the code for this study using Quarto documentation, which contains the code for all the figures in this study. You can access the documents at <https://zhengtiger.github.io/PFC_develop>. 
 
 ## Citation
 
 Our project has been released in the following publication:
 
+```
+Zheng H, Yan K, et al. A single-cell spatiotemporal transcriptomic atlas of mouse prefrontal cortex maps dynamics of intratelencephalic neurons during postnatal development. PLOS Biology.
+```
 
 

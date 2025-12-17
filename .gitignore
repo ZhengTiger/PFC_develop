@@ -6,13 +6,12 @@
 .quarto
 /.quarto/
 TOM/
+毕业论文.qmd
 clusting.qmd
 hdWGCNA.qmd
-hdWGCNA_ST.qmd
 Moncle2.qmd
 NeuronChat.qmd
 Other.qmd
 rds_h5ad.qmd
 supplemental-tables.qmd
-VoxHunt.qmd
-Figure6-old.qmd
+Revision.qmd

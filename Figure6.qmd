@@ -1,6 +1,6 @@
 ---
 author: "Hu Zheng"
-date: "2025-06-22"
+date: "2025-12-01"
 date-format: YYYY-MM-DD
 ---
 
@@ -13,7 +13,6 @@ date-format: YYYY-MM-DD
 library(Seurat)
 library(tidyverse)
 library(stringr)
-library(EWCE)
 library(ggplot2)
 library(pheatmap)
 library(cowplot)
@@ -25,8 +24,6 @@ source('bin/Palettes.R')
 
 ```{r}
 seu.harmony <- readRDS('../data/seu.harmony.rds')
-seu.harmony.metadata <- readRDS('../data/seu.harmony.metadata.rds')
-seu.harmony@meta.data <- seu.harmony.metadata
 ```
 
 ```{r}
@@ -38,6 +35,8 @@ seu <- seu[,!seu$Time_Subtype %in% c(
   "Adult Im L2/3 IT","Adult Im L4/5 IT","Adult Im L5 IT","Adult Im L6 IT",
   "Adult Endo","Adult NPC")]
 ```
+
+
 
 ## Figure_6A
 
@@ -101,21 +100,19 @@ Gene_weight <- read.csv("../../data/Revision/Gene_weight.csv")
 ```
 
 
-```{r}
-disease_subtype <- OCD_subtype
-gene <- Gene_weight$OCD_Gene
+```{r fig.width=10, fig.height=3}
+#| eval: false
 
+disease_subtype <- MDD_subtype
+gene <- Gene_weight$MDD_Gene
 seu_disease <- seu[,seu$Time_Subtype %in% disease_subtype]
 gene <- gene[gene %in% rownames(seu)]
-
 seu_disease$Time_Subtype <- factor(seu_disease$Time_Subtype, 
                                    levels = disease_subtype)
 Idents(seu_disease) <- "Time_Subtype"
 DEG <- FindAllMarkers(seu_disease, features = gene, logfc.threshold = 0.25,
                       only.pos = T)
-```
 
-```{r fig.width=5, fig.height=3}
 Figure_6B <- jjVolcano(
   diffData = DEG,
   topGeneN = 0,
@@ -130,21 +127,14 @@ Figure_6B
 ```
 
 ```{r}
-#| eval: false
-
-ggsave("../../Figure/Figure6/Figure_6B_OCD.pdf", plot = Figure_6B,
-       height = 3, width = 5, units = "in")
+knitr::include_graphics("./images/Figure_6B.png", dpi = 300)
 ```
-
 
 ```{r}
 #| eval: false
-#| echo: false
 
-x <- DEG %>%
-  group_by(cluster) %>%
-  slice_max(avg_log2FC, n = 3) %>%
-  ungroup()
+ggsave("../../Figure/Figure6/Figure_6B_MDD.pdf", plot = Figure_6B,
+       height = 3, width = 10, units = "in")
 ```
 
 
@@ -162,7 +152,7 @@ All_score <- rbind(P1_score, P4_score, P10_score, Adult_score)
 ```
 
 ```{r fig.width=4, fig.height=4}
-disease <- names(col_Disease)[8]
+disease <- names(col_Disease)[5]
 
 df <- data.frame(
   UMAP_1 = All_score$UMAP_1,
@@ -178,7 +168,7 @@ Figure_6C <-
   theme_void() +
   theme(legend.position = "none") +
   coord_fixed() +
-  scale_color_gradientn(colours = c("lightgray", "white", col_Disease[8]), 
+  scale_color_gradientn(colours = c("lightgray", "white", col_Disease[5]), 
                         limits = c(0,4))
 Figure_6C
 ```
@@ -196,35 +186,10 @@ ggsave(filename=paste("../../Figure/Figure6/Figure_6C/",disease,".png",sep=""),
 
 ## Figure_6D
 
-```{r}
-#| eval: false
-
-MDD_Gene <- str_to_title(Gene_weight$MDD_Gene)
-MDD_Gene <- MDD_Gene[MDD_Gene %in% rownames(seu)]
-MDD_DEG <- FindMarkers(
-  seu, 
-  ident.1 = colnames(seu)[seu$Time_Subtype %in% MDD_subtype], 
-  ident.2 = colnames(seu)[seu$Time_Subtype %in% ANO_subtype],
-  features = MDD_Gene, only.pos = T, logfc.threshold = 1)
-
-ANO_Gene <- str_to_title(Gene_weight$ANO_Gene)
-ANO_Gene <- ANO_Gene[ANO_Gene %in% rownames(seu)]
-ANO_DEG <- FindMarkers(
-  seu, 
-  ident.1 = colnames(seu)[seu$Time_Subtype %in% ANO_subtype], 
-  ident.2 = colnames(seu)[seu$Time_Subtype %in% MDD_subtype],
-  features = ANO_Gene, only.pos = T, logfc.threshold = 1)
-```
-
-
-```{r}
+```{r fig.width=6, fig.height=3}
 use_subtype <- c(order[order %in% MDD_subtype], order[order %in% ANO_subtype])
 seu_heatmap <- seu[,seu$Time_Subtype %in% use_subtype]
 seu_heatmap$Time_Subtype <- factor(seu_heatmap$Time_Subtype, levels = use_subtype)
-
-#MDD_DEG <- MDD_DEG[MDD_DEG$avg_log2FC>1.5,]
-#MDD_gene <- rownames(MDD_DEG)
-#MA_gene <- rownames(ANO_DEG)
 
 MDD_gene <- c("Tcf4","Auts2","Sox5","Ttc28","Rbfox1","Ctnna2",
               "Prox1","Erbb4","Stmn1","Klf7","Lrfn5","Mef2c",
@@ -238,10 +203,9 @@ avg_exp <- AverageExpression(seu_heatmap, group.by = "Time_Subtype", features = 
 avg_exp_scale <- t(scale(t(avg_exp)))
 avg_exp_scale[avg_exp_scale<0] <- 0
 avg_exp_scale[avg_exp_scale>2] <- 2
-```
 
-```{r fig.width=6, fig.height=3}
-pheatmap(avg_exp_scale, 
+Figure_6D <- 
+  pheatmap(avg_exp_scale, 
          color = colorRampPalette(c("white","#d62728"))(200), 
          breaks = seq(0,2,0.01), show_colnames = T, treeheight_row=10,
          cluster_rows = F, cluster_cols = F,
@@ -249,7 +213,6 @@ pheatmap(avg_exp_scale,
          gaps_col = 23, gaps_row = 18, border_color="white"
          )
 ```
-
 
 
 
@@ -266,12 +229,11 @@ MDD_subtype <- c("P1 Im L6 IT","P1 Lamp5","P1 Pvalb","P1 Vip","P4 L6 IT",
                  "Adult L2/3 IT","Adult L4/5 IT","Adult L5 IT","Adult L6 IT",
                  "Adult L5 NP","Adult L6 CT","Adult Pvalb","Adult Vip")
 seu <- seu.harmony[,seu.harmony$SubType %in% names(col_SubType)[1:8]]
-#seu <- seu.harmony
 seu$Time_Subtype <- paste(seu$orig.ident, seu$SubType)
 seu <- seu[,seu$Time_Subtype %in% MDD_subtype]
 
 seu$orig.ident <- factor(seu$orig.ident, levels = c("P1","P4","P10","Adult"))
-gene_list <- c("Egr1")
+gene_list <- c("Tcf4")
 
 Figure_6E <- 
   VlnPlot_scCustom(seurat_object = seu, features = gene_list, group.by = "orig.ident",
@@ -287,9 +249,22 @@ Figure_6E
 ```{r}
 #| eval: false
 
-ggsave("../../Figure/Figure6/Figure_6E_Egr1.pdf", plot = Figure_6E, 
+ggsave("../../Figure/Figure6/Figure_6E_Tcf4.pdf", plot = Figure_6E, 
        height = 6, width = 5, units = "in")
 ```
+
+
+
+
+
+## Figure_6F
+
+```{r}
+knitr::include_graphics("./images/Figure_6F.png", dpi = 300)
+```
+
+
+
 
 
 

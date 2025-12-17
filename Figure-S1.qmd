@@ -1,6 +1,6 @@
 ---
 author: "Hu Zheng"
-date: "2024-12-01"
+date: "2025-12-01"
 date-format: YYYY-MM-DD
 ---
 
@@ -21,8 +21,6 @@ source('bin/Palettes.R')
 #| message: false
 
 seu.harmony <- readRDS('../data/seu.harmony.rds')
-seu.harmony.metadata <- readRDS('../data/seu.harmony.metadata.rds')
-seu.harmony@meta.data <- seu.harmony.metadata
 ```
 
 
@@ -175,6 +173,49 @@ knitr::include_graphics("./images/Figure_S1D.jpg", dpi = 300)
 
 ## Figure_S1E
 
+```{r fig.width=10, fig.height=5}
+df <- seu.harmony@meta.data[,c("orig.ident","SubType")]
+df <- table(df$orig.ident, df$SubType)
+df <- as.data.frame.array(df/rowSums(df))
+CV <- apply(df, 2, function(x){(sd(x)/mean(x))})
+CV <- as.data.frame(CV)
+CV$Type <- rownames(CV)
+CV <- CV[CV$Type %in% names(col_SubType)[1:15],]
+CV <- CV[order(CV$CV),]
+
+Figure_S1E <- ggplot(CV, aes(x=Type, y=CV, fill=Type)) +
+  geom_col() +
+  scale_fill_manual(values = col_SubType) +
+  theme_classic(base_size = 15) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.text = element_text(color = "black")) +
+  labs(x="", y="Coefficient of variation")
+Figure_S1E
+```
+
+```{r}
+#| eval: false
+
+ggsave("../../Figure/FigureS1/Figure_S1E.pdf", plot = p,
+       height = 5, width = 10, units = "in")
+```
+
+
+
+
+
+## Figure_S1F
+
+```{r}
+knitr::include_graphics("./images/Figure_S1F.png", dpi = 300)
+```
+
+
+
+
+
+## Figure_S1G
+
 ```{r fig.width=5, fig.height=5}
 column <- c("x_rotated","y_rotated","Im.L2.3.IT","Im.L4.5.IT","Im.L5.IT","Im.L6.IT","L2.3.IT","L4.5.IT","L5.IT","L6.IT","L5.PT","L5.NP","L6.CT","Lamp5","Pvalb","Sst","Vip","NPC","Astro","Endo","Microglia","Oligo","OPC")
 P1_cell2loc <- read.csv("../data/Figure1/P1_cell2location.csv", row.names = 1)
@@ -209,7 +250,7 @@ for (i in 1:length(col_SubType)){
     theme_void() +
     theme(legend.position = "none")
   subtype_i <- gsub("/","",subtype_i)
-  #ggsave(paste("../../Figure/Figure1/Figure_1H/",i,".P1_",subtype_i,".png",sep=""), 
+  #ggsave(paste("../../Figure/Figure1/Figure_1G/",i,".P1_",subtype_i,".png",sep=""), 
   #       plot = plist[[i]], height = 5, width = 5, units = "in")
 }
 
@@ -220,7 +261,7 @@ plist[[10]]
 
 
 
-## Figure_S1F
+## Figure_S1H
 
 ```{r fig.width=5, fig.height=5}
 column <- c("x_rotated","y_rotated","Im.L2.3.IT","Im.L4.5.IT","Im.L5.IT","Im.L6.IT","L2.3.IT","L4.5.IT","L5.IT","L6.IT","L5.PT","L5.NP","L6.CT","Lamp5","Pvalb","Sst","Vip","NPC","Astro","Endo","Microglia","Oligo","OPC")
@@ -254,7 +295,7 @@ for (i in 1:length(col_SubType)){
     theme_void() +
     theme(legend.position = "none")
   subtype_i <- gsub("/","",subtype_i)
-  #ggsave(paste("../../Figure/Figure1/Figure_1J/",i,".P77_",subtype_i,".png",sep=""), 
+  #ggsave(paste("../../Figure/Figure1/Figure_1H/",i,".P77_",subtype_i,".png",sep=""), 
   #       plot = plist[[i]], height = 5, width = 5, units = "in")
 }
 plist[[10]]
