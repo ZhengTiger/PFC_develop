@@ -24,7 +24,7 @@
     "href": "index.html#data-visualization",
     "title": "PFC develop",
     "section": "Data Visualization",
-    "text": "Data Visualization\nWe developed is a shiny application PFCdev-web that allows users to interactively access our data. You can access our online website at https://huggingface.co/spaces/TigerZheng/PFCdev-web\n\nUsers can browse the following content through the scRNAseq page:\n\nSelect dataset: Select datasets containing different cell types\nSelect celltype: Select different resolutions to view cell clusters on UMAP\nSelect gene: Select different genes to view their expression\n\nUsers can browse the following content through the spatial page:\n\nSpatial Clustering: Select different cell subtypes to view their spatial distribution\nSpatial Gene Expression: Select different genes to view their spatial expression",
+    "text": "Data Visualization\nWe developed is a shiny application PFCdev-web that allows users to interactively access our data. You can access our online website at https://huggingface.co/spaces/TigerZheng/PFCdev-web\n\n\n\nmovie\n\n\nUsers can browse the following content through the scRNAseq page:\n\nSelect dataset: Select datasets containing different cell types\nSelect celltype: Select different resolutions to view cell clusters on UMAP\nSelect gene: Select different genes to view their expression\n\nUsers can browse the following content through the spatial page:\n\nSpatial Clustering: Select different cell subtypes to view their spatial distribution\nSpatial Gene Expression: Select different genes to view their spatial expression",
     "crumbs": [
       "PFC develop"
     ]
